@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Controle de Qualidade de Matérias-Primas Formula Animal</title>
+<title>CQ Formula Animal</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,Helvetica,sans-serif;background:#EDF2F7;min-height:100vh}
@@ -99,7 +99,7 @@ function e(v){return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&l
 function fmt(d){if(!d||d==='--')return d||'--';var p=String(d).split('-');if(p.length===3&&p[0].length===4)return p[2]+'/'+p[1]+'/'+p[0];return d;}
 function gls(k){try{return JSON.parse(localStorage.getItem(k)||'null');}catch(x){return null;}}
 function sls(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(x){}}
-function fdb(){return DB.concat(S.udb);}
+function fdb(){var ov=S.overrides;var base=DB.map(function(s){return ov[s.c]?Object.assign({},s,ov[s.c]):s;});return base.concat(S.udb);}
 function nre(){var y=new Date().getFullYear().toString().slice(-2);return String(S.entries.filter(function(x){return x.ano===y;}).length+1).padStart(3,'0');}
 function rc(r){return r==='A'?'#276749':r==='Q'?'#744210':'#9B2C2C';}
 function rb(r){return r==='A'?'#F0FFF4':r==='Q'?'#FFFBEB':'#FFF5F5';}
@@ -122,7 +122,8 @@ function blank(){return {re:'',ano:new Date().getFullYear().toString().slice(-2)
   port344:false,termossens:false,fotossens:false,higro:false,hormonio:false,citostatico:false,antibiotico:false};}
 
 var S={tab:'entrada',form:blank(),entries:gls('cq_entries')||[],udb:gls('cq_userdb')||[],
-       current:null,esel:{},histQ:'',subQ:'',etiqQ:'',gerTab:'sub',msg:'',editSub:null,
+       overrides:gls('cq_overrides')||{},
+       current:null,esel:{},histQ:'',subQ:'',etiqQ:'',gerTab:'sub',msg:'',editSub:null,fichaCode:null,apiKey:gls('cq_apikey')||'',aiLoading:false,aiModal:false,
        newSub:{n:'',d:'',s:'',dci:'',sin:'',fm:'',pm:'',fte:'',ftc:'',tp:'',
                org:'',sol:'',fus:'',dn:'',ph:'',a:'',ref:''}};
 
@@ -223,7 +224,7 @@ function etiqCard(en){
 
 /* ── TAB RENDERS ── */
 function renderHdr(){
-  return '<div class="hdr np"><div><div style="font-size:17px;font-weight:700">🔬 Controle de Qualidade de Matérias-Primas Formula Animal</div><div style="font-size:11px;opacity:.65;margin-top:2px">'+fdb().length+' substancias · '+S.entries.length+' entradas</div></div>'+
+  return '<div class="hdr np"><div><div style="font-size:17px;font-weight:700">🔬 CQ Formula Animal</div><div style="font-size:11px;opacity:.65;margin-top:2px">'+fdb().length+' substancias · '+S.entries.length+' entradas</div></div>'+
          '<button class="btn np" data-action="newEntry" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff">+ Nova entrada</button></div>';}
 
 function renderTabs(){
@@ -235,7 +236,7 @@ function renderTabs(){
 function renderEntrada(){
   var r='';if(S.msg){r='<div class="ok">'+e(S.msg)+'</div>';}
   r+='<div class="sec s1"><div class="stl" style="color:#1A3A5C">Identificacao</div><div class="g2">'+fld('R.E. (auto se vazio)','re')+fld('Ano (2 digitos)','ano')+'</div><div style="font-size:10px;color:#A0AEC0;margin-top:-6px">Proximo: '+nre()+'</div></div>';
-  r+='<div style="margin-bottom:12px"><label class="lbl">Substancia / Produto *</label><div class="sw"><input id="ss" autocomplete="off" value="'+e(S.form.substancia)+'" placeholder="Digite o nome da substancia..."><div class="sd" id="sd"></div></div>';
+  r+='<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><label class="lbl" style="margin:0">Substancia / Produto *</label><button class="btn bg bsm" data-action="openAI" style="font-size:11px">🤖 Analisar laudo com IA</button></div><div class="sw"><input id="ss" autocomplete="off" value="'+e(S.form.substancia)+'" placeholder="Digite o nome da substancia..."><div class="sd" id="sd"></div></div>';
   r+='<div style="font-size:10px;color:#A0AEC0;margin-top:3px">Busca nos '+fdb().length+' produtos — referencias tecnicas preenchem automaticamente</div></div>';
   r+='<div class="g3" style="margin-bottom:4px">'+fld('Codigo','codigo')+fld('DCB','dcb')+fld('CAS','cas')+'</div>';
   r+='<div class="g3" style="margin-bottom:12px">'+fld('Formula Molecular','formula')+fld('Peso Molecular','peso')+fld('DCI','dci')+'</div>';
@@ -362,7 +363,7 @@ function renderGerenciar(){
       if(hasTests){r+='<span style="margin-left:6px;font-size:10px;background:#F0FFF4;color:#276749;padding:1px 6px;border-radius:10px">dados testes</span>';}
       if(isU){r+='<span style="margin-left:4px;font-size:10px;background:#EBF4FB;color:#1A3A5C;padding:1px 6px;border-radius:10px">personalizada</span>';}
       r+='<div style="font-size:11px;color:#718096;margin-top:2px">'+(s.d?'DCB: '+e(s.d)+' · ':'')+( s.s?'CAS: '+e(s.s):'')+'</div></div>';
-      if(isU){r+='<div style="display:flex;gap:4px"><button class="btn bg bsm editSub-btn" data-sc="'+e(s.c)+'">Editar</button><button class="btn bd bsm remSub-btn" data-sc="'+e(s.c)+'">Remover</button></div>';}
+      r+='<div style="display:flex;gap:4px"><button class="btn bg bsm editSub-btn" data-sc="'+e(s.c)+'">✏️ Editar</button><button class="btn bg bsm fichaBtn" data-sc="'+e(s.c)+'">📄 Ficha</button>'+(isU?'<button class="btn bd bsm remSub-btn" data-sc="'+e(s.c)+'">✕</button>':'')+'</div>';
       r+='</div>';
     });
     if(fil.length>150){r+='<div style="padding:10px;text-align:center;color:#718096;font-size:12px">Mostrando 150 de '+fil.length+'. Refine a busca.</div>';}
@@ -370,7 +371,12 @@ function renderGerenciar(){
     /* Edit form */
     if(S.editSub){
       var es=S.editSub;
-      r+='<div id="edit-sub-form" class="sec s2" style="margin-top:16px"><div class="stl" style="color:#276749">✏️ Editando: '+e(es.n)+'</div>';
+      var esIsU=String(es.c).indexOf('U')===0;
+      r+='<div id="edit-sub-form" class="sec s2" style="margin-top:16px">';
+      r+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">';
+      r+='<div class="stl" style="color:#276749;margin:0">✏️ Editando: '+e(es.n)+'</div>';
+      if(!esIsU&&S.overrides[es.c]){r+='<button class="btn bd bsm" data-action="resetSub" data-sc="'+e(es.c)+'">↺ Restaurar original</button>';}
+      r+='</div>';
       r+='<div class="g3" style="margin-bottom:8px">';
       var eFields=[['Nome','n'],['DCB','d'],['CAS','s'],['DCI','dci'],['Sinonimo','sin'],['Formula Molecular','fm'],['Peso Molecular','pm'],['Ft. Equivalencia','fte'],['Ft. Correcao','ftc'],['Teor/Potencia','tp'],['Densidade','dn'],['pH','ph']];
       eFields.forEach(function(f){r+='<div class="fld"><label class="lbl">'+f[0]+'</label><input class="esf" data-ek="'+f[1]+'" value="'+e(es[f[1]]||'')+'"></div>';});
@@ -404,9 +410,9 @@ function renderTab(){
 
 /* ── PAINT ── */
 function paint(){
-  document.getElementById('root').innerHTML='<div class="app">'+renderHdr()+renderTabs()+'<div class="card body" id="tb">'+renderTab()+'</div><div class="ft np">CQ Formula Animal · Dados salvos localmente</div></div>';
+  document.getElementById('root').innerHTML='<div class="app">'+renderHdr()+renderTabs()+'<div class="card body" id="tb">'+renderTab()+'</div><div class="ft np">CQ Formula Animal · Dados salvos localmente</div></div>'+renderFichaModal()+renderAIModal();
   bindAll();}
-function repaint(){document.getElementById('tb').innerHTML=renderTab();bindAll();}
+function repaint(){document.getElementById('tb').innerHTML=renderTab();var root=document.getElementById('root');var existing=root.querySelectorAll('.modal-overlay');existing.forEach(function(m){m.remove();});var fichaHtml=renderFichaModal();var aiHtml=renderAIModal();if(fichaHtml){var d=document.createElement('div');d.className='modal-overlay';d.innerHTML=fichaHtml;root.appendChild(d);}if(aiHtml){var d2=document.createElement('div');d2.className='modal-overlay';d2.innerHTML=aiHtml;root.appendChild(d2);}bindAll();}
 
 function bindAll(){
   var inp=document.getElementById('ss'),drop=document.getElementById('sd');
@@ -421,6 +427,8 @@ function bindAll(){
   document.querySelectorAll('.etog-btn').forEach(function(btn){btn.onclick=function(ev){ev.stopPropagation();togE(this.dataset.eid);};});
   document.querySelectorAll('.remSub-btn').forEach(function(btn){btn.onclick=function(){remSub(this.dataset.sc);};});
   document.querySelectorAll('.editSub-btn').forEach(function(btn){btn.onclick=function(){startEditSub(this.dataset.sc);};});
+  document.querySelectorAll('.fichaBtn').forEach(function(btn){btn.onclick=function(){S.fichaCode=this.dataset.sc;repaint();};});
+  var aif=document.getElementById('ai-file');if(aif){aif.onchange=function(){callAI(this);this.value='';};}
   document.querySelectorAll('.esf').forEach(function(el){el.oninput=function(){if(S.editSub)S.editSub[this.dataset.ek]=this.value;};});
   var ie=document.getElementById('imp-e');if(ie){ie.onchange=function(ev){impE(ev);};}
   var idd=document.getElementById('imp-d');if(idd){idd.onchange=function(ev){impD(ev);};}
@@ -439,6 +447,15 @@ function bindAll(){
       else if(a==='addSub'){addSub();}
       else if(a==='saveEditSub'){saveEditSub();}
       else if(a==='cancelEdit'){cancelEdit();}
+      else if(a==='resetSub'){var c=this.dataset.sc;delete S.overrides[c];sls('cq_overrides',S.overrides);S.editSub=null;S.msg='Substancia restaurada ao original.';repaint();setTimeout(function(){S.msg='';},3000);}
+      else if(a==='openAI'){S.aiModal=true;repaint();}
+      else if(a==='closeAI'){S.aiModal=false;repaint();}
+      else if(a==='pickAIFile'){document.getElementById('ai-file').click();}
+      else if(a==='saveApiKey'){var k=document.getElementById('ai-key');if(k){S.apiKey=k.value.trim();sls('cq_apikey',S.apiKey);repaint();}}
+      else if(a==='changeApiKey'){S.apiKey='';sls('cq_apikey','');repaint();}
+      else if(a==='pichaBtn'||a==='showFicha'){S.fichaCode=this.dataset.sc;repaint();}
+      else if(a==='closeFicha'){S.fichaCode=null;repaint();}
+      else if(a==='printFicha'){window.print();}
       else if(a==='expDB'){expDB();}
       else if(a==='expE'){expE();}
       else if(a==='pickImpE'){document.getElementById('imp-e').click();}
@@ -555,14 +572,142 @@ function startEditSub(c){
 }
 function saveEditSub(){
   if(!S.editSub)return;
-  S.udb=S.udb.map(function(s){return s.c===S.editSub.c?Object.assign({},S.editSub):s;});
-  sls('cq_userdb',S.udb);
-  S.msg='Substancia atualizada!';
-  S.editSub=null;
-  repaint();
-  setTimeout(function(){S.msg='';},3000);
+  var c=S.editSub.c,isU=String(c).indexOf('U')===0;
+  if(isU){
+    S.udb=S.udb.map(function(s){return s.c===c?Object.assign({},S.editSub):s;});
+    sls('cq_userdb',S.udb);
+  } else {
+    S.overrides[c]=Object.assign({},S.editSub);
+    sls('cq_overrides',S.overrides);
+  }
+  S.msg='Substancia atualizada!';S.editSub=null;repaint();setTimeout(function(){S.msg='';},3000);
 }
 function cancelEdit(){S.editSub=null;repaint();}
+
+function renderFicha(code){
+  var db=fdb();
+  var s=db.filter(function(x){return x.c===code;})[0];
+  if(!s)return '<div style="padding:30px;color:#999">Substancia nao encontrada.</div>';
+  var today=new Date().toLocaleDateString('pt-BR');
+  var r='<div style="max-width:700px;margin:0 auto;background:#fff;border:1px solid #CBD5E0;border-radius:8px;overflow:hidden;font-size:11px">';
+  r+='<div style="background:#1A3A5C;color:#fff;padding:10px 18px;display:flex;justify-content:space-between;align-items:center">';
+  r+='<div><div style="font-size:13px;font-weight:700;letter-spacing:.5px">FICHA TECNICA DE MATERIA-PRIMA</div>';
+  r+='<div style="font-size:10px;opacity:.7;margin-top:2px">LABORATORIO DE CONTROLE DE QUALIDADE — FORMULA ANIMAL</div></div>';
+  r+='<div style="text-align:right"><div style="font-size:9px;opacity:.7">Codigo</div><div style="font-size:16px;font-weight:700">'+e(s.c)+'</div></div></div>';
+  r+='<div style="padding:12px 16px">';
+  r+='<div style="background:#EBF4FB;border-radius:6px;padding:10px 12px;margin-bottom:10px">';
+  r+='<div style="font-size:16px;font-weight:700;color:#1A3A5C;margin-bottom:6px">'+e(s.n)+'</div>';
+  r+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;font-size:10px">';
+  if(s.d){r+='<div><span style="color:#718096;font-weight:700">DCB: </span>'+e(s.d)+'</div>';}
+  if(s.s){r+='<div><span style="color:#718096;font-weight:700">CAS: </span>'+e(s.s)+'</div>';}
+  if(s.dci){r+='<div><span style="color:#718096;font-weight:700">DCI: </span>'+e(s.dci)+'</div>';}
+  if(s.sin){r+='<div style="grid-column:span 2"><span style="color:#718096;font-weight:700">Sinonimo: </span>'+e(s.sin)+'</div>';}
+  if(s.fm){r+='<div><span style="color:#718096;font-weight:700">Formula: </span>'+e(s.fm)+'</div>';}
+  if(s.pm){r+='<div><span style="color:#718096;font-weight:700">Peso Mol.: </span>'+e(s.pm)+'</div>';}
+  if(s.fte){r+='<div><span style="color:#718096;font-weight:700">Ft. Equiv.: </span>'+e(s.fte)+'</div>';}
+  if(s.ftc){r+='<div><span style="color:#718096;font-weight:700">Ft. Corr.: </span>'+e(s.ftc)+'</div>';}
+  r+='</div></div>';
+  function spec(label,val){if(!val)return'';return'<tr><td style="padding:3px 8px;background:#FAFAFA;font-weight:600;color:#4A5568;width:30%;font-size:10px;border-bottom:1px solid #EEF2F7">'+label+'</td><td style="padding:3px 8px;font-size:10px;border-bottom:1px solid #EEF2F7">'+e(val)+'</td></tr>';}
+  r+='<div style="font-weight:700;font-size:10px;color:#1A3A5C;border-bottom:1.5px solid #1A3A5C;padding-bottom:4px;margin-bottom:6px;text-transform:uppercase">Especificacoes Tecnicas</div>';
+  r+='<table style="width:100%;border-collapse:collapse;margin-bottom:10px"><tbody>';
+  r+=spec('Teor / Potencia',s.tp);
+  r+=spec('Caract. Organolepticas',s.org);
+  r+=spec('Solubilidade',s.sol);
+  r+=spec('Ponto de Fusao',s.fus);
+  r+=spec('Densidade',s.dn);
+  r+=spec('pH',s.ph);
+  r+='</tbody></table>';
+  if(s.a){
+    r+='<div style="background:#EBF4FB;border-radius:6px;padding:6px 10px;margin-bottom:8px;font-size:10px">';
+    r+='<div style="font-size:9px;font-weight:700;color:#1A3A5C;text-transform:uppercase;margin-bottom:3px">Embalagem / Armazenamento</div>';
+    r+=e(s.a)+'</div>';
+  }
+  if(s.ref){
+    r+='<div style="border-top:1px solid #EEF2F7;padding-top:6px;font-size:9px;color:#718096">';
+    r+='<b>Referencias:</b> '+e(s.ref)+'</div>';
+  }
+  r+='<div style="display:flex;justify-content:space-between;margin-top:8px;font-size:9px;color:#A0AEC0">';
+  r+='<span>DOCUMENTO INTERNO — NAO SUBSTITUIR SEM ATUALIZACAO</span><span>Emitido em: '+today+'</span></div>';
+  r+='</div></div>';
+  return r;
+}
+
+function renderAIModal(){
+  if(!S.aiModal)return '';
+  var r='<div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px">';
+  r+='<div style="background:#fff;border-radius:12px;padding:20px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto">';
+  r+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">';
+  r+='<div style="font-weight:700;font-size:15px;color:#1A3A5C">🤖 Analisar Laudo com IA</div>';
+  r+='<button data-action="closeAI" style="background:none;border:none;font-size:20px;cursor:pointer;color:#718096">✕</button></div>';
+  if(!S.apiKey){
+    r+='<div style="background:#FFF5F5;border:1px solid #FEB2B2;border-radius:6px;padding:10px 12px;margin-bottom:12px;font-size:13px;color:#9B2C2C">';
+    r+='Cole sua chave de API do Claude (anthropic.com/api) para usar esta funcionalidade.</div>';
+    r+='<div class="fld"><label class="lbl">Chave de API Anthropic</label>';
+    r+='<input id="ai-key" type="password" value="'+e(S.apiKey)+'" placeholder="sk-ant-..."></div>';
+    r+='<button class="btn bp" data-action="saveApiKey" style="width:100%;margin-bottom:8px">Salvar Chave</button>';
+  } else {
+    r+='<div style="background:#F0FFF4;border:1px solid #68D391;border-radius:6px;padding:8px 12px;margin-bottom:12px;font-size:12px;color:#276749">✅ API configurada. Faca upload de um laudo (foto ou PDF).</div>';
+    r+='<div style="margin-bottom:12px;font-size:13px;color:#4A5568">A IA extraira automaticamente: produto, lote, nota fiscal, datas, fornecedor, teor, caracteristicas organolépticas e mais.</div>';
+    r+='<input type="file" id="ai-file" accept="image/*,.pdf" style="display:none">';
+    if(!S.aiLoading){
+      r+='<button class="btn bp" data-action="pickAIFile" style="width:100%;margin-bottom:8px">📷 Selecionar foto ou PDF do laudo</button>';
+      r+='<button class="btn bg" data-action="changeApiKey" style="width:100%;font-size:11px">Alterar chave de API</button>';
+    } else {
+      r+='<div style="text-align:center;padding:20px;color:#4A5568"><div style="font-size:24px;margin-bottom:8px">⏳</div><div>Analisando documento...</div><div style="font-size:11px;color:#A0AEC0;margin-top:4px">Isso pode levar alguns segundos</div></div>';
+    }
+  }
+  r+='</div></div>';
+  return r;
+}
+
+function renderFichaModal(){
+  if(!S.fichaCode)return '';
+  var r='<div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px">';
+  r+='<div style="background:#fff;border-radius:12px;max-width:740px;width:100%;max-height:95vh;overflow-y:auto">';
+  r+='<div class="np" style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid #E2E8F0">';
+  r+='<span style="font-weight:700;color:#1A3A5C">Ficha Tecnica</span>';
+  r+='<div style="display:flex;gap:8px"><button class="btn bp bsm" data-action="printFicha">🖨️ Imprimir</button>';
+  r+='<button data-action="closeFicha" style="background:none;border:none;font-size:20px;cursor:pointer;color:#718096">✕</button></div></div>';
+  r+=renderFicha(S.fichaCode);
+  r+='</div></div>';
+  return r;
+}
+
+function callAI(fileInput){
+  var file=fileInput.files[0];if(!file)return;
+  var isPDF=file.type==='application/pdf';
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    var b64=ev.target.result.split(',')[1];
+    var mediaType=file.type||'image/jpeg';
+    S.aiLoading=true;repaint();
+    var content=[
+      {type:isPDF?'document':'image',
+       source:{type:'base64',media_type:mediaType,data:b64}},
+      {type:'text',text:'Este e um laudo de materia-prima de farmacia de manipulacao. Extraia os dados e retorne APENAS um JSON valido (sem markdown, sem explicacoes) com estes campos (deixe vazio se nao encontrar): substancia, fornecedor, lote, nf (nota fiscal), qtde (quantidade com unidade), fabricacao (data no formato YYYY-MM-DD), validade (data no formato YYYY-MM-DD), origem, dcb, cas, fator, teor_fab (teor informado no laudo), organoleptica_result, solubilidade_result, fusao_result, densidade_result, ph_result, armazenamento, obs.'}
+    ];
+    fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':S.apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-opus-4-5',max_tokens:1000,messages:[{role:'user',content:content}]})
+    }).then(function(r){return r.json();}).then(function(data){
+      S.aiLoading=false;
+      try{
+        var text=data.content[0].text;
+        var clean=text.replace(/```json|```/g,'').trim();
+        var parsed=JSON.parse(clean);
+        Object.keys(parsed).forEach(function(k){if(parsed[k])S.form[k]=parsed[k];});
+        S.aiModal=false;
+        S.msg='✅ Laudo analisado pela IA! Revise e corrija os campos se necessario.';
+        repaint();setTimeout(function(){S.msg='';},5000);
+      }catch(err){alert('Erro ao processar resposta da IA: '+err.message);}
+    }).catch(function(err){
+      S.aiLoading=false;repaint();
+      alert('Erro na chamada da API: '+err.message+'. Verifique sua chave de API.');
+    });
+  };
+  reader.readAsDataURL(file);
+}
 try{paint();}catch(err){document.getElementById('root').innerHTML='<div class="err">Erro: '+err.message+'\n\n'+err.stack+'</div>';}
 
 </script>
