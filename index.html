@@ -4,983 +4,700 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>CQ Fórmula Animal</title>
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,Helvetica,sans-serif;background:#EDF2F7;min-height:100vh;font-size:14px}
-input,select,textarea,button{font-family:inherit;font-size:13px}
-input,select,textarea{width:100%;padding:7px 10px;border:1px solid #CBD5E0;border-radius:6px;background:#fff;outline:none;transition:border .15s}
-input:focus,select:focus,textarea:focus{border-color:#2B6CB0;box-shadow:0 0 0 2px rgba(43,108,176,.15)}
-textarea{resize:vertical;min-height:60px}
-button{cursor:pointer}
-.btn{padding:8px 16px;border:none;border-radius:6px;font-weight:600;font-size:13px;transition:opacity .15s}
-.btn:hover{opacity:.88}
+body{font-family:Arial,Helvetica,sans-serif;background:#EDF2F7;min-height:100vh}
+a{color:inherit}
+.app{max-width:900px;margin:0 auto;padding:16px 12px}
+.card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.07)}
+.hdr{background:linear-gradient(135deg,#1A3A5C,#2B6CB0);color:#fff;padding:14px 22px;display:flex;align-items:center;justify-content:space-between}
+.hdr-title{font-size:17px;font-weight:700;letter-spacing:.3px}
+.hdr-sub{font-size:11px;opacity:.65;margin-top:2px}
+.tabs{display:flex;border-bottom:2px solid #E2E8F0;overflow-x:auto}
+.tab-btn{flex:1;min-width:90px;padding:11px 8px;border:none;background:transparent;font-size:12px;color:#718096;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;font-family:inherit}
+.tab-btn.active{color:#1A3A5C;font-weight:700;border-bottom-color:#1A3A5C}
+.body-card{padding:18px;margin-top:0;border-radius:0 0 12px 12px}
+.btn{padding:8px 16px;border:none;border-radius:6px;font-weight:600;font-size:13px;cursor:pointer;font-family:inherit;transition:opacity .15s}
+.btn:hover{opacity:.85}
 .btn-primary{background:#1A3A5C;color:#fff}
-.btn-sm{padding:5px 10px;font-size:12px}
 .btn-ghost{background:#EBF4FB;border:1px solid #BEE3F8;color:#1A3A5C}
 .btn-danger{background:#FFF5F5;border:1px solid #FEB2B2;color:#9B2C2C}
-.card{background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.07);overflow:hidden}
-.section{border-radius:8px;padding:12px 14px;margin-bottom:12px}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn-warn{background:#FFFBEB;border:1px solid #F6E05E;color:#744210}
+.sec{border-radius:8px;padding:12px 14px;margin-bottom:12px}
 .sec-blue{background:#EBF4FB}
 .sec-green{background:#F0FFF4}
 .sec-yellow{background:#FFFFF0}
 .sec-red{background:#FFF5F5}
 .sec-gray{background:#F7FAFC}
-.sec-orange{background:#FFFAF0}
-.label{font-size:11px;font-weight:700;color:#4A5568;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px}
 .sec-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-.tag{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:6px;border:1px solid #CBD5E0;font-size:12px;cursor:pointer;background:#fff;transition:background .15s;user-select:none}
-.tag-on{background:#BEE3F8;border-color:#63B3ED}
-.alert-success{background:#F0FFF4;border:1px solid #68D391;color:#276749;padding:10px 14px;border-radius:8px;font-weight:600;margin-bottom:14px}
-.alert-info{background:#EBF4FB;border:1px solid #90CDF4;color:#2C5282;padding:10px 14px;border-radius:8px;margin-bottom:14px}
+.lbl{font-size:11px;font-weight:700;color:#4A5568;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px}
+.field{margin-bottom:10px}
+input,select,textarea{width:100%;padding:7px 10px;border:1px solid #CBD5E0;border-radius:6px;font-size:13px;font-family:inherit;outline:none;background:#fff;transition:border .15s}
+input:focus,select:focus,textarea:focus{border-color:#2B6CB0;box-shadow:0 0 0 2px rgba(43,108,176,.15)}
+textarea{resize:vertical;min-height:56px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .conf-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #EEF2F7}
 .conf-row:last-child{border-bottom:none}
-.conf-label{flex:1;font-size:13px}
-.radio-group{display:flex;gap:8px}
-.radio-group label{display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;white-space:nowrap;color:#4A5568}
-.radio-group input{width:auto;margin:0}
-
-/* ── LAUDO PRINT ── */
+.conf-lbl{flex:1;font-size:13px}
+.radio-grp{display:flex;gap:10px}
+.radio-grp label{display:flex;align-items:center;gap:3px;font-size:12px;cursor:pointer;white-space:nowrap;color:#4A5568}
+.radio-grp input[type=radio]{width:auto;margin:0}
+.teste-box{border:1px solid #E2E8F0;border-radius:8px;padding:10px 12px;margin-bottom:8px}
+.teste-box .t-name{font-weight:700;font-size:12px;color:#2D3748;margin-bottom:8px}
+.tag{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:6px;border:1px solid #CBD5E0;font-size:12px;cursor:pointer;background:#fff;user-select:none}
+.tag input[type=checkbox]{width:auto;margin:0}
+.tag.on{background:#BEE3F8;border-color:#63B3ED}
+.res-opt{flex:1;display:flex;align-items:center;gap:8px;padding:9px 14px;border-radius:8px;cursor:pointer;border:2px solid #E2E8F0;font-weight:700;background:#fff;font-family:inherit;font-size:13px}
+.res-opt input[type=radio]{width:auto;margin:0}
+.alert-ok{background:#F0FFF4;border:1px solid #68D391;color:#276749;padding:10px 14px;border-radius:8px;font-weight:600;margin-bottom:14px;font-size:13px}
+.alert-info{background:#EBF4FB;border:1px solid #90CDF4;color:#2C5282;padding:10px 14px;border-radius:8px;margin-bottom:14px;font-size:13px}
+/* search */
+.search-wrap{position:relative}
+.search-drop{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #CBD5E0;border-radius:6px;max-height:240px;overflow-y:auto;z-index:99;box-shadow:0 4px 20px rgba(0,0,0,.15);display:none}
+.search-item{padding:8px 12px;cursor:pointer;font-size:13px;border-bottom:1px solid #F0F0F0;line-height:1.4}
+.search-item:hover{background:#EBF4FB}
+.search-item .s-dcb{color:#888;font-size:11px;margin-left:8px}
+/* laudo */
+.laudo-wrap{max-width:700px;margin:0 auto;background:#fff;border:1px solid #CBD5E0;border-radius:8px;overflow:hidden;font-size:11px}
+.laudo-hdr{background:#1A3A5C;color:#fff;padding:10px 18px;display:flex;justify-content:space-between;align-items:center}
+.laudo-body{padding:10px 16px}
+.laudo-kpi{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px;background:#EBF4FB;border-radius:6px;padding:10px;margin-bottom:10px}
+.kpi-lbl{font-size:9px;color:#718096;font-weight:700;text-transform:uppercase}
+.kpi-val{font-size:13px;font-weight:700}
+.sec-hdr{font-weight:700;font-size:10px;color:#1A3A5C;border-bottom:1.5px solid #1A3A5C;padding-bottom:4px;margin:10px 0 6px;text-transform:uppercase}
+.laudo-tbl{width:100%;border-collapse:collapse;margin-bottom:10px}
+.laudo-tbl td{padding:3px 8px;font-size:10px;border-bottom:1px solid #EEF2F7;vertical-align:top}
+.laudo-tbl .th{background:#FAFAFA;font-weight:600;color:#4A5568;width:30%}
+.laudo-tbl thead th{background:#EBF4FB;padding:4px 8px;font-size:10px;font-weight:700;color:#1A3A5C;text-align:left}
+.laudo-arm{background:#EBF4FB;border-radius:6px;padding:6px 10px;margin-bottom:10px;font-size:10px}
+.laudo-obs{background:#FFF8E1;border:1px solid #F6E05E;border-radius:6px;padding:6px 10px;margin-bottom:10px;font-size:10px}
+.laudo-result{border-radius:8px;padding:10px 16px;text-align:center;margin-bottom:8px}
+.laudo-footer{display:flex;justify-content:space-between;font-size:9px;color:#A0AEC0}
+/* etiquetas */
+.etiq-card{border:2.5px solid #1A3A5C;border-radius:6px;padding:7px 9px;background:#fff;font-size:10px;break-inside:avoid;page-break-inside:avoid}
+.etiq-hdr{color:#fff;text-align:center;font-weight:700;font-size:12px;padding:3px 0;border-radius:4px;margin-bottom:5px;letter-spacing:1px}
+.etiq-name{font-weight:700;font-size:11px;text-align:center;border-bottom:1px solid #E2E8F0;padding-bottom:4px;margin-bottom:5px;line-height:1.3}
+.etiq-tbl{width:100%;border-collapse:collapse;font-size:10px}
+.etiq-tbl td{padding:1px 0;vertical-align:top}
+.etiq-lbl{color:#718096;width:28%}
+.etiq-val{font-weight:600}
+.etiq-arm{border-top:1px solid #E2E8F0;padding-top:4px;margin-top:4px;font-size:9px}
+.etiq-arm-lbl{font-size:9px;font-weight:700;color:#4A5568;text-transform:uppercase;margin-bottom:2px}
+.etiq-tags{border-top:1px solid #E2E8F0;padding-top:3px;margin-top:3px;display:flex;flex-wrap:wrap;gap:2px 6px;font-size:9px}
+.hist-item{border:1px solid #E2E8F0;border-radius:10px;padding:10px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;background:#fff;transition:background .15s}
+.hist-item:hover{background:#EBF4FB}
+.hist-btns{display:flex;gap:6px;margin-left:10px;flex-shrink:0}
+.footer{text-align:center;font-size:11px;color:#A0AEC0;margin-top:12px}
+.etiq-sel-row{padding:8px 14px;border-bottom:1px solid #EEF2F7;display:flex;justify-content:space-between;align-items:center;cursor:pointer;background:#fff;transition:background .15s}
+.etiq-sel-row:hover{background:#F7FAFC}
+.etiq-sel-row.sel{background:#EBF4FB}
+.chk-box{width:18px;height:18px;border-radius:4px;border:2px solid #CBD5E0;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;font-size:12px}
+.chk-box.on{background:#1A3A5C;border-color:#1A3A5C}
+/* print */
 @media print{
   @page{size:A4 portrait;margin:8mm}
   .no-print{display:none!important}
-  body{background:#fff;font-size:9.5px}
+  body{background:#fff}
+  .hdr,.tabs{display:none!important}
+  .app{padding:0;max-width:100%}
   .card{box-shadow:none;border-radius:0}
-  .laudo-wrap{max-width:100%!important;margin:0!important}
-  .laudo-hdr{padding:8px 14px!important}
-  .laudo-hdr .title{font-size:12px!important}
-  .laudo-body{padding:8px 12px!important}
-  .laudo-kpi{padding:8px!important}
-  .laudo-kpi .kpi-val{font-size:14px!important}
-  table td{padding:2px 6px!important;font-size:9px!important}
-  .laudo-result{padding:8px 14px!important}
-  .laudo-result .res-val{font-size:14px!important}
-  .laudo-arm{padding:6px 10px!important;font-size:9px!important}
-  .sec-title{font-size:9px!important;margin-bottom:4px!important}
-  .testes-grid{grid-template-columns:1fr 1fr!important}
-
-  /* ETIQUETA PRINT */
-  .etiq-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:4mm!important;padding:0!important}
-  .etiq-card{width:auto!important;page-break-inside:avoid!important}
-  .etiq-page{page-break-after:always}
-  .etiq-page:last-child{page-break-after:auto}
+  .body-card{padding:4px}
+  .laudo-wrap{max-width:100%!important;font-size:9.5px!important}
+  .laudo-hdr{padding:7px 12px!important}
+  .laudo-body{padding:7px 12px!important}
+  .laudo-kpi{padding:7px!important}
+  .kpi-val{font-size:12px!important}
+  .laudo-tbl td{padding:2px 6px!important;font-size:9px!important}
+  .sec-hdr{margin:6px 0 4px!important}
+  /* etiq print: 2 col grid */
+  .etiq-print-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:4mm!important}
 }
 </style>
 </head>
 <body>
-<div id="root"></div>
-<script type="text/babel">
-const {useState,useEffect,useRef,useCallback}=React;
-
-/* ── DATA ── */
+<div id="root"><div style="text-align:center;padding:60px;color:#666;font-family:Arial;font-size:16px">⏳ Carregando...</div></div>
+<script>
+// ── DATA ─────────────────────────────────────────────────────────────
 const EMBEDDED_DB = [{"c":"15","n":"Acetona P.A.","d":"00113","s":"123-99-9","a":"Conservar em lugar bem ventilado.Manter distante dos pontos de inflamação.","tr":"99,99%"},{"c":"1301","n":"Acido Ursodesoxicolico","d":"00369","s":"128-13-2","a":"Armazenar em recioientes fechados e ao abrigo da luz.","tm":"15 - 30°C","dn":"0,515g/mL","tr":"1.006"},{"c":"49","n":"Albendazol","s":"54965-21-8","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30°C","dn":"0,3355g/mL","tr":"1.013"},{"c":"97","n":"Alopurinol","a":"Deve ser mantido em um recipiente bem fechado."},{"c":"67","n":"Aminofilina","d":"0685","s":"31-34-0","a":"Armazenar em recipientes herméticos","tm":"15 - 30°C","dn":"0,691g/mL","tr":"Etilenodiamina: 13,71% - Teofilina: 86,79%"},{"c":"70","n":"Amoxicilina Trihidratada","d":"00736","s":"61336-70-7","a":"Armazenar em recipientes perfeitamente fechados","fn":"1.15"},{"c":"86","n":"Atenolol Base","d":"00911","s":"29122-68-7","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tr":"1.0041"},{"c":"1507","n":"Benazepril HCl","a":"Armazenar em recipientes bem fechados, protegidos da luz.","dn":"0,2518g/mL","tr":"1.001"},{"c":"1282","n":"Berberina","s":"633-65-8","a":"Armazenar em recipientes bem fechados ao abrigo da luz."},{"c":"1502","n":"Beta Glucanas 65%","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","tm":"15 - 30ºC","dn":"0,68g/mL","tr":"n/d"},{"c":"187","n":"Betametasona 17 Valerato","d":"09969","s":"58207-19-5","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"0,2949g/mL","fn":"1.09"},{"c":"106","n":"Bezafibrato","d":"01240","s":"41859-67-0","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tr":"1.0048"},{"c":"108","n":"Bicarbonato de Sódio","d":"01249","s":"144-55-8","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade."},{"c":"1386","n":"Bitter Melon - Melão de São Caetano","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade."},{"c":"689","n":"Brometo de Potassio","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30ºC","dn":"1,2928g/mL","tr":"1.004"},{"c":"240","n":"Brometo de Potassio","d":"09429","s":"59-51-8","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tr":"0.987"},{"c":"1421","n":"Carbotil AG","a":"Conservar de 15 a 30°C protegido da luz e umidade","tm":"15 - 30°C","dn":"0,65g/mL","tr":"n/d"},{"c":"1420","n":"Carbotil HR","a":"Conservar de 15 a 30°C protegido da luz e umidade","tm":"15 - 30°C","dn":"0,42g/mL","tr":"n/d"},{"c":"1419","n":"Carbotil UG","a":"Conservar de 15 a 30°C protegido da luz e umidade","tm":"15 - 30°C","dn":"0,43g/mL","tr":"n/d"},{"c":"158","n":"Cefalexina Monohidratada","d":"01827","s":"23325-78","a":"Armazenar em recipientes bem fechados.","tm":"15 - 30°C","dn":"0,55g/mL","tr":"0.997"},{"c":"330","n":"Cefalexina Monohidratada","d":"04536","s":"126-07-8","a":"Armazenar em recipientes bem fechados.","dn":"0,6300g/mL","tr":"0.9899"},{"c":"164","n":"Cetoconazol","d":"01956","s":"65277-42-1","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30°C","dn":"0,4937g/mL","tr":"0.9954"},{"c":"341","n":"Cetoconazol","s":"1309-42-8","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"0,4600g/mL","tr":"1.0076"},{"c":"1512","n":"Ciclosporina","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","tr":"0.999"},{"c":"356","n":"Ciclosporina","s":"574-12-9","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","tr":"0.999"},{"c":"179","n":"Ciproterona Acetato","d":"02146","s":"427-51-0","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","tm":"15 - 30°C","dn":"0,2432g/mL","tr":"0.994"},{"c":"184","n":"Citrato de Potássio","d":"09373","s":"6100-05-6","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tr":"0.9952"},{"c":"1493","n":"Clavulanato de Potássio","a":"Armazenar em recipiente fechado sob refrigeração (2 a 8ºC)","tm":"2 - 8ºC","dn":"0,45g/mL","tr":"1.012"},{"c":"381","n":"Clindamicina HCl","d":"10688","s":"138199-71-0","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"0,6623g/mL","tr":"868ug/mg","fn":"1.02"},{"c":"196","n":"Clorexidina Digluconato 20%","d":"02437","s":"18472-51-0","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30ºC","dn":"1,06g/mL","tr":"0.20016"},{"c":"395","n":"Clorexidina Digluconato 20%","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"1,0600 g/mL","tr":"204,1300 g/L"},{"c":"408","n":"CMC - Carboximetilcelulose","d":"05515","s":"31431-39-7","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"0,5637g/mL"},{"c":"204","n":"Coco Amido Propil  Betaína","d":"02543","s":"61789-40-4","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"1,0697g/mL"},{"c":"205","n":"Codeína Fosfato (A2 - P.344/98)","d":"10802","s":"41444-62-6","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30ºC","dn":"0,4837g/mL","tr":"0.9939"},{"c":"940","n":"Coenzima Q-10 (Ubidecarenona)","d":"09005","s":"303-98-0","a":"Em recipientes bem fechados, protegidos da luz.","tm":"15 - 30°C","dn":"0,3472g/mL","tr":"0.9992"},{"c":"1174","n":"Colágeno Tipo II Não Desnaturado","s":"9007-34-5","a":"Conservar em recipiente hermeticamente fechado."},{"c":"214","n":"Condicionador Antiestático","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade."},{"c":"975","n":"Condroitina Sulfato","d":"02597","s":"9007-28-7","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"0,57g/mL"},{"c":"701","n":"Cramberry Extrato Seco","s":"91770-88-6","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30°C","dn":"0,471g/mL","tr":"0.3083"},{"c":"220","n":"Creme Base Aniônico","a":"Em recipiente adequado, de plástico opaco, ao abrigo da luz e à temperatura ambiente.","tm":"15 - 30°C","dn":"n/d","tr":"n/d"},{"c":"1201","n":"Creme Base Não Iônico","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade."},{"c":"1047","n":"Crodamol Trig. Ác. Caprico/Caprilico","s":"73398-61-5","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30°C","dn":"0,945g/mL","tr":"n/d"},{"c":"452","n":"Crodamol Trig. Ác. Caprico/Caprilico","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade."},{"c":"1024","n":"Curcumina (Curcuma longa) 96%","s":"458-37-7","a":"Armazenar em recipientes bem fechados protegidos da luz e do calor excessivo."},{"c":"43","n":"Cápsula n°0 Branca","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade."},{"c":"273","n":"Cápsula n°0 Branca","d":"03612","s":"979-32-8","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"99,2mg/cáps."},{"c":"275","n":"Cápsula n°00 Branca","d":"03663","s":"60-29-7","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade."},{"c":"128","n":"Cápsula n°00 Incolor","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30°C","dn":"ND","tr":"ND"},{"c":"276","n":"Cápsula n°00 Incolor","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade."},{"c":"976","n":"Cápsula n°1 Incolor","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30°C","dn":"ND","tr":"ND"},{"c":"278","n":"Cápsula n°1 Incolor","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"75mg/cáps."},{"c":"132","n":"Cápsula n°3 Incolor","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30°C","dn":"ND","tr":"ND"},{"c":"280","n":"Cápsula n°3 Incolor","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"47,9mg/cáps."},{"c":"1508","n":"Cápsula nº 0 Gastrorresistentes","a":"Conservar em recipientes bem fechados ao abrigo de luz, calor (temperatura entre 20ºC e 25ºC) e umidade (35% a 65%)."},{"c":"1509","n":"Cápsula nº 00 Gastrorresistentes","a":"Conservar em recipientes bem fechados ao abrigo de luz, calor (temperatura entre 20ºC e 25ºC) e umidade (35% a 65%)."},{"c":"1497","n":"Cápsula nº 1 Gastrorresistentes","a":"Conservar em recipientes bem fechados ao abrigo de luz, calor (temperatura entre 20ºC e 25ºC) e umidade (35% a 65%).","tm":"20 - 25ºC","dn":"86,09mg/cáps.","tr":"n/d"},{"c":"1498","n":"Cápsula nº 2 Gastrorresistentes","a":"Conservar em recipientes bem fechados ao abrigo de luz, calor (temperatura entre 20ºC e 25ºC) e umidade (35% a 65%).","tm":"15 - 30ºC","dn":"75,05mg/cáps.","tr":"n/d"},{"c":"1510","n":"Cápsula nº 3 Gastrorresistentes","a":"Conservar em recipientes bem fechados ao abrigo de luz, calor (temperatura entre 20ºC e 25ºC) e umidade (35% a 65%)."},{"c":"988","n":"Cápsula nº2 Incolor","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30°C","dn":"ND","tr":"ND"},{"c":"288","n":"Cápsula nº2 Incolor","d":"03785","s":"76824-35-6","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"61,7mg/cáps."},{"c":"290","n":"Cápsula nº4 Branca","d":"03849","s":"18305-29-8","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"41mg/cáps."},{"c":"133","n":"Cápsula nº4 Colorida","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30°C","dn":"37,9mg/cáps.","tr":"n/d"},{"c":"292","n":"Cápsula nº4 Incolor","d":"03967","s":"49562-28-9","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"38,85mg/cáps."},{"c":"986","n":"Cápsula nº4 Incolor.","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30°C","dn":"ND","tr":"ND"},{"c":"293","n":"Cápsula nº5 Colorida","d":"09759","s":"20150-34-9","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"29,4mg/cáps."},{"c":"1484","n":"Cápsula nº5 Incolor","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","tm":"15 - 30°C","dn":"27,3mg/cáps.","tr":"n/d"},{"c":"294","n":"Cápsula nº5 Incolor","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","dn":"28,06mg/cáps."},{"c":"142","n":"Cápsulas de Óleo de Linhaça 500mg","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade."},{"c":"1475","n":"Cápsulas nº5 Colorida","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30°C","dn":"ND","tr":"ND"},{"c":"1476","n":"D-Manose","s":"3458-28-4","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30°C","dn":"ND","tr":"0.9982"},{"c":"1","n":"Deflazacort"},{"c":"227","n":"Deflazacort","d":"02728","s":"14484-47-0","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30°C","dn":"0,2047g/mL","tr":"1.0106"},{"c":"465","n":"Deflazacort","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"0,3928g/mL"},{"c":"1396","n":"Dilucap HYGRO","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"0,4g/mL"},{"c":"1395","n":"Dilucap PSD","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"0,4g/mL"},{"c":"1394","n":"Dilucap SLD","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"0,4g/mL"},{"c":"1364","n":"DMSO - Dimetilsulfóxido","d":"03066","s":"67-68-5","a":"Manter hermeticamente fechado ao abrigo da luz calor e umidade.","tm":"15 - 30°C","dn":"1,097g/mL","tr":"0.9994"},{"c":"242","n":"DMSO - Dimetilsulfóxido","d":"03066","s":"67-68-5","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade."},{"c":"694","n":"Doxiciclina HCl","s":"10592-13-9","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30°C","dn":"n/d","tr":"0.964"},{"c":"507","n":"Doxiciclina HCl","d":"07918","s":"3366-95-8","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"0,59g/mL","tr":"0.9892"},{"c":"252","n":"Enalapril Maleato","d":"03370","s":"76095-16-4","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tr":"1"},{"c":"524","n":"Enalapril Maleato","d":"06213","s":"16676-29-2","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"0,47g/mL","tr":"0.9916"},{"c":"1488","n":"Enrofloxacino","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","tm":"15 - 30°C","dn":"0,5135g/mL","tr":"1.003"},{"c":"526","n":"Enrofloxacino","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","dn":"0,5171g/mL","tr":"1.006"},{"c":"255","n":"Eritromicina Estolato","d":"03494","s":"3521-62-8","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tr":"0.612"},{"c":"258","n":"Espironolactona","d":"03561","s":"52-01-7","a":"Armazenar em recipientes bem fechados e protegidos da luz.","tr":"0.9702"},{"c":"544","n":"Espironolactona","a":"Armazenar em recipientes bem fechados e protegidos da luz."},{"c":"259","n":"Espirulina Pó","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade."},{"c":"757","n":"Espuma Base","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade."},{"c":"279","n":"Extrato Glicólico de Babosa (Aloe Vera)","d":"09893","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"1,009g/mL"},{"c":"590","n":"Extrato Glicólico de Babosa (Aloe Vera)","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"1,009g/mL"},{"c":"593","n":"Extrato Glicólico de Calêndula","d":"11056","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade."},{"c":"1517","n":"Farinha Desengordurada de BSF","a":"Armazenar em local seco e fresco, longe da luz solar direta. Manter o produto em embalagem fechada para evitar contaminação e absorção de umidade.","tr":"0.5"},{"c":"612","n":"Farinha Desengordurada de BSF","a":"Armazenar em local seco e fresco, longe da luz solar direta. Manter o produto em embalagem fechada para evitar contaminação e absorção de umidade.","tr":"0.5"},{"c":"1482","n":"Febantel","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","tm":"15 - 30°C","dn":"n/d","tr":"0.9983"},{"c":"1515","n":"Febendazol","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","dn":"0,321g/mL","tr":"0.983"},{"c":"627","n":"Ferro Quelato 20%","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"0,5716g/mL","tr":"0.2"},{"c":"1513","n":"Firocoxibe","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","dn":"0,7090g/mL","tr":"1.001"},{"c":"631","n":"Firocoxibe","d":"07344","s":"145-13-1","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","dn":"0,7240g/mL","tr":"1"},{"c":"1494","n":"Flavorizante de Bacon Pó","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","tm":"15 - 30°C","dn":"0,7788g/mL","tr":"n/d"},{"c":"1514","n":"Flavorizante de Carne Pó","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC)."},{"c":"1495","n":"Flavorizante de Frango Pó","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","tm":"15 - 30°C","dn":"0,6369g/mL","tr":"n/d"},{"c":"1492","n":"Flavorizante de Picanha Pó","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","tm":"15 - 30°C","dn":"n/d","tr":"n/d"},{"c":"1499","n":"Flavorizante Líquido - Carne","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","tm":"15 - 30ºC","dn":"0,922g/mL","tr":"n/d"},{"c":"1501","n":"Flavorizante Líquido - Frango","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","tm":"15 - 30ºC","dn":"0,922g/mL","tr":"n/d"},{"c":"647","n":"Flavorizante Líquido - Frango","d":"03108","s":"13463-67-7","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC)."},{"c":"1503","n":"Flavorizante Líquido - Picanha","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","tm":"15 - 30ºC","dn":"0,9225g/mL","tr":"n/d"},{"c":"652","n":"Flavorizante Líquido - Picanha","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","dn":"0,9385g/mL"},{"c":"634","n":"Flavorizante Pó  - Bacon","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","dn":"0,7708g/mL"},{"c":"635","n":"Flavorizante Pó  - Carne","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC)."},{"c":"639","n":"Flavorizante Pó  - Morango","d":"10702","s":"84650-60-2","a":"Conservar em recipientes hermetico protegido de umidade, ao abrigo de luz e calor."},{"c":"640","n":"Flavorizante Pó  - Picanha","d":"04119","s":"514-36-3","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC)."},{"c":"636","n":"Flavorizante Pó  - Salmão / Peixe","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","dn":"0,7862g/mL"},{"c":"641","n":"Flavorizante Pó - Frango","s":"1317-25-5","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC)."},{"c":"672","n":"Fragrância Baby J&J","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade."},{"c":"311","n":"Furosemida","d":"04361","s":"54-31-9","a":"Armazenar em recipientes opacos e bem fechados"},{"c":"313","n":"Gabapentina (C1 - P.344/98)","d":"04369","s":"60142-96-3","a":"Armazenar em recipientes bem fechados e a temperatura ambiente.","tm":"15 - 30°C","dn":"0,5414g/mL","tr":"0.9957"},{"c":"738","n":"Gabapentina (C1 - P.344/98)","a":"Armazenar em recipientes bem fechados e a temperatura ambiente.","dn":"0,4175g/mL","tr":"0.9971"},{"c":"315","n":"Gel Base","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade."},{"c":"954","n":"Gelatina Pó","d":"04413","s":"9000-70-8","a":"Armazenar em recipientes bem fechados e protegidos da luz.","dn":"0,6342g/mL"},{"c":"751","n":"Gelatina Pó","d":"4478","s":"299-28-5","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"0,6237g/mL"},{"c":"323","n":"Glicerina Vegetal (Glicerol)","s":"56-81-5","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30°C","dn":"1,265g/mL","tr":"n/d"},{"c":"762","n":"Glicerina Vegetal (Glicerol)","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"1,277 g/mL","tr":"0.999"},{"c":"328","n":"Glucosamina Sulfato Potássico","d":"09391","s":"38899-05-7","a":"Armazenar em recipientes hermeticamente fechados e protegidos da luz","tr":"0.9832","fn":"1.33"},{"c":"774","n":"Glucosamina Sulfato Potássico","a":"Armazenar em recipientes hermeticamente fechados e protegidos da luz"},{"c":"334","n":"Hidroclorotiazida (HCTZ)","d":"04652","s":"58-93-5","a":"Em recipientes perfeitamente fechados, em temperatura entre 15 °C a 25 °C."},{"c":"360","n":"Itraconazol Pellets 22%","d":"05122","s":"84625-61-6","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30°C","dn":"0,85g/mL","tr":"0.225","fn":"(Pó)1,00  observar teor expresso no certificado de análise."},{"c":"931","n":"L - Arginina HCL","d":"00869","s":"1119-34-2","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tr":"1.0088"},{"c":"858","n":"L - Carnitina (Levocarnitina)","s":"194043-92-0","a":"Em um recipiente hermético. Eprotegido da luz","dn":"0,3666g/mL"},{"c":"821","n":"L - Isoleucina","d":"05083","s":"73-32-5","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30ºC","dn":"n/d","tr":"1.005"},{"c":"847","n":"L - Leucina","d":"05215","s":"61-90-5","a":"Conservar ao abrigo da luz.","tm":"15 - 30ºC","dn":"0,3796g/mL","tr":"0.9945"},{"c":"388","n":"L - Lisina HCl","d":"05350","s":"657-27-2","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30°C","dn":"0,61g/mL","tr":"0.9974"},{"c":"869","n":"L - Metionina","s":"84775-66-6","a":"Manter hermeticamente fechado protegido da luz.","dn":"0,5687g/mL","tr":"0.9901"},{"c":"1022","n":"L - Threonine","d":"08838","s":"72-19-5","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade."},{"c":"737","n":"L - Valina","d":"09076","s":"72-18-4","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30ºC","dn":"n/d","tr":"1.006"},{"c":"1487","n":"L-Histidina","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","tm":"15 - 30°C","dn":"n/d","tr":"0.9909"},{"c":"397","n":"L-Triptofano","d":"08947","s":"73-22-3","a":"Armazenar em recipientes bem fechados e protegidos da luz","tm":"15 - 30ºC","dn":"0,2222g/mL","tr":"1.012"},{"c":"1486","n":"Lenços Descartáveis","a":"Armazenar em local seco, limpo e arejado.","tm":"15 - 30°C","dn":"57,87g/m2","tr":"n/d"},{"c":"916","n":"Lenços Descartáveis","a":"Armazenar em local seco, limpo e arejado."},{"c":"1505","n":"Lufenurona 98%","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","dn":"1,0907g/mL","tr":"0.983"},{"c":"1491","n":"Micofenolato de Mofetila","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","tm":"15 - 30°C","dn":"0,4355g/mL","tr":"1.001"},{"c":"1000","n":"Micofenolato de Mofetila","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","dn":"0,3072g/mL","tr":"0.992"},{"c":"937","n":"Miconazol Nitrato","d":"05929","s":"22832-87-7","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade."},{"c":"1496","n":"Moxidectina","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","tm":"15 - 30°C","dn":"0,1330g/mL","tr":"n/d"},{"c":"1293","n":"N-Acetil L-Cisteína","d":"00067","s":"616-91-1","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade."},{"c":"494","n":"Nipazol - Propilparabeno","s":"94-13-3","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade."},{"c":"1049","n":"Nitrofurantoína","d":"03595","s":"50-28-2","a":"Manter hermeticamente fechado protegidos da luz calor e umidade.","dn":"0,39g/mL","tr":"1.0182"},{"c":"1479","n":"Oclacitinibe Maleato","s":"1208319-26-8","a":"Armazenar em recipiente fechado, sob refrigeração (2 a 8ºC).","tm":"15 - 30°C","dn":"0,3386g/mL","tr":"0.993"},{"c":"1062","n":"Oclacitinibe Maleato","s":"73-31-4","a":"Armazenar em recipiente fechado, sob refrigeração (2 a 8ºC).","tr":"0.992"},{"c":"1333","n":"Omega 3 Pó","a":"Manter hermeticamente fechado ao abrigo da luz calor e umidade.","dn":"0,5g/mL"},{"c":"1089","n":"Omega 3 Pó","a":"Manter hermeticamente fechado ao abrigo da luz calor e umidade."},{"c":"1485","n":"Ozonica Base","a":"Armazenar em local seco, limpo e arejado.","tm":"15 - 30°C","dn":"0,998g/cm3","tr":"n/d"},{"c":"1108","n":"Ozonica Base","a":"Armazenar em local seco, limpo e arejado.","dn":"0,9648g/mL"},{"c":"461","n":"Pancreatina","d":"06811","s":"8049-47-6","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30°C","dn":"ND","tr":"ND"},{"c":"1038","n":"Papaína","d":"06821","s":"9001-73-4","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade."},{"c":"350","n":"Pellets Inertes","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade."},{"c":"1132","n":"Peróxido de Benzoíla","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade."},{"c":"1481","n":"Pimobendana","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","tm":"15 - 30°C","dn":"n/d","tr":"0.994"},{"c":"1140","n":"Pimobendana","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","tr":"0.9846"},{"c":"1478","n":"Prazosina Cloridrato","d":"07325","s":"19237-84-4","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","tm":"15 - 30°C","dn":"0,3302g/mL","tr":"1.006"},{"c":"1511","n":"Prednisolona Base","a":"Em recipientes bem fechados, protegidos da luz.","dn":"0,3493g/mL","tr":"0.997"},{"c":"490","n":"Prednisona Base Micronizada","d":"07341","s":"53-03-2","a":"Armazenar em recipientes bem fechados e protegidos da luz","tm":"15 - 30°C","dn":"0,5744g/mL","tr":"0.9811"},{"c":"981","n":"Pregabalina (Port.344/C1)","d":"07343","s":"148553-50-8","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30°C","dn":"0,5247g/mL","tr":"0.9855"},{"c":"1205","n":"Pregabalina (Port.344/C1)","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"0,6228g/mL","tr":"1.0082"},{"c":"493","n":"Propilenoglicol","d":"07455","s":"57-55-60","a":"Em recipientes bem fechados.","tm":"15 - 30°C","dn":"1,036g/mL","tr":"0.9997"},{"c":"1209","n":"Propilenoglicol","a":"Em recipientes bem fechados.","dn":"1,0367g/mL","tr":"0.9989"},{"c":"30","n":"Quercetina","d":"07537","s":"117-39-5","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade."},{"c":"1477","n":"Ribavirina","d":"07700","s":"376971-04-5","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30°C","dn":"0,24g/mL","tr":"1.0007"},{"c":"1235","n":"Ribavirina","s":"7732-18-5/84012-26-0/122-99-6/70445-33-9","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tr":"0.9984"},{"c":"1179","n":"Same (S-Adenosil L-metionina Dissulfato Tosilato)","s":"97540-22-2","a":"Armazenar sob refrigeração, em embalagem fechada, protegida da luz.","tm":"2 - 8°C","dn":"0,482g/mL","tr":"0.516"},{"c":"1260","n":"Same (S-Adenosil L-Metionina)","a":"Armazenar sob refrigeração, em embalagem fechada, protegida da luz.","dn":"0,4434g/mL","tr":"0.5112"},{"c":"508","n":"Selegilina HCl (C1 - P.344/98)","s":"14611-52-0","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"0,22g/mL","tr":"0.9872"},{"c":"1263","n":"Selegilina HCl (C1 - P.344/98)","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"0,2200g/mL","tr":"1.0063"},{"c":"1275","n":"Shampoo Base Catiônico (Clorexidina)","a":"Armazenar em recipientes bem fechados."},{"c":"1276","n":"Shampoo Base Neutro","s":"778571-57-6","a":"Armazenar em recipientes bem fechados."},{"c":"515","n":"Shampoo Cabelos Normais","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30°C","dn":"1,0380g/mL","tr":"n/d"},{"c":"518","n":"Sildenafil Citrato","d":"07991","s":"171599-83-0","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tr":"1.0041"},{"c":"522","n":"Silimarina","d":"08000","s":"65666-07-1","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30°C","dn":"0,4041g/mL","tr":"0.9708"},{"c":"1288","n":"Silimarina","d":"09628","s":"11138-66-2","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"0,4226g/mL"},{"c":"1409","n":"Sorbitol Líquido 70%","d":"08061","s":"50-70-4","a":"Em recipientes bem fechados.","tm":"15 - 30°C","dn":"1,301g/mL","tr":"0.7058"},{"c":"1302","n":"Sorbitol Líquido 70%","d":"00510","s":"57-91-0","a":"Em recipientes bem fechados.","dn":"1,3066g/mL","tr":"0.654"},{"c":"1504","n":"Syrspend SF PH4 Dry","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","tm":"15 - 30ºC","dn":"0,274g/mL","tr":"n/d"},{"c":"1321","n":"Syrspend SF PH4 Dry","s":"84961-46-6","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC)."},{"c":"540","n":"T-4 Levotiroxina Sódica","d":"05296","s":"25416-65-3","a":"Armazenar em recipientes herméticos e protegidos da luz.","tm":"15 - 30°C","dn":"0,48g/mL","tr":"1.0037","fn":"Corrigir em função do grau de hidratação em relação a forma anidra."},{"c":"1327","n":"Talco Farmacêutico","a":"Manter hermeticamente fechado ."},{"c":"1156","n":"Tansulosina HCL","d":"08296","s":"106463176","a":"Conservar em recipiente hermético protegido de umidade, ao abrigo da luz e calor."},{"c":"1403","n":"Tintura de Própolis","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","dn":"0,898g/mL"},{"c":"882","n":"Tixosil - Aerosil","d":"09428","s":"112926-00-8","a":"Em recipientes bem fechados.","tm":"15 - 30ºC","dn":"0,1430g/Ml","tr":"n/d"},{"c":"1483","n":"Torasemida","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","tm":"15 - 30°C","dn":"0,5437g/mL","tr":"0.9979"},{"c":"569","n":"Tramadol HCL(A2 - P.344/98)","d":"807","s":"36282-47-0","a":"Em recipientes bem fechados, protegidos da luz.","tm":"15 - 30ºC","dn":"0,6243g/mL","tr":"0.9967"},{"c":"1506","n":"Triglicerídeos de Cadeia Média - TCM Líquido","a":"Temperatura ambiente.","dn":"0,95g/mL"},{"c":"1480","n":"Trilostano","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","tm":"15 - 30°C","dn":"n/d","tr":"0.997"},{"c":"1424","n":"Trilostano","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","dn":"0,30g/mL","tr":"0.9995"},{"c":"591","n":"Vitamina A Acetato Pó 500.000UI/g","d":"07694","s":"127-47-9","a":"Manter hermeticamente fechado ao protegidos da luz."},{"c":"594","n":"Vitamina B6 - Piridoxina HCl","d":"7167","s":"58-56-0","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tr":"1.002"},{"c":"597","n":"Vitamina E Acetato Pó 50%","d":"09341","s":"7695-91-2","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade.","tm":"15 - 30°C","dn":"0,6028g/mL","tr":"0.5093"},{"c":"1489","n":"Zidovudina","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","tm":"15 - 30°C","dn":"0,3760g/mL","tr":"0.998"},{"c":"52","n":"Álcool Cetoestearílico Etoxilado - Emulgin B2","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade."},{"c":"440","n":"Óleo de Amêndoas Doce","s":"8007-69-0","a":"Armazenar em recipientes em recipientes bem cheios e protegidos da luz.","tm":"15 - 30°C","dn":"0,9176g/mL","tr":"ND"},{"c":"1516","n":"Óleo de Amêndoas – EP 5.0","a":"Armazenar em recipientes bem fechados, protegidos da luz."},{"c":"1065","n":"Óleo de Amêndoas – EP 5.0","d":"09808","s":"24634-61-5","a":"Armazenar em recipientes bem fechados, protegidos da luz.","dn":"0,9128g/mL"},{"c":"1500","n":"Óleo de Argan (Nano Golden Oil)","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","tm":"15 - 30ºC","dn":"0,99g/mL","tr":"n/d"},{"c":"1075","n":"Óleo de Melaleuca","a":"Manter hermeticamente fechado ao abrigo da luz, calor e umidade."},{"c":"1490","n":"Óleo de Neem","a":"Armazenar em recipiente fechado, protegido da luz e umidade (15 a 30ºC).","tm":"15 - 30°C","dn":"0,9295g/mL","tr":"n/d"}];
-const FORNECEDORES=["Active Caldic","Anidrol","Copermed","Copervet","Embrafarma","Fagron","Floresça","Florien","Fórmula Animal","G.Giannone","Galena","Gemini","Ideal","Infinity","Irial Mag","IrialMag","Labsynth","Lepuge","Natural Pro","Nutrifarm","Purifarma","SM Emp. Farm. LTDA","SM Emprend. Farm.","Sixty Pharma"];
-const ORIGENS=["Brasil","China","Coréia do Sul","EUA","Espanha","Hong Kong","India","Índia","Malasia","Malásia","Paraguai","Polônia"];
-const TODAY=new Date().toISOString().split('T')[0];
+const FORN = ["Active Caldic","Anidrol","Copermed","Copervet","Embrafarma","Fagron","Floresça","Florien","Fórmula Animal","G.Giannone","Galena","Gemini","Ideal","Infinity","Irial Mag","IrialMag","Labsynth","Lepuge","Natural Pro","Nutrifarm","Purifarma","SM Emp. Farm. LTDA","SM Emprend. Farm.","Sixty Pharma"];
+const ORIG = ["Brasil","China","Coréia do Sul","EUA","Espanha","Hong Kong","India","Índia","Malasia","Malásia","Paraguai","Polônia"];
+const TODAY = new Date().toISOString().split('T')[0];
 
-/* ── STORAGE ── */
-const LS={
-  getEntries:()=>{try{return JSON.parse(localStorage.getItem('cq_entries')||'[]')}catch{return[]}},
-  saveEntries:l=>{try{localStorage.setItem('cq_entries',JSON.stringify(l))}catch{}},
-  getUserDB:()=>{try{return JSON.parse(localStorage.getItem('cq_userdb')||'[]')}catch{return[]}},
-  saveUserDB:l=>{try{localStorage.setItem('cq_userdb',JSON.stringify(l))}catch{}},
+// ── STORAGE ──────────────────────────────────────────────────────────
+const LS = {
+  get: k => { try { return JSON.parse(localStorage.getItem(k)||'null'); } catch { return null; } },
+  set: (k,v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
 };
 
-/* ── BLANK FORM ── */
-const blank=()=>({
-  re:'',ano:new Date().getFullYear().toString().slice(-2),
-  substancia:'',codigo:'',dcb:'',cas:'',formula:'',peso:'',
-  fornecedor:'',lote:'',nf:'',qtde:'',
-  fabricacao:'',validade:'',fracionamento:TODAY,origem:'',
-  armazenamento:'',temperatura:'',densidade:'',teor:'',fator:'',
-  laudo_forn:'C',peso_vol:'C',rotulo:'C',
-  organoleptica_ref:'',organoleptica_result:'',organoleptica_conf:'NR',
-  solubilidade_ref:'',solubilidade_result:'',solubilidade_conf:'NR',
-  fusao_ref:'',fusao_result:'',fusao_conf:'NR',
-  densidade_ref:'',densidade_result:'',densidade_conf:'NR',
-  ph_ref:'',ph_result:'',ph_conf:'NR',
-  teor_ref:'',teor_fab:'',
-  resultado:'A',analisado:'',obs:'',
-  port344:false,termossens:false,fotossens:false,
-  higro:false,hormonio:false,citostatico:false,antibiotico:false,
+// ── STATE ────────────────────────────────────────────────────────────
+const blank = () => ({
+  re:'', ano: new Date().getFullYear().toString().slice(-2),
+  substancia:'', codigo:'', dcb:'', cas:'', formula:'', peso:'',
+  fornecedor:'', lote:'', nf:'', qtde:'',
+  fabricacao:'', validade:'', fracionamento: TODAY,
+  origem:'', armazenamento:'', temperatura:'', densidade:'', teor:'', fator:'',
+  laudo_forn:'C', peso_vol:'C', rotulo:'C',
+  organoleptica_ref:'', organoleptica_result:'', organoleptica_conf:'NR',
+  solubilidade_ref:'', solubilidade_result:'', solubilidade_conf:'NR',
+  fusao_ref:'', fusao_result:'', fusao_conf:'NR',
+  densidade_ref:'', densidade_result:'', densidade_conf:'NR',
+  ph_ref:'', ph_result:'', ph_conf:'NR',
+  teor_ref:'', teor_fab:'',
+  resultado:'A', analisado:'', obs:'',
+  port344:false, termossens:false, fotossens:false,
+  higro:false, hormonio:false, citostatico:false, antibiotico:false,
 });
 
-/* ── HELPERS ── */
-function confLabel(v){return v==='C'?'Conforme (✓)':v==='N'?'Não Conforme (✗)':'N/R'}
-function confColor(v){return v==='C'?'#276749':v==='N'?'#9B2C2C':'#718096'}
-function resColor(r){return r==='A'?'#276749':r==='Q'?'#744210':'#9B2C2C'}
-function resBg(r){return r==='A'?'#F0FFF4':r==='Q'?'#FFFBEB':'#FFF5F5'}
-function resText(r){return r==='A'?'✅ APROVADO':r==='Q'?'🟡 QUARENTENA':'❌ REPROVADO'}
-function resBorder(r){return r==='A'?'#38A169':r==='Q'?'#D69E2E':'#E53E3E'}
+let S = {
+  tab: 'entrada',
+  form: blank(),
+  entries: LS.get('cq_entries') || [],
+  userDB: LS.get('cq_userdb') || [],
+  current: null,
+  etiqSel: {},
+  histQ: '',
+  subQ: '',
+  gerTab: 'sub',
+  msg: '',
+  newSub: {n:'',d:'',s:'',a:'',tm:'',dn:'',tr:'',fn:''},
+};
 
-/* ── SEARCH COMPONENT ── */
-function Search({value,onChange,onSelect,db}){
-  const [open,setOpen]=useState(false);
-  const [q,setQ]=useState(value);
-  const ref=useRef();
-  const results=q.length>=2?db.filter(s=>s.n.toLowerCase().includes(q.toLowerCase())).slice(0,12):[];
-  useEffect(()=>{setQ(value)},[value]);
-  useEffect(()=>{
-    const h=e=>{if(ref.current&&!ref.current.contains(e.target))setOpen(false)};
-    document.addEventListener('mousedown',h);return()=>document.removeEventListener('mousedown',h);
-  },[]);
-  return(
-    <div ref={ref} style={{position:'relative'}}>
-      <input value={q} placeholder="Digite o nome da substância..."
-        onChange={e=>{setQ(e.target.value);onChange(e.target.value);setOpen(true)}}
-        onFocus={()=>setOpen(true)} />
-      {open&&results.length>0&&(
-        <div style={{position:'absolute',top:'100%',left:0,right:0,zIndex:999,background:'#fff',border:'1px solid #CBD5E0',borderRadius:6,maxHeight:250,overflowY:'auto',boxShadow:'0 4px 20px rgba(0,0,0,.15)'}}>
-          {results.map(s=>(
-            <div key={s.c+s.n} onClick={()=>{onSelect(s);setQ(s.n);setOpen(false)}}
-              style={{padding:'8px 12px',cursor:'pointer',borderBottom:'1px solid #F0F0F0',lineHeight:1.4}}
-              onMouseEnter={e=>e.currentTarget.style.background='#EBF4FB'}
-              onMouseLeave={e=>e.currentTarget.style.background='#fff'}>
-              <span style={{fontWeight:600,fontSize:13}}>{s.n}</span>
-              {s.d&&<span style={{color:'#888',fontSize:11,marginLeft:8}}>DCB {s.d}</span>}
-              {s.s&&<span style={{color:'#aaa',fontSize:11,marginLeft:8}}>CAS {s.s}</span>}
-            </div>
-          ))}
-        </div>
-      )}
+// ── UTILS ────────────────────────────────────────────────────────────
+function esc(v){ return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function fullDB(){ return [...EMBEDDED_DB,...S.userDB]; }
+function nextRE(){ const y=new Date().getFullYear().toString().slice(-2); return String(S.entries.filter(e=>e.ano===y).length+1).padStart(3,'0'); }
+function resColor(r){ return r==='A'?'#276749':r==='Q'?'#744210':'#9B2C2C'; }
+function resBg(r){ return r==='A'?'#F0FFF4':r==='Q'?'#FFFBEB':'#FFF5F5'; }
+function resBorder(r){ return r==='A'?'#38A169':r==='Q'?'#D69E2E':'#E53E3E'; }
+function resLabel(r){ return r==='A'?'✅ APROVADO':r==='Q'?'🟡 QUARENTENA':'❌ REPROVADO'; }
+function confColor(v){ return v==='C'?'#276749':v==='N'?'#9B2C2C':'#718096'; }
+function confLabel(v){ return v==='C'?'Conforme (✓)':v==='N'?'Não Conforme (✗)':'N/R'; }
+function tag(v,lbl){ return `<label class="tag${S.form[v]?' on':''}" style="cursor:pointer"><input type="checkbox" name="${v}" ${S.form[v]?'checked':''} style="width:auto;margin:0"> ${esc(lbl)}</label>`; }
+function radio(name,val,label,checked,color){ return `<label class="res-opt" style="border-color:${checked?resBorder(val):'#E2E8F0'};background:${checked?resBg(val):'#fff'}"><input type="radio" name="${name}" value="${val}" ${checked?'checked':''} style="width:auto;margin:0"> <span style="color:${resColor(val)};font-size:13px">${label}</span></label>`; }
+function confRow(label,val,name){ return `<div class="conf-row"><span class="conf-lbl">${esc(label)}</span><div class="radio-grp"><label><input type="radio" name="${name}" value="C" ${val==='C'?'checked':''}> ✅ Conforme</label><label><input type="radio" name="${name}" value="N" ${val==='N'?'checked':''}> ❌ Não Conf.</label><label><input type="radio" name="${name}" value="NR" ${val==='NR'?'checked':''}> N/R</label></div></div>`; }
+function field(label, fld, type='text', opts){ const v=S.form[fld]??''; if(opts){ const optHtml=opts.map(o=>`<option value="${esc(o)}" ${v===o?'selected':''}>${esc(o)}</option>`).join(''); return `<div class="field"><label class="lbl">${label}</label><select data-f="${fld}"><option value="">— selecione —</option>${optHtml}</select></div>`; } return `<div class="field"><label class="lbl">${label}</label><input type="${type}" data-f="${fld}" value="${esc(v)}"></div>`; }
+function testeBox(title, refF, resF, confF){ const rv=S.form[refF]??'', rv2=S.form[resF]??'', cv=S.form[confF]??'NR'; return `<div class="teste-box"><div class="t-name">${esc(title)}</div><div class="g2" style="gap:8px;margin-bottom:8px"><div><span class="lbl">Referência / Especificação</span><input data-f="${refF}" value="${esc(rv)}" placeholder="Ex: Pó branco a amarelado"></div><div><span class="lbl">Resultado Obtido</span><input data-f="${resF}" value="${esc(rv2)}" placeholder="Resultado do analista"></div></div><div class="radio-grp"><span style="font-size:12px;color:#4A5568;margin-right:6px">Resultado:</span><label><input type="radio" name="${confF}" value="C" ${cv==='C'?'checked':''}> ✅ Conforme</label><label><input type="radio" name="${confF}" value="N" ${cv==='N'?'checked':''}> ❌ Não Conforme</label><label><input type="radio" name="${confF}" value="NR" ${cv==='NR'?'checked':''}> N/R</label></div></div>`; }
+
+// ── LAUDO HTML ───────────────────────────────────────────────────────
+function laudoHtml(e){
+  if(!e) return `<div style="text-align:center;padding:60px;color:#A0AEC0"><div style="font-size:48px;margin-bottom:12px">🔬</div><div style="font-size:15px">Salve uma entrada para gerar o laudo.</div></div>`;
+  const RE=esc(e.re)+'/'+esc(e.ano);
+  const row3=(a,b,c,d,ef,g)=>`<tr><td class="th">${a}</td><td>${esc(b)}</td><td class="th">${c}</td><td>${esc(d)}</td><td class="th">${ef}</td><td style="font-weight:${ef==='Fator'&&e.fator&&e.fator!='1'?700:400};color:${ef==='Fator'&&e.fator&&e.fator!='1'?'#9B2C2C':'inherit'}">${esc(g)}</td></tr>`;
+  const tests=[['Caract. Organolépticas',e.organoleptica_ref,e.organoleptica_result,e.organoleptica_conf],['Solubilidade',e.solubilidade_ref,e.solubilidade_result,e.solubilidade_conf],['Ponto de Fusão',e.fusao_ref,e.fusao_result,e.fusao_conf],['Densidade',e.densidade_ref||e.densidade,e.densidade_result,e.densidade_conf],['pH',e.ph_ref,e.ph_result,e.ph_conf]];
+  return `<div class="laudo-wrap">
+    <div class="laudo-hdr">
+      <div><div style="font-size:13px;font-weight:700;letter-spacing:.5px">LAUDO DE ANÁLISE DE MATÉRIA-PRIMA</div><div style="font-size:10px;opacity:.7;margin-top:2px">LABORATÓRIO DE CONTROLE DE QUALIDADE — FÓRMULA ANIMAL</div></div>
+      <div style="text-align:right"><div style="font-size:9px;opacity:.7">Código do Laudo</div><div style="font-size:20px;font-weight:700">${RE}</div></div>
     </div>
-  );
+    <div class="laudo-body">
+      <div class="laudo-kpi">
+        <div><div class="kpi-lbl">Produto</div><div class="kpi-val" style="font-size:13px;color:#1A3A5C">${esc(e.substancia)}</div></div>
+        <div><div class="kpi-lbl">Data de Validade</div><div class="kpi-val" style="color:#9B2C2C">${esc(e.validade)||'—'}</div></div>
+        <div><div class="kpi-lbl">Fabricação</div><div class="kpi-val" style="font-size:11px">${esc(e.fabricacao)||'—'}</div></div>
+        <div><div class="kpi-lbl">Fracionamento</div><div class="kpi-val" style="font-size:11px">${esc(e.fracionamento)||'—'}</div></div>
+      </div>
+      <div class="sec-hdr">Detalhes da Compra</div>
+      <table class="laudo-tbl"><tbody>
+        ${row3('Fornecedor',e.fornecedor,'Nota Fiscal',e.nf,'Quantidade',e.qtde)}
+        ${row3('Lote',e.lote,'DCB',e.dcb,'Origem',e.origem)}
+        ${row3('CAS',e.cas,'Cód. Espec.',e.codigo,'Fator',e.fator)}
+        ${row3('Fórmula Mol.',e.formula,'Peso Mol.',e.peso,'','')}
+      </tbody></table>
+      <div class="sec-hdr">Aspectos Gerais</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px">
+        ${[['Laudo Fornecedor',e.laudo_forn],['Peso / Vol. Produto',e.peso_vol],['Rótulo Fornecedor',e.rotulo]].map(([l,v])=>`<div style="display:flex;justify-content:space-between;align-items:center;background:#F7FAFC;border-radius:5px;padding:5px 8px;font-size:10px"><span style="color:#4A5568">${l}</span><span style="font-weight:700;color:${confColor(v)}">${confLabel(v)}</span></div>`).join('')}
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;background:#FFFFF0;border:1px solid #ECC94B;border-radius:6px;padding:6px 10px;margin-bottom:10px">
+        <div><div style="font-size:9px;color:#975A16;font-weight:700;text-transform:uppercase">Teor Referência</div><div style="font-weight:600;font-size:12px">${esc(e.teor_ref)||'—'}</div></div>
+        <div><div style="font-size:9px;color:#975A16;font-weight:700;text-transform:uppercase">Teor Laudo Fabricante</div><div style="font-weight:600;font-size:12px">${esc(e.teor_fab)||'—'}</div></div>
+      </div>
+      <div class="sec-hdr">Testes de Identificação</div>
+      <table class="laudo-tbl"><thead><tr><th style="width:18%">Teste</th><th style="width:30%">Referência / Especificação</th><th style="width:30%">Resultado Obtido</th><th style="width:22%;text-align:center">Conformidade</th></tr></thead><tbody>
+        ${tests.map(([l,ref,res,conf])=>`<tr><td class="th">${l}</td><td>${esc(ref)||'—'}</td><td>${esc(res)||'—'}</td><td style="text-align:center;font-weight:700;color:${confColor(conf)}">${confLabel(conf)}</td></tr>`).join('')}
+      </tbody></table>
+      ${e.armazenamento?`<div class="laudo-arm"><div style="font-size:9px;font-weight:700;color:#1A3A5C;text-transform:uppercase;margin-bottom:3px">Armazenamento</div><div>${esc(e.armazenamento)}</div>${e.temperatura?`<div style="margin-top:3px;color:#4A5568">Temperatura: ${esc(e.temperatura)}</div>`:''}</div>`:''}
+      ${e.obs?`<div class="laudo-obs"><b>Observações:</b> ${esc(e.obs)}</div>`:''}
+      <div class="laudo-result" style="background:${resBg(e.resultado)};border:2px solid ${resBorder(e.resultado)}">
+        <div style="font-size:9px;color:#718096;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Resultado Final</div>
+        <div style="font-size:18px;font-weight:700;color:${resColor(e.resultado)}">${resLabel(e.resultado)}</div>
+        ${e.resultado==='Q'?'<div style="font-size:10px;color:#744210;margin-top:4px">Produto em quarentena — aguardando análise complementar</div>':''}
+        ${e.analisado?`<div style="font-size:10px;margin-top:6px;color:#718096">Analisado por: <b style="color:#2D3748">${esc(e.analisado)}</b></div>`:''}
+      </div>
+      <div class="laudo-footer"><span>CÓPIA CONTROLADA</span><span>Data: ${esc(e.fracionamento)||TODAY}</span><span>Revisão nº 01</span></div>
+    </div>
+  </div>`;
 }
 
-/* ── FIELD COMPONENT ── */
-function Field({label,value,onChange,type='text',options,note,small}){
-  return(
-    <div style={{marginBottom:small?6:10}}>
-      {label&&<label className="label">{label}</label>}
-      {options?(
-        <select value={value} onChange={e=>onChange(e.target.value)}>
-          <option value="">— selecione —</option>
-          {options.map(o=><option key={o} value={o}>{o}</option>)}
-        </select>
-      ):(
-        <input type={type} value={value} onChange={e=>onChange(e.target.value)} />
-      )}
-      {note&&<div style={{fontSize:10,color:'#A0AEC0',marginTop:3}}>{note}</div>}
-    </div>
-  );
+// ── ETIQUETA CARD HTML ───────────────────────────────────────────────
+function etiqCard(e){
+  const RE=esc(e.re)+'/'+esc(e.ano);
+  const TAGS=[['port344','Port.344'],['termossens','Termoss.'],['fotossens','Fotoss.'],['higro','Higro.'],['hormonio','Horm.'],['citostatico','Cito.'],['antibiotico','Antib.']];
+  const fatorOk=e.fator&&e.fator!='1'&&e.fator!='';
+  return `<div class="etiq-card" style="border-color:${e.resultado==='Q'?'#D69E2E':'#1A3A5C'}">
+    <div class="etiq-hdr" style="background:${resColor(e.resultado)}">${resLabel(e.resultado)}</div>
+    <div class="etiq-name">${esc(e.substancia)}</div>
+    <table class="etiq-tbl"><tbody>
+      <tr><td class="etiq-lbl">DT.Fabr.:</td><td class="etiq-val">${esc(e.fabricacao)}</td><td class="etiq-lbl" style="width:12%">RE</td><td style="font-weight:700;color:#1A3A5C">${RE}</td></tr>
+      <tr><td class="etiq-lbl">DT.Valid.:</td><td style="font-weight:700;font-size:12px;color:#9B2C2C">${esc(e.validade)||'—'}</td><td class="etiq-lbl">DCB:</td><td class="etiq-val">${esc(e.dcb)||'n/d'}</td></tr>
+      ${fatorOk?`<tr><td class="etiq-lbl">F.Corr.:</td><td colspan="3" style="font-weight:700;font-size:13px;color:#9B2C2C">${esc(e.fator)}</td></tr>`:
+                `<tr><td class="etiq-lbl">F.Corr.:</td><td class="etiq-val">${esc(e.fator)||'—'}</td><td class="etiq-lbl">Orig.:</td><td class="etiq-val">${esc(e.origem)||'—'}</td></tr>`}
+      <tr><td class="etiq-lbl">Fornec.:</td><td colspan="2" class="etiq-val">${esc(e.fornecedor)}</td><td></td></tr>
+      <tr><td class="etiq-lbl">Lote:</td><td class="etiq-val">${esc(e.lote)}</td><td class="etiq-lbl">Dens.:</td><td class="etiq-val">${esc(e.densidade)||'—'}</td></tr>
+      <tr><td class="etiq-lbl">Qtde.:</td><td class="etiq-val">${esc(e.qtde)}</td><td class="etiq-lbl">Teor:</td><td class="etiq-val">${esc(e.teor_fab||e.teor)||'—'}</td></tr>
+      <tr><td class="etiq-lbl">CAS:</td><td colspan="3" style="font-weight:600;font-size:9px">${esc(e.cas)||'—'}</td></tr>
+    </tbody></table>
+    ${e.armazenamento?`<div class="etiq-arm"><div class="etiq-arm-lbl">Armazenamento</div><div style="font-size:9px;color:#2D3748;line-height:1.4">${esc((e.armazenamento||'').substring(0,80))}${(e.armazenamento||'').length>80?'…':''}</div></div>`:''}
+    <div class="etiq-tags">${TAGS.map(([k,l])=>`<span style="color:${e[k]?'#1A3A5C':'#CBD5E0'};font-weight:${e[k]?700:400}">${e[k]?'☑':'☐'} ${l}</span>`).join('')}</div>
+  </div>`;
 }
 
-/* ── CONF ROW ── */
-function Conf({label,value,onChange}){
-  return(
-    <div className="conf-row">
-      <span className="conf-label">{label}</span>
-      <div className="radio-group">
-        {[['C','✅ Conforme'],['N','❌ Não Conf.'],['NR','N/R']].map(([v,l])=>(
-          <label key={v}><input type="radio" name={label} value={v} checked={value===v} onChange={()=>onChange(v)} />{l}</label>
-        ))}
-      </div>
-    </div>
-  );
+// ── TAB RENDERS ──────────────────────────────────────────────────────
+function renderHeader(){
+  const db=fullDB();
+  return `<div class="hdr no-print">
+    <div><div class="hdr-title">🔬 CQ Fórmula Animal</div><div class="hdr-sub">${db.length} substâncias · ${S.entries.length} entradas registradas</div></div>
+    <button class="btn" onclick="newEntry()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff">+ Nova entrada</button>
+  </div>`;
 }
 
-/* ── TESTE ROW ── */
-function TesteRow({label,refVal,onRefChange,resultVal,onResultChange,confVal,onConfChange}){
-  return(
-    <div style={{border:'1px solid #E2E8F0',borderRadius:8,padding:'10px 12px',marginBottom:8}}>
-      <div style={{fontWeight:700,fontSize:12,color:'#2D3748',marginBottom:8}}>{label}</div>
-      <div className="grid2" style={{gap:8,marginBottom:8}}>
-        <div>
-          <label className="label">Referência / Especificação</label>
-          <input value={refVal} onChange={e=>onRefChange(e.target.value)} placeholder="Ex: Pó branco a amarelado" />
-        </div>
-        <div>
-          <label className="label">Resultado Obtido</label>
-          <input value={resultVal} onChange={e=>onResultChange(e.target.value)} placeholder="Resultado do analista" />
-        </div>
-      </div>
-      <div className="radio-group">
-        <span style={{fontSize:12,color:'#4A5568',marginRight:6}}>Resultado:</span>
-        {[['C','✅ Conforme'],['N','❌ Não Conforme'],['NR','— N/R']].map(([v,l])=>(
-          <label key={v}><input type="radio" name={label+'_conf'} value={v} checked={confVal===v} onChange={()=>onConfChange(v)} />{l}</label>
-        ))}
-      </div>
-    </div>
-  );
+function renderTabs(){
+  const ts=[['entrada','📝 Nova Entrada'],['laudo','🔬 Laudo'],['etiqueta','🏷️ Etiquetas'],['historico','📚 Histórico'],['gerenciar','⚙️ Gerenciar']];
+  return `<div class="tabs no-print">${ts.map(([k,l])=>`<button class="tab-btn${S.tab===k?' active':''}" onclick="switchTab('${k}')">${l}</button>`).join('')}</div>`;
 }
 
-/* ══════════════════ LAUDO COMPONENT ══════════════════ */
-function Laudo({e,onPrint}){
-  if(!e) return(
-    <div style={{textAlign:'center',padding:60,color:'#A0AEC0'}}>
-      <div style={{fontSize:48,marginBottom:12}}>🔬</div>
-      <div style={{fontSize:15}}>Salve uma entrada para gerar o laudo.</div>
+function renderEntrada(){
+  const msg = S.msg?`<div class="alert-ok">${esc(S.msg)}</div>`:'';
+  return `${msg}
+  <div class="sec sec-blue">
+    <div class="sec-title" style="color:#1A3A5C">Identificação</div>
+    <div class="g2">
+      ${field('R.E. (auto se vazio)','re')}
+      ${field('Ano (2 dígitos)','ano')}
     </div>
-  );
-  const RE=e.re+'/'+e.ano;
-  const Cell=({l,v,span})=>(
-    <td style={{padding:'3px 8px',fontSize:10,borderBottom:'1px solid #EEF2F7',verticalAlign:'top',whiteSpace:span?'normal':'nowrap',background:l?'#FAFAFA':'#fff',fontWeight:l?600:400,color:l?'#4A5568':'#2D3748',width:l?'30%':'auto',...(span?{colSpan:span}:{})}}>
-      {v||'—'}
-    </td>
-  );
-  const TR=({cols})=><tr>{cols.map((c,i)=><Cell key={i} {...c} />)}</tr>;
-
-  return(
-    <div>
-      <div className="no-print" style={{display:'flex',justifyContent:'flex-end',marginBottom:12}}>
-        <button className="btn btn-primary" onClick={onPrint}>🖨️ Imprimir Laudo</button>
-      </div>
-      <div className="laudo-wrap" style={{maxWidth:700,margin:'0 auto',background:'#fff',border:'1px solid #CBD5E0',borderRadius:8,overflow:'hidden',fontSize:11}}>
-        {/* Header */}
-        <div className="laudo-hdr" style={{background:'#1A3A5C',color:'#fff',padding:'10px 18px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-          <div>
-            <div className="title" style={{fontSize:13,fontWeight:700,letterSpacing:.5}}>LAUDO DE ANÁLISE DE MATÉRIA-PRIMA</div>
-            <div style={{fontSize:10,opacity:.7,marginTop:2}}>LABORATÓRIO DE CONTROLE DE QUALIDADE — FÓRMULA ANIMAL</div>
-          </div>
-          <div style={{textAlign:'right'}}>
-            <div style={{fontSize:10,opacity:.7}}>Código do Laudo</div>
-            <div style={{fontSize:20,fontWeight:700}}>{RE}</div>
-          </div>
-        </div>
-
-        <div className="laudo-body" style={{padding:'10px 16px'}}>
-          {/* KPIs */}
-          <div className="laudo-kpi" style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr',gap:8,background:'#EBF4FB',borderRadius:6,padding:10,marginBottom:10}}>
-            <div>
-              <div style={{fontSize:9,color:'#718096',fontWeight:700,textTransform:'uppercase'}}>Produto</div>
-              <div style={{fontSize:13,fontWeight:700,color:'#1A3A5C',lineHeight:1.3}}>{e.substancia}</div>
-            </div>
-            <div>
-              <div style={{fontSize:9,color:'#718096',fontWeight:700,textTransform:'uppercase'}}>Data de Validade</div>
-              <div className="kpi-val" style={{fontSize:15,fontWeight:700,color:'#9B2C2C'}}>{e.validade||'—'}</div>
-            </div>
-            <div>
-              <div style={{fontSize:9,color:'#718096',fontWeight:700,textTransform:'uppercase'}}>Fabricação</div>
-              <div style={{fontSize:12,fontWeight:600,marginTop:2}}>{e.fabricacao||'—'}</div>
-            </div>
-            <div>
-              <div style={{fontSize:9,color:'#718096',fontWeight:700,textTransform:'uppercase'}}>Fracionamento</div>
-              <div style={{fontSize:12,fontWeight:600,marginTop:2}}>{e.fracionamento||'—'}</div>
-            </div>
-          </div>
-
-          {/* Detalhes em 3 colunas */}
-          <div style={{fontWeight:700,fontSize:10,color:'#1A3A5C',borderBottom:'1.5px solid #1A3A5C',paddingBottom:4,marginBottom:6,textTransform:'uppercase'}}>Detalhes da Compra</div>
-          <table style={{width:'100%',borderCollapse:'collapse',marginBottom:10,fontSize:10}}>
-            <tbody>
-              <tr>
-                <td style={{padding:'3px 8px',background:'#FAFAFA',fontWeight:600,color:'#4A5568',width:'16%',fontSize:10,borderBottom:'1px solid #EEF2F7'}}>Fornecedor</td>
-                <td style={{padding:'3px 8px',fontSize:10,borderBottom:'1px solid #EEF2F7',width:'34%'}}>{e.fornecedor||'—'}</td>
-                <td style={{padding:'3px 8px',background:'#FAFAFA',fontWeight:600,color:'#4A5568',width:'16%',fontSize:10,borderBottom:'1px solid #EEF2F7'}}>Nota Fiscal</td>
-                <td style={{padding:'3px 8px',fontSize:10,borderBottom:'1px solid #EEF2F7',width:'14%'}}>{e.nf||'—'}</td>
-                <td style={{padding:'3px 8px',background:'#FAFAFA',fontWeight:600,color:'#4A5568',width:'10%',fontSize:10,borderBottom:'1px solid #EEF2F7'}}>Qtde</td>
-                <td style={{padding:'3px 8px',fontSize:10,borderBottom:'1px solid #EEF2F7'}}>{e.qtde||'—'}</td>
-              </tr>
-              <tr>
-                <td style={{padding:'3px 8px',background:'#FAFAFA',fontWeight:600,color:'#4A5568',fontSize:10,borderBottom:'1px solid #EEF2F7'}}>Lote</td>
-                <td style={{padding:'3px 8px',fontSize:10,borderBottom:'1px solid #EEF2F7'}}>{e.lote||'—'}</td>
-                <td style={{padding:'3px 8px',background:'#FAFAFA',fontWeight:600,color:'#4A5568',fontSize:10,borderBottom:'1px solid #EEF2F7'}}>DCB</td>
-                <td style={{padding:'3px 8px',fontSize:10,borderBottom:'1px solid #EEF2F7'}}>{e.dcb||'—'}</td>
-                <td style={{padding:'3px 8px',background:'#FAFAFA',fontWeight:600,color:'#4A5568',fontSize:10,borderBottom:'1px solid #EEF2F7'}}>Origem</td>
-                <td style={{padding:'3px 8px',fontSize:10,borderBottom:'1px solid #EEF2F7'}}>{e.origem||'—'}</td>
-              </tr>
-              <tr>
-                <td style={{padding:'3px 8px',background:'#FAFAFA',fontWeight:600,color:'#4A5568',fontSize:10,borderBottom:'1px solid #EEF2F7'}}>CAS</td>
-                <td style={{padding:'3px 8px',fontSize:10,borderBottom:'1px solid #EEF2F7'}}>{e.cas||'—'}</td>
-                <td style={{padding:'3px 8px',background:'#FAFAFA',fontWeight:600,color:'#4A5568',fontSize:10,borderBottom:'1px solid #EEF2F7'}}>Cód. Espec.</td>
-                <td style={{padding:'3px 8px',fontSize:10,borderBottom:'1px solid #EEF2F7'}}>{e.codigo||'—'}</td>
-                <td style={{padding:'3px 8px',background:'#FAFAFA',fontWeight:600,color:'#4A5568',fontSize:10,borderBottom:'1px solid #EEF2F7'}}>Fator</td>
-                <td style={{padding:'3px 8px',fontSize:10,fontWeight:e.fator&&e.fator!='1'?700:400,color:e.fator&&e.fator!='1'?'#9B2C2C':'inherit',borderBottom:'1px solid #EEF2F7'}}>{e.fator||'—'}</td>
-              </tr>
-              <tr>
-                <td style={{padding:'3px 8px',background:'#FAFAFA',fontWeight:600,color:'#4A5568',fontSize:10,borderBottom:'1px solid #EEF2F7'}}>Fórmula Mol.</td>
-                <td style={{padding:'3px 8px',fontSize:10,borderBottom:'1px solid #EEF2F7'}}>{e.formula||'—'}</td>
-                <td style={{padding:'3px 8px',background:'#FAFAFA',fontWeight:600,color:'#4A5568',fontSize:10,borderBottom:'1px solid #EEF2F7'}}>Peso Mol.</td>
-                <td style={{padding:'3px 8px',fontSize:10,borderBottom:'1px solid #EEF2F7'}}>{e.peso||'—'}</td>
-                <td colSpan={2} style={{borderBottom:'1px solid #EEF2F7'}}></td>
-              </tr>
-            </tbody>
-          </table>
-
-          {/* Aspectos Gerais */}
-          <div style={{fontWeight:700,fontSize:10,color:'#1A3A5C',borderBottom:'1.5px solid #1A3A5C',paddingBottom:4,marginBottom:6,textTransform:'uppercase'}}>Aspectos Gerais</div>
-          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:6,marginBottom:10}}>
-            {[['Laudo do Fornecedor',e.laudo_forn],['Peso / Vol. Produto',e.peso_vol],['Rótulo do Fornecedor',e.rotulo]].map(([l,v])=>(
-              <div key={l} style={{display:'flex',justifyContent:'space-between',alignItems:'center',background:'#F7FAFC',borderRadius:5,padding:'5px 8px',fontSize:10}}>
-                <span style={{color:'#4A5568'}}>{l}</span>
-                <span style={{fontWeight:700,color:confColor(v)}}>{confLabel(v)}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Teor */}
-          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,background:'#FFFFF0',border:'1px solid #ECC94B',borderRadius:6,padding:'6px 10px',marginBottom:10}}>
-            <div><div style={{fontSize:9,color:'#975A16',fontWeight:700,textTransform:'uppercase'}}>Teor Referência</div><div style={{fontWeight:600,fontSize:12}}>{e.teor_ref||'—'}</div></div>
-            <div><div style={{fontSize:9,color:'#975A16',fontWeight:700,textTransform:'uppercase'}}>Teor Laudo Fabricante</div><div style={{fontWeight:600,fontSize:12}}>{e.teor_fab||'—'}</div></div>
-          </div>
-
-          {/* Testes de Identificação */}
-          <div style={{fontWeight:700,fontSize:10,color:'#1A3A5C',borderBottom:'1.5px solid #1A3A5C',paddingBottom:4,marginBottom:6,textTransform:'uppercase'}}>Testes de Identificação</div>
-          <table style={{width:'100%',borderCollapse:'collapse',marginBottom:10,fontSize:10}}>
-            <thead>
-              <tr style={{background:'#EBF4FB'}}>
-                <th style={{padding:'4px 8px',textAlign:'left',fontWeight:700,color:'#1A3A5C',width:'18%',fontSize:10}}>Teste</th>
-                <th style={{padding:'4px 8px',textAlign:'left',fontWeight:700,color:'#1A3A5C',width:'30%',fontSize:10}}>Referência / Especificação</th>
-                <th style={{padding:'4px 8px',textAlign:'left',fontWeight:700,color:'#1A3A5C',width:'30%',fontSize:10}}>Resultado Obtido</th>
-                <th style={{padding:'4px 8px',textAlign:'center',fontWeight:700,color:'#1A3A5C',width:'22%',fontSize:10}}>Conformidade</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ['Caract. Organolépticas',e.organoleptica_ref,e.organoleptica_result,e.organoleptica_conf],
-                ['Solubilidade',e.solubilidade_ref,e.solubilidade_result,e.solubilidade_conf],
-                ['Ponto de Fusão',e.fusao_ref,e.fusao_result,e.fusao_conf],
-                ['Densidade',e.densidade_ref||e.densidade,e.densidade_result,e.densidade_conf],
-                ['pH',e.ph_ref,e.ph_result,e.ph_conf],
-              ].map(([l,ref,res,conf])=>(
-                <tr key={l} style={{borderBottom:'1px solid #EEF2F7'}}>
-                  <td style={{padding:'3px 8px',fontWeight:600,color:'#4A5568',background:'#FAFAFA',fontSize:10}}>{l}</td>
-                  <td style={{padding:'3px 8px',fontSize:10,color:'#2D3748'}}>{ref||'—'}</td>
-                  <td style={{padding:'3px 8px',fontSize:10,color:'#2D3748'}}>{res||'—'}</td>
-                  <td style={{padding:'3px 8px',textAlign:'center',fontWeight:700,fontSize:10,color:confColor(conf)}}>{confLabel(conf)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          {/* Armazenamento + Obs */}
-          <div className="laudo-arm" style={{background:'#EBF4FB',borderRadius:6,padding:'6px 10px',marginBottom:10,fontSize:10}}>
-            <div style={{fontWeight:700,color:'#1A3A5C',marginBottom:3,textTransform:'uppercase',fontSize:9}}>Armazenamento</div>
-            <div>{e.armazenamento||'—'}</div>
-            {e.temperatura&&<div style={{marginTop:3,color:'#4A5568'}}>Temperatura: {e.temperatura}</div>}
-          </div>
-          {e.obs&&<div style={{background:'#FFF8E1',border:'1px solid #F6E05E',borderRadius:6,padding:'6px 10px',marginBottom:10,fontSize:10}}><b>Observações:</b> {e.obs}</div>}
-
-          {/* Resultado */}
-          <div className="laudo-result" style={{background:resBg(e.resultado),border:`2px solid ${resBorder(e.resultado)}`,borderRadius:8,padding:'10px 16px',textAlign:'center',marginBottom:8}}>
-            <div style={{fontSize:9,color:'#718096',textTransform:'uppercase',letterSpacing:.5,marginBottom:4}}>Resultado Final</div>
-            <div className="res-val" style={{fontSize:18,fontWeight:700,color:resColor(e.resultado)}}>{resText(e.resultado)}</div>
-            {e.resultado==='Q'&&<div style={{fontSize:10,color:'#744210',marginTop:4}}>Produto em quarentena — aguardando análise complementar</div>}
-            {e.analisado&&<div style={{fontSize:10,marginTop:6,color:'#718096'}}>Analisado por: <b style={{color:'#2D3748'}}>{e.analisado}</b></div>}
-          </div>
-          <div style={{display:'flex',justifyContent:'space-between',fontSize:9,color:'#A0AEC0'}}>
-            <span>CÓPIA CONTROLADA</span>
-            <span>Data: {e.fracionamento||TODAY}</span>
-            <span>Revisão nº 01</span>
-          </div>
-        </div>
-      </div>
+    <div style="font-size:10px;color:#A0AEC0;margin-top:-6px">Próximo R.E.: ${nextRE()}</div>
+  </div>
+  <div style="margin-bottom:12px">
+    <label class="lbl">Substância / Produto *</label>
+    <div class="search-wrap">
+      <input id="sub-search" autocomplete="off" value="${esc(S.form.substancia)}" placeholder="Digite o nome da substância...">
+      <div class="search-drop" id="search-drop"></div>
     </div>
-  );
+    <div style="font-size:10px;color:#A0AEC0;margin-top:3px">Busca nos ${fullDB().length} produtos — DCB, CAS, armazenamento e dados técnicos preenchem automaticamente</div>
+  </div>
+  <div class="g3" style="margin-bottom:4px">
+    ${field('Código','codigo')}
+    ${field('DCB','dcb')}
+    ${field('CAS','cas')}
+  </div>
+  <div class="sec sec-green">
+    <div class="sec-title" style="color:#276749">Compra / Nota Fiscal</div>
+    <div class="g3">
+      ${field('Fornecedor','fornecedor','text',FORN)}
+      ${field('Nota Fiscal','nf')}
+      ${field('Quantidade','qtde')}
+      ${field('Lote','lote')}
+      ${field('Data Fabricação','fabricacao','date')}
+      ${field('Data Validade *','validade','date')}
+      ${field('Data Fracionamento','fracionamento','date')}
+      ${field('Origem','origem','text',ORIG)}
+    </div>
+  </div>
+  <div class="sec sec-yellow">
+    <div class="sec-title" style="color:#744210">Dados Técnicos</div>
+    <div class="g3">
+      ${field('Armazenamento','armazenamento')}
+      ${field('Temperatura','temperatura')}
+      ${field('Fator de Correção','fator')}
+      ${field('Teor Referência','teor_ref')}
+      ${field('Teor Laudo Fabricante','teor_fab')}
+    </div>
+  </div>
+  <div class="sec sec-red">
+    <div class="sec-title" style="color:#9B2C2C">Aspectos Gerais</div>
+    ${confRow('Laudo do Fornecedor', S.form.laudo_forn, 'laudo_forn')}
+    ${confRow('Peso / Vol. do Produto', S.form.peso_vol, 'peso_vol')}
+    ${confRow('Rótulo do Fornecedor', S.form.rotulo, 'rotulo')}
+  </div>
+  <div class="sec sec-gray">
+    <div class="sec-title" style="color:#2D3748">Testes de Identificação</div>
+    ${testeBox('Características Organolépticas','organoleptica_ref','organoleptica_result','organoleptica_conf')}
+    ${testeBox('Solubilidade','solubilidade_ref','solubilidade_result','solubilidade_conf')}
+    ${testeBox('Ponto de Fusão','fusao_ref','fusao_result','fusao_conf')}
+    ${testeBox('Densidade','densidade_ref','densidade_result','densidade_conf')}
+    ${testeBox('pH','ph_ref','ph_result','ph_conf')}
+  </div>
+  <div class="sec sec-blue">
+    <div class="sec-title" style="color:#1A3A5C">Classificações (Etiqueta)</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+      ${tag('port344','Port. 344')}${tag('termossens','Termossensível')}${tag('fotossens','Fotossensível')}
+      ${tag('higro','Higroscópico')}${tag('hormonio','Hormônio')}${tag('citostatico','Citostático')}${tag('antibiotico','Antibiótico')}
+    </div>
+  </div>
+  <div class="sec sec-gray">
+    <div class="sec-title" style="color:#2D3748">Resultado Final</div>
+    <div style="display:flex;gap:10px;margin-bottom:12px">
+      ${radio('resultado','A','✅ Aprovado',S.form.resultado==='A')}
+      ${radio('resultado','Q','🟡 Quarentena',S.form.resultado==='Q')}
+      ${radio('resultado','R','❌ Reprovado',S.form.resultado==='R')}
+    </div>
+    <div class="g2">
+      ${field('Analisado por','analisado')}
+      ${field('Observações','obs')}
+    </div>
+  </div>
+  <button class="btn btn-primary" onclick="saveEntry()" style="width:100%;padding:14px;font-size:14px;letter-spacing:.3px;margin-top:4px">
+    💾 Salvar Entrada → Gerar Laudo e Etiqueta
+  </button>`;
 }
 
-/* ══════════════════ ETIQUETAS COMPONENT ══════════════════ */
-function Etiquetas({entries}){
-  const [selections,setSelections]=useState({}); // {id: qty}
-  const [search,setSearch]=useState('');
+function renderLaudo(){
+  return `<div class="no-print" style="display:flex;justify-content:flex-end;margin-bottom:12px">
+    <button class="btn btn-primary" onclick="window.print()">🖨️ Imprimir Laudo</button>
+  </div>${laudoHtml(S.current)}`;
+}
 
-  const totalEtiq=Object.values(selections).reduce((a,b)=>a+b,0);
-  const numCodes=Object.keys(selections).length;
-
-  const filtered=search
-    ?entries.filter(e=>e.substancia?.toLowerCase().includes(search.toLowerCase())||e.re?.includes(search))
-    :entries.slice(0,50);
-
-  function toggleEntry(e){
-    setSelections(s=>{
-      if(s[e.id]) { const n={...s}; delete n[e.id]; return n; }
-      if(numCodes>=8) { alert('Máximo de 8 laudos diferentes por impressão.'); return s; }
-      if(totalEtiq>=8) { alert('Máximo de 8 etiquetas por folha.'); return s; }
-      return {...s,[e.id]:1};
-    });
-  }
-  function setQty(id,qty){
-    setSelections(s=>{
-      const other=Object.entries(s).filter(([k])=>k!=id).reduce((a,[,v])=>a+v,0);
-      const maxQty=Math.min(qty,8-other);
-      if(maxQty<1){const n={...s};delete n[id];return n;}
-      return {...s,[id]:maxQty};
-    });
-  }
-
-  // Build etiqueta list
+function renderEtiqueta(){
+  const total=Object.values(S.etiqSel).reduce((a,b)=>a+b,0);
+  const numCodes=Object.keys(S.etiqSel).length;
+  const selEntries=S.entries.filter(e=>S.etiqSel[e.id]);
   const etiqList=[];
-  const selectedEntries=entries.filter(e=>selections[e.id]);
-  selectedEntries.forEach(e=>{
-    const qty=selections[e.id]||0;
-    for(let i=0;i<qty;i++) etiqList.push(e);
+  selEntries.forEach(e=>{ for(let i=0;i<(S.etiqSel[e.id]||0);i++) etiqList.push(e); });
+
+  const selHtml=selEntries.length?`<div style="background:#EBF4FB;border-radius:8px;padding:10px 12px;margin-bottom:12px">
+    <div style="font-size:11px;font-weight:700;color:#1A3A5C;margin-bottom:8px">SELECIONADOS:</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+      ${selEntries.map(e=>`<div style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #BEE3F8;border-radius:6px;padding:4px 10px">
+        <span style="font-weight:700;font-size:12px;color:#1A3A5C">${esc(e.re)}/${esc(e.ano)}</span>
+        <span style="font-size:11px;color:#718096;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(e.substancia)}</span>
+        <span style="font-size:11px">×</span>
+        <select style="width:50px;padding:2px 4px;font-size:12px" onchange="setEtiqQty('${e.id}',+this.value)">
+          ${[1,2,3,4,5,6,7,8].map(n=>`<option value="${n}" ${S.etiqSel[e.id]===n?'selected':''}>${n}</option>`).join('')}
+        </select>
+        <button onclick="toggleEtiq('${e.id}')" style="background:none;border:none;color:#E53E3E;font-weight:700;font-size:14px;cursor:pointer;padding:0 2px">×</button>
+      </div>`).join('')}
+    </div>
+  </div>`:'';
+
+  const list50=S.entries.slice(0,50);
+  const listHtml=list50.map(e=>{
+    const sel=!!S.etiqSel[e.id];
+    return `<div class="etiq-sel-row${sel?' sel':''}" onclick="toggleEtiq('${e.id}')">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="chk-box${sel?' on':''}">${sel?'✓':''}</div>
+        <div>
+          <span style="font-weight:700;font-size:12px;color:#1A3A5C">RE ${esc(e.re)}/${esc(e.ano)}</span>
+          <span style="font-size:12px;color:#4A5568;margin-left:8px">${esc(e.substancia)}</span>
+        </div>
+      </div>
+      <span style="font-size:11px;color:#718096">${esc(e.fornecedor)||''} · ${esc(e.validade)||'—'}</span>
+    </div>`;
+  }).join('');
+
+  const preview=etiqList.length?`<div><div class="no-print" style="font-weight:700;font-size:13px;color:#4A5568;margin-bottom:10px">Prévia de impressão (${etiqList.length} etiqueta${etiqList.length>1?'s':''}):</div>
+    <div class="etiq-print-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">${etiqList.map(e=>etiqCard(e)).join('')}</div>
+  </div>`:
+  `<div class="no-print" style="text-align:center;padding:40px;color:#A0AEC0;border:2px dashed #E2E8F0;border-radius:12px">
+    <div style="font-size:40px;margin-bottom:10px">🏷️</div>
+    <div style="font-size:14px">Selecione laudos acima para pré-visualizar e imprimir.</div>
+  </div>`;
+
+  return `<div class="no-print card" style="margin-bottom:16px;padding:16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div>
+        <div style="font-weight:700;font-size:14px;color:#1A3A5C">Selecionar Etiquetas para Impressão</div>
+        <div style="font-size:12px;color:#718096;margin-top:2px">${numCodes}/8 laudos · ${total}/8 etiquetas · máx. 8 por folha A4</div>
+      </div>
+      ${etiqList.length?`<button class="btn btn-primary" onclick="window.print()">🖨️ Imprimir ${etiqList.length} etiqueta${etiqList.length>1?'s':''}</button>`:''}
+    </div>
+    ${selHtml}
+    <div style="max-height:260px;overflow-y:auto;border:1px solid #E2E8F0;border-radius:8px">${listHtml}</div>
+  </div>
+  ${preview}`;
+}
+
+function renderHistorico(){
+  const q=S.histQ.toLowerCase();
+  const filtered=q?S.entries.filter(e=>(e.substancia||'').toLowerCase().includes(q)||(e.re||'').includes(q)||(e.fornecedor||'').toLowerCase().includes(q)):S.entries;
+  const list=filtered.map(e=>`<div class="hist-item" onclick="loadEntry('${e.id}')">
+    <div style="flex:1;min-width:0">
+      <div style="font-weight:700;font-size:13px;color:#1A3A5C">RE ${esc(e.re)}/${esc(e.ano)} — ${esc(e.substancia)}</div>
+      <div style="font-size:11px;color:#718096;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+        ${esc(e.fornecedor||'')} · Lote ${esc(e.lote||'')} · Val. <b style="color:#9B2C2C">${esc(e.validade||'—')}</b> · <span style="color:${resColor(e.resultado)};font-weight:600">${resLabel(e.resultado)}</span>
+      </div>
+    </div>
+    <div class="hist-btns">
+      <button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();viewLaudo('${e.id}')">Laudo</button>
+      <button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();viewEtiq('${e.id}')">Etiqueta</button>
+      <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteEntry('${e.id}')">✕</button>
+    </div>
+  </div>`).join('');
+
+  return `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+    <div style="font-weight:700;font-size:14px;color:#1A3A5C">${S.entries.length} entrada${S.entries.length!==1?'s':''}</div>
+    <input style="width:280px" placeholder="Buscar por produto, RE, fornecedor..." oninput="S.histQ=this.value;repaintTab()" value="${esc(S.histQ)}">
+  </div>
+  ${S.entries.length===0?`<div style="text-align:center;padding:60px;color:#A0AEC0;border:2px dashed #E2E8F0;border-radius:12px"><div style="font-size:40px;margin-bottom:10px">📋</div><div style="font-size:14px">Nenhuma entrada. Importe o historico_cq.json na aba ⚙️ Gerenciar.</div></div>`:list}`;
+}
+
+function renderGerenciar(){
+  const ns=S.newSub;
+  const db=fullDB();
+  const q=S.subQ.toLowerCase();
+  const filtered=q?db.filter(s=>s.n.toLowerCase().includes(q)):db;
+  const subList=filtered.slice(0,100).map(s=>{
+    const isUser=String(s.c).startsWith('U');
+    return `<div style="padding:8px 14px;border-bottom:1px solid #EEF2F7;display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <span style="font-weight:600;font-size:13px">${esc(s.n)}</span>
+        ${isUser?`<span style="margin-left:6px;font-size:10px;background:#EBF4FB;color:#1A3A5C;padding:1px 6px;border-radius:10px;font-weight:600">Adicionada</span>`:''}
+        <div style="font-size:11px;color:#718096;margin-top:2px">${s.d?`DCB: ${esc(s.d)} · `:''}${s.s?`CAS: ${esc(s.s)}`:''}</div>
+      </div>
+      ${isUser?`<button class="btn btn-sm btn-danger" onclick="removeSub('${esc(s.c)}')">Remover</button>`:''}
+    </div>`;
+  }).join('');
+
+  const tabs=[['sub','📦 Substâncias'],['imp','📥 Importar/Exportar']];
+  return `<div style="display:flex;gap:6px;margin-bottom:16px">
+    ${tabs.map(([k,l])=>`<button class="btn ${S.gerTab===k?'btn-primary':'btn-ghost'}" onclick="S.gerTab='${k}';repaintTab()">${l}</button>`).join('')}
+  </div>
+  ${S.msg?`<div class="alert-ok">${esc(S.msg)}</div>`:''}
+
+  ${S.gerTab==='sub'?`
+  <div class="sec sec-blue" style="margin-bottom:16px">
+    <div class="sec-title" style="color:#1A3A5C">Adicionar Nova Substância</div>
+    <div class="g3" style="margin-bottom:8px">
+      <div class="field"><label class="lbl">Nome *</label><input id="ns-n" value="${esc(ns.n)}" oninput="S.newSub.n=this.value"></div>
+      <div class="field"><label class="lbl">DCB</label><input id="ns-d" value="${esc(ns.d)}" oninput="S.newSub.d=this.value"></div>
+      <div class="field"><label class="lbl">CAS</label><input id="ns-s" value="${esc(ns.s)}" oninput="S.newSub.s=this.value"></div>
+      <div class="field"><label class="lbl">Temperatura</label><input id="ns-tm" value="${esc(ns.tm)}" oninput="S.newSub.tm=this.value"></div>
+      <div class="field"><label class="lbl">Densidade</label><input id="ns-dn" value="${esc(ns.dn)}" oninput="S.newSub.dn=this.value"></div>
+      <div class="field"><label class="lbl">Teor / Fator</label><input id="ns-fn" value="${esc(ns.fn)}" oninput="S.newSub.fn=this.value"></div>
+    </div>
+    <div class="field" style="margin-bottom:10px"><label class="lbl">Armazenamento</label><input id="ns-a" value="${esc(ns.a)}" oninput="S.newSub.a=this.value"></div>
+    <button class="btn btn-primary" onclick="addSub()">+ Adicionar Substância</button>
+  </div>
+  <div style="margin-bottom:8px"><input placeholder="Buscar nas ${db.length} substâncias..." oninput="S.subQ=this.value;repaintTab()" value="${esc(S.subQ)}"></div>
+  <div style="max-height:380px;overflow-y:auto;border:1px solid #E2E8F0;border-radius:8px">${subList}${filtered.length>100?`<div style="padding:10px 14px;color:#718096;font-size:12px;text-align:center">Mostrando 100 de ${filtered.length} resultados. Refine a busca.</div>`:''}</div>
+  `:
+  `<div class="sec sec-green" style="margin-bottom:16px">
+    <div class="sec-title" style="color:#276749">📥 Importar Histórico de Laudos</div>
+    <p style="font-size:13px;margin-bottom:12px;color:#4A5568">Importe o arquivo <b>historico_cq.json</b> para carregar as 377 entradas dos anos 2022–2026.</p>
+    <input type="file" id="imp-entries" accept=".json" onchange="importEntries(event)" style="display:none">
+    <button class="btn btn-primary" onclick="document.getElementById('imp-entries').click()">📂 Selecionar historico_cq.json</button>
+  </div>
+  <div class="sec sec-blue" style="margin-bottom:16px">
+    <div class="sec-title" style="color:#1A3A5C">📥 Importar Banco de Substâncias</div>
+    <p style="font-size:13px;margin-bottom:12px;color:#4A5568">Importe um JSON com novas substâncias para adicionar ao banco.</p>
+    <input type="file" id="imp-db" accept=".json" onchange="importSubDB(event)" style="display:none">
+    <button class="btn btn-ghost" onclick="document.getElementById('imp-db').click()">📂 Selecionar JSON de substâncias</button>
+  </div>
+  <div class="sec sec-yellow">
+    <div class="sec-title" style="color:#744210">📤 Exportar Dados</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-ghost" onclick="exportDB()">💾 Exportar Substâncias (${fullDB().length})</button>
+      <button class="btn btn-ghost" onclick="exportEntries()">💾 Exportar Laudos (${S.entries.length})</button>
+    </div>
+    <p style="font-size:11px;color:#718096;margin-top:8px">Use para backup ou para sincronizar entre computadores.</p>
+  </div>`}`;
+}
+
+// ── PAINT ────────────────────────────────────────────────────────────
+function paint(){
+  document.getElementById('root').innerHTML=`<div class="app">${renderHeader()}${renderTabs()}<div class="card body-card" id="tab-body">${renderTab()}</div><div class="footer no-print">CQ Fórmula Animal · Dados salvos localmente neste navegador</div></div>`;
+  bindSearch();
+}
+
+function repaintTab(){
+  document.getElementById('tab-body').innerHTML=renderTab();
+  if(S.tab==='entrada') bindSearch();
+}
+
+function bindSearch(){
+  const inp=document.getElementById('sub-search');
+  const drop=document.getElementById('search-drop');
+  if(!inp||!drop) return;
+  inp.oninput=function(){ doSearch(this.value); S.form.substancia=this.value; };
+  inp.onfocus=function(){ doSearch(this.value); };
+  document.addEventListener('click',function(e){ if(!inp.contains(e.target)&&!drop.contains(e.target)) drop.style.display='none'; },{once:false});
+  // re-attach on every paint
+}
+let _docClick=null;
+function doSearch(q){
+  const drop=document.getElementById('search-drop');
+  if(!drop) return;
+  if(q.length<2){ drop.style.display='none'; return; }
+  const res=fullDB().filter(s=>s.n.toLowerCase().includes(q.toLowerCase())).slice(0,12);
+  if(res.length===0){ drop.style.display='none'; return; }
+  drop.innerHTML=res.map(s=>`<div class="search-item" data-sid="${esc(s.c)}" data-sn="${esc(s.n)}" data-sd="${esc(s.d||'')}" data-ss="${esc(s.s||'')}" data-sa="${esc(s.a||'')}" data-stm="${esc(s.tm||'')}" data-sdn="${esc(s.dn||'')}" data-str="${esc(s.tr||'')}" data-sfn="${esc(s.fn||'')}">
+    <span style="font-weight:600">${esc(s.n)}</span>
+    ${s.d?`<span class="s-dcb">DCB ${esc(s.d)}</span>`:''}
+    ${s.s?`<span class="s-dcb">CAS ${esc(s.s)}</span>`:''}
+  </div>`).join('');
+  drop.style.display='block';
+  drop.querySelectorAll('.search-item').forEach(el=>{
+    el.onclick=function(){
+      const d=this.dataset;
+      S.form.substancia=d.sn; S.form.codigo=d.sid;
+      S.form.dcb=d.sd||S.form.dcb;
+      S.form.cas=d.ss||S.form.cas;
+      S.form.armazenamento=d.sa||S.form.armazenamento;
+      S.form.temperatura=d.stm||S.form.temperatura;
+      S.form.densidade=d.sdn||S.form.densidade;
+      S.form.densidade_ref=d.sdn||S.form.densidade_ref;
+      S.form.teor=d.str||S.form.teor;
+      S.form.teor_ref=d.str||S.form.teor_ref;
+      S.form.fator=d.sfn||S.form.fator;
+      document.getElementById('sub-search').value=d.sn;
+      drop.style.display='none';
+      repaintTab();
+    };
   });
+}
 
-  const EtiqCard=({e})=>{
-    const RE=e.re+'/'+e.ano;
-    const check=v=>v?'☑':'☐';
-    const fatorDiff=e.fator&&e.fator!='1'&&e.fator!='';
-    return(
-      <div className="etiq-card" style={{border:`2.5px solid ${e.resultado==='Q'?'#D69E2E':'#1A3A5C'}`,borderRadius:6,padding:'7px 9px',background:'#fff',fontFamily:'Arial,sans-serif',fontSize:10,breakInside:'avoid',pageBreakInside:'avoid'}}>
-        <div style={{background:resColor(e.resultado),color:'#fff',textAlign:'center',fontWeight:700,fontSize:12,padding:'3px 0',borderRadius:4,marginBottom:6,letterSpacing:1}}>
-          {resText(e.resultado)}
-        </div>
-        <div style={{fontWeight:700,fontSize:11,textAlign:'center',marginBottom:5,borderBottom:'1px solid #E2E8F0',paddingBottom:4,lineHeight:1.3}}>{e.substancia}</div>
-        <table style={{width:'100%',borderCollapse:'collapse',fontSize:10}}>
-          <tbody>
-            <tr>
-              <td style={{color:'#718096',width:'28%',paddingBottom:2}}>DT.Fabr.:</td>
-              <td style={{fontWeight:600,paddingBottom:2}}>{e.fabricacao}</td>
-              <td style={{color:'#718096',width:'12%'}}>RE</td>
-              <td style={{fontWeight:700,color:'#1A3A5C'}}>{RE}</td>
-            </tr>
-            <tr>
-              <td style={{color:'#718096',paddingBottom:2}}>DT.Valid.:</td>
-              <td style={{fontWeight:700,fontSize:12,color:'#9B2C2C',paddingBottom:2}}>{e.validade||'—'}</td>
-              <td style={{color:'#718096'}}>DCB:</td>
-              <td style={{fontWeight:600}}>{e.dcb||'n/d'}</td>
-            </tr>
-            {fatorDiff&&(
-              <tr>
-                <td style={{color:'#718096',paddingBottom:2}}>F.Corr.:</td>
-                <td colSpan={3} style={{fontWeight:700,fontSize:13,color:'#9B2C2C',paddingBottom:2}}>{e.fator}</td>
-              </tr>
-            )}
-            {!fatorDiff&&(
-              <tr>
-                <td style={{color:'#718096',paddingBottom:2}}>F.Corr.:</td>
-                <td style={{fontWeight:600,paddingBottom:2}}>{e.fator||'—'}</td>
-                <td style={{color:'#718096'}}>Orig.:</td>
-                <td style={{fontWeight:600}}>{e.origem||'—'}</td>
-              </tr>
-            )}
-            <tr>
-              <td style={{color:'#718096',paddingBottom:2}}>Fornec.:</td>
-              <td colSpan={2} style={{fontWeight:600,paddingBottom:2}}>{e.fornecedor}</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td style={{color:'#718096',paddingBottom:2}}>Lote:</td>
-              <td style={{fontWeight:600,paddingBottom:2}}>{e.lote}</td>
-              <td style={{color:'#718096'}}>Dens.:</td>
-              <td style={{fontWeight:600}}>{e.densidade||'—'}</td>
-            </tr>
-            <tr>
-              <td style={{color:'#718096',paddingBottom:2}}>Qtde.:</td>
-              <td style={{fontWeight:600,paddingBottom:2}}>{e.qtde}</td>
-              <td style={{color:'#718096'}}>Teor:</td>
-              <td style={{fontWeight:600}}>{e.teor_fab||e.teor||'—'}</td>
-            </tr>
-            <tr>
-              <td style={{color:'#718096'}}>CAS:</td>
-              <td colSpan={3} style={{fontWeight:600,fontSize:9}}>{e.cas||'—'}</td>
-            </tr>
-          </tbody>
-        </table>
-        <div style={{marginTop:5,borderTop:'1px solid #E2E8F0',paddingTop:4}}>
-          <div style={{fontSize:9,fontWeight:700,color:'#4A5568',marginBottom:2,textTransform:'uppercase'}}>Armazenamento</div>
-          <div style={{fontSize:9,color:'#2D3748',lineHeight:1.4}}>{(e.armazenamento||'—').substring(0,80)}{e.armazenamento?.length>80?'…':''}</div>
-        </div>
-        <div style={{marginTop:4,borderTop:'1px solid #E2E8F0',paddingTop:3,display:'flex',flexWrap:'wrap',gap:'2px 6px',fontSize:9}}>
-          {[['port344','Port.344'],['termossens','Termoss.'],['fotossens','Fotoss.'],
-            ['higro','Higro.'],['hormonio','Horm.'],['citostatico','Cito.'],['antibiotico','Antib.']].map(([k,l])=>(
-            <span key={k} style={{color:e[k]?'#1A3A5C':'#CBD5E0',fontWeight:e[k]?700:400}}>{check(e[k])} {l}</span>
-          ))}
-        </div>
-      </div>
-    );
+// ── ACTIONS ──────────────────────────────────────────────────────────
+function collectForm(){
+  // read all data-f inputs
+  document.querySelectorAll('[data-f]').forEach(el=>{
+    const f=el.dataset.f;
+    if(el.type==='checkbox') S.form[f]=el.checked;
+    else S.form[f]=el.value;
+  });
+  // radio buttons
+  document.querySelectorAll('input[type=radio]:checked').forEach(el=>{ S.form[el.name]=el.value; });
+}
+
+function switchTab(t){ collectForm(); S.tab=t; repaintTab(); if(t==='entrada') bindSearch(); }
+function newEntry(){ S.form=blank(); S.current=null; S.tab='entrada'; S.msg=''; repaintTab(); bindSearch(); }
+
+function saveEntry(){
+  collectForm();
+  const re=S.form.re||nextRE();
+  const entry={...S.form, re, id:Date.now()};
+  S.entries=[entry,...S.entries];
+  LS.set('cq_entries',S.entries);
+  S.current=entry;
+  S.tab='laudo';
+  S.msg='✅ Salvo! Laudo e etiqueta disponíveis nas abas ao lado.';
+  paint();
+}
+
+function loadEntry(id){
+  const e=S.entries.find(x=>String(x.id)===String(id));
+  if(e){ S.form={...e}; S.current=e; S.tab='entrada'; repaintTab(); bindSearch(); }
+}
+
+function viewLaudo(id){
+  const e=S.entries.find(x=>String(x.id)===String(id));
+  if(e){ S.current=e; S.tab='laudo'; repaintTab(); }
+}
+
+function viewEtiq(id){
+  const e=S.entries.find(x=>String(x.id)===String(id));
+  if(e){ S.etiqSel={[e.id]:1}; S.tab='etiqueta'; repaintTab(); }
+}
+
+function deleteEntry(id){
+  if(!confirm('Excluir esta entrada do histórico?')) return;
+  S.entries=S.entries.filter(e=>String(e.id)!==String(id));
+  LS.set('cq_entries',S.entries);
+  if(S.current&&String(S.current.id)===String(id)) S.current=null;
+  repaintTab();
+}
+
+function toggleEtiq(id){
+  const numCodes=Object.keys(S.etiqSel).length;
+  const total=Object.values(S.etiqSel).reduce((a,b)=>a+b,0);
+  if(S.etiqSel[id]){ const n={...S.etiqSel}; delete n[id]; S.etiqSel=n; }
+  else {
+    if(numCodes>=8){ alert('Máximo de 8 laudos diferentes por impressão.'); return; }
+    if(total>=8){ alert('Máximo de 8 etiquetas por folha.'); return; }
+    S.etiqSel={...S.etiqSel,[id]:1};
+  }
+  repaintTab();
+}
+
+function setEtiqQty(id,qty){
+  const other=Object.entries(S.etiqSel).filter(([k])=>k!=id).reduce((a,[,v])=>a+v,0);
+  const max=Math.min(qty,8-other);
+  if(max<1){ const n={...S.etiqSel}; delete n[id]; S.etiqSel=n; }
+  else S.etiqSel={...S.etiqSel,[id]:max};
+  repaintTab();
+}
+
+function addSub(){
+  if(!S.newSub.n.trim()){ alert('Nome obrigatório.'); return; }
+  const item={...S.newSub, c:'U'+Date.now()};
+  S.userDB=[...S.userDB,item];
+  LS.set('cq_userdb',S.userDB);
+  S.newSub={n:'',d:'',s:'',a:'',tm:'',dn:'',tr:'',fn:''};
+  S.msg='Substância adicionada com sucesso!';
+  repaintTab();
+  setTimeout(()=>{ S.msg=''; },3000);
+}
+
+function removeSub(c){
+  if(!confirm('Remover esta substância?')) return;
+  S.userDB=S.userDB.filter(s=>s.c!==c);
+  LS.set('cq_userdb',S.userDB);
+  repaintTab();
+}
+
+function importEntries(ev){
+  const f=ev.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      if(!Array.isArray(data)) throw 0;
+      const existing=new Set(S.entries.map(x=>x.id));
+      const toAdd=data.filter(x=>!existing.has(x.id));
+      S.entries=[...toAdd,...S.entries];
+      LS.set('cq_entries',S.entries);
+      S.msg=`${toAdd.length} entradas importadas com sucesso!`;
+      repaintTab();
+      setTimeout(()=>{ S.msg=''; },4000);
+    } catch { alert('Arquivo inválido.'); }
   };
-
-  return(
-    <div>
-      {/* Selection Panel */}
-      <div className="no-print card" style={{marginBottom:16,padding:16}}>
-        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
-          <div>
-            <div style={{fontWeight:700,fontSize:14,color:'#1A3A5C'}}>Selecionar Etiquetas para Impressão</div>
-            <div style={{fontSize:12,color:'#718096',marginTop:2}}>{numCodes}/8 laudos · {totalEtiq}/8 etiquetas · Máximo 8 por folha A4</div>
-          </div>
-          {etiqList.length>0&&(
-            <button className="btn btn-primary" onClick={()=>window.print()}>🖨️ Imprimir {etiqList.length} etiqueta{etiqList.length>1?'s':''}</button>
-          )}
-        </div>
-
-        {/* Selected items */}
-        {Object.keys(selections).length>0&&(
-          <div style={{background:'#EBF4FB',borderRadius:8,padding:'10px 12px',marginBottom:12}}>
-            <div style={{fontSize:11,fontWeight:700,color:'#1A3A5C',marginBottom:8}}>SELECIONADOS:</div>
-            <div style={{display:'flex',flexWrap:'wrap',gap:8}}>
-              {entries.filter(e=>selections[e.id]).map(e=>(
-                <div key={e.id} style={{display:'flex',alignItems:'center',gap:6,background:'#fff',border:'1px solid #BEE3F8',borderRadius:6,padding:'4px 10px'}}>
-                  <span style={{fontWeight:600,fontSize:12,color:'#1A3A5C'}}>{e.re}/{e.ano}</span>
-                  <span style={{fontSize:11,color:'#718096',maxWidth:120,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{e.substancia}</span>
-                  <span style={{fontSize:11,color:'#4A5568'}}>×</span>
-                  <select value={selections[e.id]} onChange={ev=>setQty(e.id,parseInt(ev.target.value))}
-                    style={{width:50,padding:'2px 4px',fontSize:12,border:'1px solid #CBD5E0',borderRadius:4}}>
-                    {[1,2,3,4,5,6,7,8].map(n=><option key={n} value={n}>{n}</option>)}
-                  </select>
-                  <button onClick={()=>toggleEntry(e)} style={{background:'none',border:'none',color:'#E53E3E',fontWeight:700,fontSize:14,padding:'0 2px'}}>×</button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Search + list */}
-        <div style={{marginBottom:8}}>
-          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Buscar laudo por produto ou RE..." />
-        </div>
-        <div style={{maxHeight:260,overflowY:'auto',border:'1px solid #E2E8F0',borderRadius:8}}>
-          {filtered.length===0&&<div style={{padding:20,textAlign:'center',color:'#A0AEC0',fontSize:13}}>Nenhuma entrada encontrada.</div>}
-          {filtered.map(e=>{
-            const sel=!!selections[e.id];
-            const full=!sel&&(numCodes>=8||totalEtiq>=8);
-            return(
-              <div key={e.id} onClick={()=>!full&&toggleEntry(e)}
-                style={{padding:'8px 14px',borderBottom:'1px solid #EEF2F7',cursor:full?'not-allowed':'pointer',background:sel?'#EBF4FB':'#fff',display:'flex',justifyContent:'space-between',alignItems:'center',opacity:full?0.5:1}}
-                onMouseEnter={e=>!full&&(e.currentTarget.style.background=sel?'#D6EAF8':'#F7FAFC')}
-                onMouseLeave={e=>e.currentTarget.style.background=sel?'#EBF4FB':'#fff'}>
-                <div style={{display:'flex',alignItems:'center',gap:10}}>
-                  <div style={{width:18,height:18,borderRadius:4,border:'2px solid #CBD5E0',background:sel?'#1A3A5C':'transparent',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                    {sel&&<span style={{color:'#fff',fontSize:12}}>✓</span>}
-                  </div>
-                  <div>
-                    <span style={{fontWeight:700,fontSize:12,color:'#1A3A5C'}}>RE {e.re}/{e.ano}</span>
-                    <span style={{fontSize:12,color:'#4A5568',marginLeft:8}}>{e.substancia}</span>
-                  </div>
-                </div>
-                <div style={{fontSize:11,color:'#718096'}}>{e.fornecedor} · {e.validade||'—'}</div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Preview / Print area */}
-      {etiqList.length>0&&(
-        <div>
-          <div className="no-print" style={{fontWeight:700,fontSize:13,color:'#4A5568',marginBottom:10}}>Prévia de impressão:</div>
-          <div className="etiq-page">
-            <div className="etiq-grid" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
-              {etiqList.map((e,i)=><EtiqCard key={i} e={e} />)}
-            </div>
-          </div>
-        </div>
-      )}
-      {etiqList.length===0&&(
-        <div className="no-print" style={{textAlign:'center',padding:40,color:'#A0AEC0',border:'2px dashed #E2E8F0',borderRadius:12}}>
-          <div style={{fontSize:40,marginBottom:10}}>🏷️</div>
-          <div style={{fontSize:14}}>Selecione laudos acima para pré-visualizar e imprimir as etiquetas.</div>
-        </div>
-      )}
-    </div>
-  );
+  r.readAsText(f);
+  ev.target.value='';
 }
 
-/* ══════════════════ GERENCIAR COMPONENT ══════════════════ */
-function Gerenciar({userDB,onSaveUserDB,entries,onImportEntries}){
-  const [subTab,setSubTab]=useState('sub');
-  const [newSub,setNewSub]=useState({n:'',d:'',s:'',a:'',tm:'',dn:'',tr:'',fn:''});
-  const [search,setSearch]=useState('');
-  const [msg,setMsg]=useState('');
-  const importRef=useRef();
-  const importEntriesRef=useRef();
-
-  function addSub(){
-    if(!newSub.n.trim()){alert('Nome obrigatório.');return;}
-    const item={...newSub,c:'U'+Date.now()};
-    const updated=[...userDB,item];
-    onSaveUserDB(updated);
-    setNewSub({n:'',d:'',s:'',a:'',tm:'',dn:'',tr:'',fn:''});
-    setMsg('Substância adicionada com sucesso!');
-    setTimeout(()=>setMsg(''),3000);
-  }
-  function delSub(c){
-    if(!confirm('Remover esta substância?'))return;
-    onSaveUserDB(userDB.filter(s=>s.c!==c));
-  }
-
-  function exportDB(){
-    const all=[...EMBEDDED_DB,...userDB];
-    const blob=new Blob([JSON.stringify(all,null,2)],{type:'application/json'});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');a.href=url;a.download='substancias_cq.json';a.click();
-  }
-  function exportEntries(){
-    const blob=new Blob([JSON.stringify(entries,null,2)],{type:'application/json'});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');a.href=url;a.download='historico_cq.json';a.click();
-  }
-  function importDB(e){
-    const file=e.target.files[0];if(!file)return;
-    const reader=new FileReader();
-    reader.onload=ev=>{
-      try{
-        const data=JSON.parse(ev.target.result);
-        if(!Array.isArray(data))throw new Error();
-        // only keep ones not in embedded
-        const embCodes=new Set(EMBEDDED_DB.map(s=>s.c));
-        const newOnes=data.filter(s=>s.n&&!embCodes.has(s.c)).map(s=>({...s,c:'U'+s.c}));
-        onSaveUserDB([...userDB,...newOnes]);
-        setMsg(`${newOnes.length} novas substâncias importadas!`);
-        setTimeout(()=>setMsg(''),4000);
-      }catch{alert('Arquivo inválido.');}
-    };
-    reader.readAsText(file);
-    e.target.value='';
-  }
-  function importEntries(e){
-    const file=e.target.files[0];if(!file)return;
-    const reader=new FileReader();
-    reader.onload=ev=>{
-      try{
-        const data=JSON.parse(ev.target.result);
-        if(!Array.isArray(data))throw new Error();
-        onImportEntries(data);
-        setMsg(`${data.length} entradas importadas com sucesso!`);
-        setTimeout(()=>setMsg(''),4000);
-      }catch{alert('Arquivo inválido.');}
-    };
-    reader.readAsText(file);
-    e.target.value='';
-  }
-
-  const allSubs=[...EMBEDDED_DB,...userDB];
-  const filtered=search?allSubs.filter(s=>s.n.toLowerCase().includes(search.toLowerCase())):allSubs;
-
-  return(
-    <div>
-      <div style={{display:'flex',gap:6,marginBottom:16}}>
-        {[['sub','📦 Substâncias'],['imp','📥 Importar/Exportar']].map(([k,l])=>(
-          <button key={k} onClick={()=>setSubTab(k)} className={`btn ${subTab===k?'btn-primary':'btn-ghost'}`}>{l}</button>
-        ))}
-      </div>
-
-      {msg&&<div className="alert-success">{msg}</div>}
-
-      {subTab==='sub'&&(
-        <div>
-          <div className="section sec-blue" style={{marginBottom:16}}>
-            <div className="sec-title" style={{color:'#1A3A5C'}}>Adicionar Nova Substância</div>
-            <div className="grid3" style={{marginBottom:8}}>
-              <Field label="Nome *" value={newSub.n} onChange={v=>setNewSub(s=>({...s,n:v}))} />
-              <Field label="DCB" value={newSub.d} onChange={v=>setNewSub(s=>({...s,d:v}))} />
-              <Field label="CAS" value={newSub.s} onChange={v=>setNewSub(s=>({...s,s:v}))} />
-              <Field label="Temperatura" value={newSub.tm} onChange={v=>setNewSub(s=>({...s,tm:v}))} />
-              <Field label="Densidade" value={newSub.dn} onChange={v=>setNewSub(s=>({...s,dn:v}))} />
-              <Field label="Teor / Fator" value={newSub.fn} onChange={v=>setNewSub(s=>({...s,fn:v}))} />
-            </div>
-            <div style={{marginBottom:8}}>
-              <Field label="Armazenamento" value={newSub.a} onChange={v=>setNewSub(s=>({...s,a:v}))} />
-            </div>
-            <button className="btn btn-primary" onClick={addSub}>+ Adicionar Substância</button>
-          </div>
-
-          <div style={{marginBottom:10}}>
-            <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={`Buscar nas ${allSubs.length} substâncias cadastradas...`} />
-          </div>
-          <div style={{maxHeight:380,overflowY:'auto',border:'1px solid #E2E8F0',borderRadius:8}}>
-            {filtered.map((s,i)=>{
-              const isUser=s.c.startsWith('U');
-              return(
-                <div key={s.c+i} style={{padding:'8px 14px',borderBottom:'1px solid #EEF2F7',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-                  <div>
-                    <span style={{fontWeight:600,fontSize:13}}>{s.n}</span>
-                    {isUser&&<span style={{marginLeft:6,fontSize:10,background:'#EBF4FB',color:'#1A3A5C',padding:'1px 6px',borderRadius:10,fontWeight:600}}>Adicionada</span>}
-                    <div style={{fontSize:11,color:'#718096',marginTop:2}}>
-                      {s.d&&<span>DCB: {s.d} · </span>}{s.s&&<span>CAS: {s.s}</span>}
-                    </div>
-                  </div>
-                  {isUser&&<button className="btn btn-sm btn-danger" onClick={()=>delSub(s.c)}>Remover</button>}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {subTab==='imp'&&(
-        <div>
-          <div className="section sec-green" style={{marginBottom:16}}>
-            <div className="sec-title" style={{color:'#276749'}}>📥 Importar Histórico de Laudos</div>
-            <p style={{fontSize:13,marginBottom:12,color:'#4A5568'}}>Importe o arquivo <b>historico_cq.json</b> para carregar as 377 entradas dos anos 2022–2026 no sistema.</p>
-            <input ref={importEntriesRef} type="file" accept=".json" onChange={importEntries} style={{display:'none'}} />
-            <button className="btn btn-primary" onClick={()=>importEntriesRef.current.click()}>📂 Selecionar historico_cq.json</button>
-          </div>
-
-          <div className="section sec-blue" style={{marginBottom:16}}>
-            <div className="sec-title" style={{color:'#1A3A5C'}}>📥 Importar Banco de Substâncias</div>
-            <p style={{fontSize:13,marginBottom:12,color:'#4A5568'}}>Importe um arquivo JSON com substâncias adicionais. Novas substâncias são adicionadas ao banco existente.</p>
-            <input ref={importRef} type="file" accept=".json" onChange={importDB} style={{display:'none'}} />
-            <button className="btn btn-ghost" onClick={()=>importRef.current.click()}>📂 Selecionar JSON de substâncias</button>
-          </div>
-
-          <div className="section sec-yellow">
-            <div className="sec-title" style={{color:'#744210'}}>📤 Exportar Dados</div>
-            <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
-              <button className="btn btn-ghost" onClick={exportDB}>💾 Exportar Banco de Substâncias</button>
-              <button className="btn btn-ghost" onClick={exportEntries}>💾 Exportar Histórico de Laudos ({entries.length} entradas)</button>
-            </div>
-            <p style={{fontSize:11,color:'#718096',marginTop:8}}>Salve os arquivos exportados como backup ou para transferir para outro dispositivo.</p>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+function importSubDB(ev){
+  const f=ev.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      if(!Array.isArray(data)) throw 0;
+      const embCodes=new Set(EMBEDDED_DB.map(s=>s.c));
+      const newOnes=data.filter(s=>s.n&&!embCodes.has(s.c)).map(s=>({...s,c:'U'+s.c}));
+      S.userDB=[...S.userDB,...newOnes];
+      LS.set('cq_userdb',S.userDB);
+      S.msg=`${newOnes.length} novas substâncias importadas!`;
+      repaintTab();
+      setTimeout(()=>{ S.msg=''; },4000);
+    } catch { alert('Arquivo inválido.'); }
+  };
+  r.readAsText(f);
+  ev.target.value='';
 }
 
-/* ══════════════════ MAIN APP ══════════════════ */
-export default function App(){
-  const [tab,setTab]=useState('entrada');
-  const [form,setForm]=useState(blank());
-  const [entries,setEntries]=useState(()=>LS.getEntries());
-  const [userDB,setUserDB]=useState(()=>LS.getUserDB());
-  const [current,setCurrent]=useState(null);
-  const [saved,setSaved]=useState(false);
-  const [histSearch,setHistSearch]=useState('');
-
-  const fullDB=[...EMBEDDED_DB,...userDB];
-  const f=k=>v=>setForm(p=>({...p,[k]:v}));
-
-  function handleSelect(spec){
-    setForm(p=>({...p,
-      substancia:spec.n,codigo:spec.c,
-      dcb:spec.d||p.dcb,cas:spec.s||p.cas,
-      armazenamento:spec.a||p.armazenamento,
-      temperatura:spec.tm||p.temperatura,
-      densidade:spec.dn||p.densidade,
-      densidade_ref:spec.dn||p.densidade_ref,
-      teor:spec.tr||p.teor,
-      teor_ref:spec.tr||p.teor_ref,
-      fator:spec.fn||p.fator,
-    }));
-  }
-
-  function nextRE(){
-    const yr=new Date().getFullYear().toString().slice(-2);
-    return String(entries.filter(e=>e.ano===yr).length+1).padStart(3,'0');
-  }
-
-  function handleSave(){
-    const re=form.re||nextRE();
-    const entry={...form,re,id:Date.now()};
-    const updated=[entry,...entries];
-    setEntries(updated);LS.saveEntries(updated);
-    setCurrent(entry);setSaved(true);
-    setTimeout(()=>setSaved(false),3000);
-    setTab('laudo');
-  }
-
-  function handleSaveUserDB(list){setUserDB(list);LS.saveUserDB(list);}
-
-  function handleImportEntries(newEntries){
-    const existing=new Set(entries.map(e=>e.id));
-    const toAdd=newEntries.filter(e=>!existing.has(e.id));
-    const updated=[...toAdd,...entries];
-    setEntries(updated);LS.saveEntries(updated);
-  }
-
-  function handleDelete(id){
-    if(!confirm('Excluir esta entrada do histórico?'))return;
-    const updated=entries.filter(e=>e.id!==id);
-    setEntries(updated);LS.saveEntries(updated);
-    if(current&&current.id===id)setCurrent(null);
-  }
-
-  const filteredHist=histSearch
-    ?entries.filter(e=>e.substancia?.toLowerCase().includes(histSearch.toLowerCase())||e.re?.includes(histSearch)||e.fornecedor?.toLowerCase().includes(histSearch.toLowerCase()))
-    :entries;
-
-  const TABS=[['entrada','📝 Nova Entrada'],['laudo','🔬 Laudo'],['etiqueta','🏷️ Etiquetas'],['historico','📚 Histórico'],['gerenciar','⚙️ Gerenciar']];
-
-  return(
-    <div style={{maxWidth:900,margin:'0 auto',padding:'16px 12px'}}>
-      {/* HEADER */}
-      <div className="no-print card" style={{marginBottom:0}}>
-        <div style={{background:'linear-gradient(135deg,#1A3A5C,#2B6CB0)',color:'#fff',padding:'14px 22px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-          <div>
-            <div style={{fontSize:17,fontWeight:700,letterSpacing:.3}}>🔬 CQ Fórmula Animal</div>
-            <div style={{fontSize:11,opacity:.65,marginTop:2}}>{fullDB.length} substâncias · {entries.length} entradas registradas</div>
-          </div>
-          <button onClick={()=>{setForm(blank());setCurrent(null);setTab('entrada');}} className="btn" style={{background:'rgba(255,255,255,.15)',border:'1px solid rgba(255,255,255,.3)',color:'#fff'}}>
-            + Nova entrada
-          </button>
-        </div>
-        <div style={{display:'flex',borderBottom:'2px solid #E2E8F0',overflowX:'auto'}}>
-          {TABS.map(([k,l])=>(
-            <button key={k} onClick={()=>setTab(k)}
-              style={{flex:1,minWidth:80,padding:'11px 8px',border:'none',background:'transparent',fontSize:12,fontWeight:tab===k?700:400,color:tab===k?'#1A3A5C':'#718096',borderBottom:tab===k?'3px solid #1A3A5C':'3px solid transparent',whiteSpace:'nowrap'}}>
-              {l}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* BODY */}
-      <div className="card" style={{padding:18}}>
-
-        {/* ── ENTRADA ── */}
-        {tab==='entrada'&&(
-          <div>
-            {saved&&<div className="alert-success">✅ Salvo! Laudo e etiqueta disponíveis nas abas ao lado.</div>}
-
-            <div className="section sec-blue">
-              <div className="sec-title" style={{color:'#1A3A5C'}}>Identificação</div>
-              <div className="grid2">
-                <Field label="R.E. (auto se vazio)" value={form.re} onChange={f('re')} note={'Próximo: '+nextRE()} />
-                <Field label="Ano (2 dígitos)" value={form.ano} onChange={f('ano')} />
-              </div>
-            </div>
-
-            <div style={{marginBottom:12}}>
-              <label className="label">Substância / Produto *</label>
-              <Search value={form.substancia} onChange={f('substancia')} onSelect={handleSelect} db={fullDB} />
-              <div style={{fontSize:10,color:'#A0AEC0',marginTop:3}}>Busca nos {fullDB.length} produtos — DCB, CAS, armazenamento e teor preenchem automaticamente</div>
-            </div>
-
-            <div className="grid3" style={{marginBottom:4}}>
-              <Field label="Código" value={form.codigo} onChange={f('codigo')} />
-              <Field label="DCB" value={form.dcb} onChange={f('dcb')} />
-              <Field label="CAS" value={form.cas} onChange={f('cas')} />
-            </div>
-
-            <div className="section sec-green">
-              <div className="sec-title" style={{color:'#276749'}}>Compra / Nota Fiscal</div>
-              <div className="grid3">
-                <Field label="Fornecedor" value={form.fornecedor} onChange={f('fornecedor')} options={FORNECEDORES} />
-                <Field label="Nota Fiscal" value={form.nf} onChange={f('nf')} />
-                <Field label="Quantidade" value={form.qtde} onChange={f('qtde')} />
-                <Field label="Lote" value={form.lote} onChange={f('lote')} />
-                <Field label="Data Fabricação" value={form.fabricacao} onChange={f('fabricacao')} type="date" />
-                <Field label="Data Validade *" value={form.validade} onChange={f('validade')} type="date" />
-                <Field label="Data Fracionamento" value={form.fracionamento} onChange={f('fracionamento')} type="date" />
-                <Field label="Origem" value={form.origem} onChange={f('origem')} options={ORIGENS} />
-              </div>
-            </div>
-
-            <div className="section sec-yellow">
-              <div className="sec-title" style={{color:'#744210'}}>Dados Técnicos</div>
-              <div className="grid3">
-                <Field label="Armazenamento" value={form.armazenamento} onChange={f('armazenamento')} />
-                <Field label="Temperatura" value={form.temperatura} onChange={f('temperatura')} />
-                <Field label="Fator de Correção" value={form.fator} onChange={f('fator')} />
-                <Field label="Teor Referência" value={form.teor_ref} onChange={f('teor_ref')} />
-                <Field label="Teor Laudo Fabricante" value={form.teor_fab} onChange={f('teor_fab')} />
-              </div>
-            </div>
-
-            <div className="section sec-red">
-              <div className="sec-title" style={{color:'#9B2C2C'}}>Aspectos Gerais</div>
-              <Conf label="Laudo do Fornecedor" value={form.laudo_forn} onChange={f('laudo_forn')} />
-              <Conf label="Peso / Vol. do Produto" value={form.peso_vol} onChange={f('peso_vol')} />
-              <Conf label="Rótulo do Fornecedor" value={form.rotulo} onChange={f('rotulo')} />
-            </div>
-
-            <div className="section sec-gray">
-              <div className="sec-title" style={{color:'#2D3748'}}>Testes de Identificação</div>
-              <TesteRow label="Características Organolépticas"
-                refVal={form.organoleptica_ref} onRefChange={f('organoleptica_ref')}
-                resultVal={form.organoleptica_result} onResultChange={f('organoleptica_result')}
-                confVal={form.organoleptica_conf} onConfChange={f('organoleptica_conf')} />
-              <TesteRow label="Solubilidade"
-                refVal={form.solubilidade_ref} onRefChange={f('solubilidade_ref')}
-                resultVal={form.solubilidade_result} onResultChange={f('solubilidade_result')}
-                confVal={form.solubilidade_conf} onConfChange={f('solubilidade_conf')} />
-              <TesteRow label="Ponto de Fusão"
-                refVal={form.fusao_ref} onRefChange={f('fusao_ref')}
-                resultVal={form.fusao_result} onResultChange={f('fusao_result')}
-                confVal={form.fusao_conf} onConfChange={f('fusao_conf')} />
-              <TesteRow label="Densidade"
-                refVal={form.densidade_ref||form.densidade} onRefChange={f('densidade_ref')}
-                resultVal={form.densidade_result} onResultChange={f('densidade_result')}
-                confVal={form.densidade_conf} onConfChange={f('densidade_conf')} />
-              <TesteRow label="pH"
-                refVal={form.ph_ref} onRefChange={f('ph_ref')}
-                resultVal={form.ph_result} onResultChange={f('ph_result')}
-                confVal={form.ph_conf} onConfChange={f('ph_conf')} />
-            </div>
-
-            <div className="section sec-blue">
-              <div className="sec-title" style={{color:'#1A3A5C'}}>Classificações (Etiqueta)</div>
-              <div className="grid3">
-                {[['port344','Port. 344'],['termossens','Termossensível'],['fotossens','Fotossensível'],
-                  ['higro','Higroscópico'],['hormonio','Hormônio'],['citostatico','Citostático'],['antibiotico','Antibiótico']].map(([k,l])=>(
-                  <label key={k} className={`tag ${form[k]?'tag-on':''}`}>
-                    <input type="checkbox" checked={!!form[k]} onChange={e=>f(k)(e.target.checked)} style={{width:'auto',margin:0}} />{l}
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            <div className="section sec-gray">
-              <div className="sec-title" style={{color:'#2D3748'}}>Resultado Final</div>
-              <div style={{display:'flex',gap:10,marginBottom:12}}>
-                {[['A','✅ Aprovado','#276749','#F0FFF4','#38A169'],
-                  ['Q','🟡 Quarentena','#744210','#FFFBEB','#D69E2E'],
-                  ['R','❌ Reprovado','#9B2C2C','#FFF5F5','#E53E3E']].map(([v,l,c,bg,bdr])=>(
-                  <label key={v} style={{flex:1,display:'flex',alignItems:'center',gap:8,padding:'9px 14px',borderRadius:8,cursor:'pointer',border:`2px solid ${form.resultado===v?bdr:'#E2E8F0'}`,background:form.resultado===v?bg:'#fff',fontWeight:700}}>
-                    <input type="radio" value={v} checked={form.resultado===v} onChange={()=>f('resultado')(v)} style={{width:'auto',margin:0}} />
-                    <span style={{color:c,fontSize:13}}>{l}</span>
-                  </label>
-                ))}
-              </div>
-              <div className="grid2">
-                <Field label="Analisado por" value={form.analisado} onChange={f('analisado')} />
-                <Field label="Observações" value={form.obs} onChange={f('obs')} />
-              </div>
-            </div>
-
-            <button className="btn btn-primary" onClick={handleSave} style={{width:'100%',padding:'14px',fontSize:14,letterSpacing:.3}}>
-              💾 Salvar Entrada → Gerar Laudo e Etiqueta
-            </button>
-          </div>
-        )}
-
-        {tab==='laudo'&&<Laudo e={current} onPrint={()=>window.print()} />}
-        {tab==='etiqueta'&&<Etiquetas entries={entries} />}
-
-        {/* ── HISTÓRICO ── */}
-        {tab==='historico'&&(
-          <div>
-            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:14}}>
-              <div style={{fontWeight:700,fontSize:14,color:'#1A3A5C'}}>{entries.length} entrada{entries.length!==1?'s':''}</div>
-              <input value={histSearch} onChange={e=>setHistSearch(e.target.value)} placeholder="Buscar por produto, RE, fornecedor..." style={{width:280}} />
-            </div>
-            {entries.length===0&&(
-              <div style={{textAlign:'center',padding:60,color:'#A0AEC0',border:'2px dashed #E2E8F0',borderRadius:12}}>
-                <div style={{fontSize:40,marginBottom:10}}>📋</div>
-                <div style={{fontSize:14}}>Nenhuma entrada. Importe o historico_cq.json na aba ⚙️ Gerenciar.</div>
-              </div>
-            )}
-            {filteredHist.map(e=>(
-              <div key={e.id}
-                style={{border:'1px solid #E2E8F0',borderRadius:10,padding:'10px 14px',marginBottom:8,display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer',background:'#fff'}}
-                onMouseEnter={el=>el.currentTarget.style.background='#EBF4FB'}
-                onMouseLeave={el=>el.currentTarget.style.background='#fff'}
-                onClick={()=>{setCurrent(e);setForm(e);setTab('entrada');}}>
-                <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontWeight:700,fontSize:13,color:'#1A3A5C'}}>RE {e.re}/{e.ano} — {e.substancia}</div>
-                  <div style={{fontSize:11,color:'#718096',marginTop:2,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>
-                    {e.fornecedor} · Lote {e.lote} · Val. <b style={{color:'#9B2C2C'}}>{e.validade||'—'}</b> · <span style={{color:resColor(e.resultado),fontWeight:600}}>{resText(e.resultado)}</span>
-                  </div>
-                </div>
-                <div style={{display:'flex',gap:6,marginLeft:10}}>
-                  <button className="btn btn-sm btn-ghost" onClick={ev=>{ev.stopPropagation();setCurrent(e);setTab('laudo');}}>Laudo</button>
-                  <button className="btn btn-sm btn-ghost" onClick={ev=>{ev.stopPropagation();setCurrent(e);setTab('etiqueta');}}>Etiqueta</button>
-                  <button className="btn btn-sm btn-danger" onClick={ev=>{ev.stopPropagation();handleDelete(e.id);}}>✕</button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {tab==='gerenciar'&&(
-          <Gerenciar userDB={userDB} onSaveUserDB={handleSaveUserDB} entries={entries} onImportEntries={handleImportEntries} />
-        )}
-      </div>
-
-      <div className="no-print" style={{textAlign:'center',fontSize:11,color:'#A0AEC0',marginTop:12}}>
-        CQ Fórmula Animal · Dados salvos localmente neste navegador
-      </div>
-    </div>
-  );
+function exportDB(){
+  const all=[...EMBEDDED_DB,...S.userDB];
+  const b=new Blob([JSON.stringify(all,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='substancias_cq.json'; a.click();
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+function exportEntries(){
+  const b=new Blob([JSON.stringify(S.entries,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='historico_cq.json'; a.click();
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────
+paint();
 </script>
 </body>
 </html>
