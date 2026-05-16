@@ -95,6 +95,8 @@ var TODAY=new Date().toISOString().split("T")[0];
 <script>
 
 function e(v){return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function fmt(d){if(!d||d==='--')return d||'--';var p=String(d).split('-');if(p.length===3&&p[0].length===4)return p[2]+'/'+p[1]+'/'+p[0];return d;}
 function gls(k){try{return JSON.parse(localStorage.getItem(k)||'null');}catch(x){return null;}}
 function sls(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(x){}}
 function fdb(){return DB.concat(S.udb);}
@@ -120,7 +122,7 @@ function blank(){return {re:'',ano:new Date().getFullYear().toString().slice(-2)
   port344:false,termossens:false,fotossens:false,higro:false,hormonio:false,citostatico:false,antibiotico:false};}
 
 var S={tab:'entrada',form:blank(),entries:gls('cq_entries')||[],udb:gls('cq_userdb')||[],
-       current:null,esel:{},histQ:'',subQ:'',etiqQ:'',gerTab:'sub',msg:'',
+       current:null,esel:{},histQ:'',subQ:'',etiqQ:'',gerTab:'sub',msg:'',editSub:null,
        newSub:{n:'',d:'',s:'',dci:'',sin:'',fm:'',pm:'',fte:'',ftc:'',tp:'',
                org:'',sol:'',fus:'',dn:'',ph:'',a:'',ref:''}};
 
@@ -160,16 +162,16 @@ function laudoHtml(en){
   r+='<div style="text-align:right"><div style="font-size:9px;opacity:.7">Codigo do Laudo</div><div style="font-size:20px;font-weight:700">'+RE+'</div></div></div>';
   r+='<div class="lb"><div class="lk">';
   r+='<div><div class="kl">Produto</div><div class="kv" style="color:#1A3A5C">'+e(en.substancia)+'</div></div>';
-  r+='<div><div class="kl">Data de Validade</div><div class="kv" style="color:#9B2C2C">'+(e(en.validade)||'--')+'</div></div>';
-  r+='<div><div class="kl">Fabricacao</div><div class="kv" style="font-size:11px">'+(e(en.fabricacao)||'--')+'</div></div>';
-  r+='<div><div class="kl">Fracionamento</div><div class="kv" style="font-size:11px">'+(e(en.fracionamento)||'--')+'</div></div></div>';
+  r+='<div><div class="kl">Data de Validade</div><div class="kv" style="color:#9B2C2C">'+(fmt(en.validade)||'--')+'</div></div>';
+  r+='<div><div class="kl">Fabricacao</div><div class="kv" style="font-size:11px">'+(fmt(en.fabricacao)||'--')+'</div></div>';
+  r+='<div><div class="kl">Fracionamento</div><div class="kv" style="font-size:11px">'+(fmt(en.fracionamento)||'--')+'</div></div></div>';
   /* DETALHES DA COMPRA - 2 colunas conforme solicitado */
   r+='<div class="sh">Detalhes da Compra</div>';
   r+='<table class="lt" style="margin-bottom:4px"><tbody>';
   r+=row2('Produto',en.substancia,'Codigo/Espec.',en.codigo);
   r+=row2('Fornecedor',en.fornecedor,'Nota Fiscal',en.nf);
   r+=row2('Lote',en.lote,'Quantidade',en.qtde);
-  r+=row2('Data Fabricacao',en.fabricacao,'Data Validade',en.validade);
+  r+=row2('Data Fabricacao',fmt(en.fabricacao),'Data Validade',fmt(en.validade));
   r+=row2('Origem',en.origem,'Fator de Correcao',en.fator);
   r+=row2('DCB',en.dcb,'CAS',en.cas);
   r+=row2('DCI',en.dci,'Sinonimo',en.sinonimo);
@@ -192,7 +194,7 @@ function laudoHtml(en){
   r+='<div style="font-size:18px;font-weight:700;color:'+rc(en.resultado)+'">'+ri(en.resultado)+' '+rl(en.resultado)+'</div>';
   if(en.resultado==='Q'){r+='<div style="font-size:10px;color:#744210;margin-top:4px">Produto em quarentena</div>';}
   if(en.analisado){r+='<div style="font-size:10px;margin-top:6px;color:#718096">Analisado por: <b style="color:#2D3748">'+e(en.analisado)+'</b></div>';}
-  r+='</div><div class="lf"><span>COPIA CONTROLADA</span><span>Data: '+(e(en.fracionamento)||TODAY)+'</span><span>Revisao n 01</span></div>';
+  r+='</div><div class="lf"><span>COPIA CONTROLADA</span><span>Data: '+(fmt(en.fracionamento)||TODAY)+'</span><span>Revisao n 01</span></div>';
   r+='</div></div>';return r;}
 
 /* ── ETIQUETA CARD ── */
@@ -205,13 +207,14 @@ function etiqCard(en){
   /* UPPERCASE nome na etiqueta */
   r+='<div class="en">'+e((en.substancia||'').toUpperCase())+'</div>';
   r+='<table class="et"><tbody>';
-  r+='<tr><td class="el">DT.Fabr.:</td><td class="ev">'+e(en.fabricacao)+'</td><td class="el" style="width:12%">RE</td><td style="font-weight:700;color:#1A3A5C">'+RE+'</td></tr>';
-  r+='<tr><td class="el">DT.Valid.:</td><td style="font-weight:700;font-size:12px;color:#9B2C2C">'+(e(en.validade)||'--')+'</td><td class="el">DCB:</td><td class="ev">'+(e(en.dcb)||'n/d')+'</td></tr>';
+  r+='<tr><td class="el">DT.Fabr.:</td><td class="ev">'+fmt(en.fabricacao)+'</td><td class="el" style="width:12%">RE</td><td style="font-weight:700;color:#1A3A5C">'+RE+'</td></tr>';
+  r+='<tr><td class="el">DT.Valid.:</td><td colspan="3" style="font-weight:700;font-size:12px;color:#9B2C2C;white-space:nowrap">'+(fmt(en.validade)||'--')+'</td></tr>';
+  r+='<tr><td class="el">DCB:</td><td colspan="3" class="ev">'+(e(en.dcb)||'n/d')+'</td></tr>';
   if(fok){r+='<tr><td class="el">F.Corr.:</td><td colspan="3" style="font-weight:700;font-size:13px;color:#9B2C2C">'+e(en.fator)+'</td></tr>';}
   else{r+='<tr><td class="el">F.Corr.:</td><td class="ev">'+(e(en.fator)||'--')+'</td><td class="el">Orig.:</td><td class="ev">'+(e(en.origem)||'--')+'</td></tr>';}
   r+='<tr><td class="el">Fornec.:</td><td colspan="2" class="ev">'+e(en.fornecedor)+'</td><td></td></tr>';
-  r+='<tr><td class="el">Lote:</td><td class="ev">'+e(en.lote)+'</td><td class="el">Dens.:</td><td class="ev">'+(e(en.densidade||en.densidade_ref)||'--')+'</td></tr>';
-  r+='<tr><td class="el">Qtde.:</td><td class="ev">'+e(en.qtde)+'</td><td class="el">Teor:</td><td class="ev">'+(e(en.teor_fab||en.teor_pot||en.teor_ref)||'--')+'</td></tr>';
+  r+='<tr><td class="el">Lote:</td><td colspan="3" class="ev">'+e(en.lote)+'</td></tr>';
+  r+='<tr><td class="el">Qtde.:</td><td class="ev">'+e(en.qtde)+'</td><td class="el">Teor:</td><td class="ev">'+e(en.teor_fab||en.teor_pot||en.teor_ref||'--')+'</td></tr>';
   r+='<tr><td class="el">CAS:</td><td colspan="3" style="font-weight:600;font-size:9px">'+(e(en.cas)||'--')+'</td></tr>';
   r+='</tbody></table>';
   if(en.armazenamento){var arm=(en.armazenamento||'').substring(0,90);r+='<div class="ea"><div style="font-size:9px;font-weight:700;color:#4A5568;text-transform:uppercase;margin-bottom:2px">Armazenamento</div><div style="font-size:9px;color:#2D3748;line-height:1.4">'+e(arm)+((en.armazenamento||'').length>90?'...':'')+'</div></div>';}
@@ -220,7 +223,7 @@ function etiqCard(en){
 
 /* ── TAB RENDERS ── */
 function renderHdr(){
-  return '<div class="hdr np"><div><div style="font-size:17px;font-weight:700">🔬 Controle de Qualidade de Matérias Primas Formula Animal</div><div style="font-size:11px;opacity:.65;margin-top:2px">'+fdb().length+' substancias · '+S.entries.length+' entradas</div></div>'+
+  return '<div class="hdr np"><div><div style="font-size:17px;font-weight:700">🔬 Controle de Qualidade de Matérias-Primas Formula Animal</div><div style="font-size:11px;opacity:.65;margin-top:2px">'+fdb().length+' substancias · '+S.entries.length+' entradas</div></div>'+
          '<button class="btn np" data-action="newEntry" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff">+ Nova entrada</button></div>';}
 
 function renderTabs(){
@@ -359,11 +362,23 @@ function renderGerenciar(){
       if(hasTests){r+='<span style="margin-left:6px;font-size:10px;background:#F0FFF4;color:#276749;padding:1px 6px;border-radius:10px">dados testes</span>';}
       if(isU){r+='<span style="margin-left:4px;font-size:10px;background:#EBF4FB;color:#1A3A5C;padding:1px 6px;border-radius:10px">personalizada</span>';}
       r+='<div style="font-size:11px;color:#718096;margin-top:2px">'+(s.d?'DCB: '+e(s.d)+' · ':'')+( s.s?'CAS: '+e(s.s):'')+'</div></div>';
-      if(isU){r+='<button class="btn bd bsm remSub-btn" data-sc="'+e(s.c)+'">Remover</button>';}
+      if(isU){r+='<div style="display:flex;gap:4px"><button class="btn bg bsm editSub-btn" data-sc="'+e(s.c)+'">Editar</button><button class="btn bd bsm remSub-btn" data-sc="'+e(s.c)+'">Remover</button></div>';}
       r+='</div>';
     });
     if(fil.length>150){r+='<div style="padding:10px;text-align:center;color:#718096;font-size:12px">Mostrando 150 de '+fil.length+'. Refine a busca.</div>';}
     r+='</div>';
+    /* Edit form */
+    if(S.editSub){
+      var es=S.editSub;
+      r+='<div id="edit-sub-form" class="sec s2" style="margin-top:16px"><div class="stl" style="color:#276749">✏️ Editando: '+e(es.n)+'</div>';
+      r+='<div class="g3" style="margin-bottom:8px">';
+      var eFields=[['Nome','n'],['DCB','d'],['CAS','s'],['DCI','dci'],['Sinonimo','sin'],['Formula Molecular','fm'],['Peso Molecular','pm'],['Ft. Equivalencia','fte'],['Ft. Correcao','ftc'],['Teor/Potencia','tp'],['Densidade','dn'],['pH','ph']];
+      eFields.forEach(function(f){r+='<div class="fld"><label class="lbl">'+f[0]+'</label><input class="esf" data-ek="'+f[1]+'" value="'+e(es[f[1]]||'')+'"></div>';});
+      r+='</div><div class="g2" style="margin-bottom:8px">';
+      [['Caract. Organolepticas','org'],['Solubilidade','sol'],['Ponto de Fusao','fus'],['Armazenamento','a']].forEach(function(f){r+='<div class="fld"><label class="lbl">'+f[0]+'</label><input class="esf" data-ek="'+f[1]+'" value="'+e(es[f[1]]||'')+'"></div>';});
+      r+='</div><div class="fld" style="margin-bottom:12px"><label class="lbl">Referencias</label><input class="esf" data-ek="ref" value="'+e(es.ref||'')+'"></div>';
+      r+='<div style="display:flex;gap:8px"><button class="btn bp" data-action="saveEditSub">💾 Salvar Alteracoes</button><button class="btn bg" data-action="cancelEdit">Cancelar</button></div></div>';
+    }
   }else{
     r+='<div class="sec s2" style="margin-bottom:16px"><div class="stl" style="color:#276749">📥 Importar Historico de Laudos</div>';
     r+='<p style="font-size:13px;margin-bottom:12px;color:#4A5568">Importe o <b>historico_cq.json</b> — 377 entradas de 2022-2026.</p>';
@@ -405,6 +420,8 @@ function bindAll(){
   document.querySelectorAll('.eq-sel').forEach(function(sel){sel.onchange=function(){setEQ(this.dataset.eid,+this.value);};});
   document.querySelectorAll('.etog-btn').forEach(function(btn){btn.onclick=function(ev){ev.stopPropagation();togE(this.dataset.eid);};});
   document.querySelectorAll('.remSub-btn').forEach(function(btn){btn.onclick=function(){remSub(this.dataset.sc);};});
+  document.querySelectorAll('.editSub-btn').forEach(function(btn){btn.onclick=function(){startEditSub(this.dataset.sc);};});
+  document.querySelectorAll('.esf').forEach(function(el){el.oninput=function(){if(S.editSub)S.editSub[this.dataset.ek]=this.value;};});
   var ie=document.getElementById('imp-e');if(ie){ie.onchange=function(ev){impE(ev);};}
   var idd=document.getElementById('imp-d');if(idd){idd.onchange=function(ev){impD(ev);};}
   document.querySelectorAll('[data-action]').forEach(function(el){
@@ -420,6 +437,8 @@ function bindAll(){
       else if(a==='delE'){ev.stopPropagation();delE(eid);}
       else if(a==='gerTab'){S.gerTab=v;repaint();}
       else if(a==='addSub'){addSub();}
+      else if(a==='saveEditSub'){saveEditSub();}
+      else if(a==='cancelEdit'){cancelEdit();}
       else if(a==='expDB'){expDB();}
       else if(a==='expE'){expE();}
       else if(a==='pickImpE'){document.getElementById('imp-e').click();}
@@ -523,6 +542,27 @@ function impD(ev){var f=ev.target.files[0];if(!f)return;var r=new FileReader();r
 function expDB(){var b=new Blob([JSON.stringify(DB.concat(S.udb),null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='substancias_cq.json';a.click();}
 function expE(){var b=new Blob([JSON.stringify(S.entries,null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='historico_cq.json';a.click();}
 
+
+function startEditSub(c){
+  var s=S.udb.filter(function(x){return x.c===c;})[0];
+  if(!s)return;
+  S.editSub=Object.assign({},s);
+  repaint();
+  setTimeout(function(){
+    var el=document.getElementById('edit-sub-form');
+    if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+  },50);
+}
+function saveEditSub(){
+  if(!S.editSub)return;
+  S.udb=S.udb.map(function(s){return s.c===S.editSub.c?Object.assign({},S.editSub):s;});
+  sls('cq_userdb',S.udb);
+  S.msg='Substancia atualizada!';
+  S.editSub=null;
+  repaint();
+  setTimeout(function(){S.msg='';},3000);
+}
+function cancelEdit(){S.editSub=null;repaint();}
 try{paint();}catch(err){document.getElementById('root').innerHTML='<div class="err">Erro: '+err.message+'\n\n'+err.stack+'</div>';}
 
 </script>
