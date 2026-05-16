@@ -327,7 +327,7 @@ function renderHdr(){
 function renderTabs(){
   var ts=[['entrada','📝 Nova Entrada'],['laudo','🔬 Laudo'],['etiqueta','🏷️ Etiquetas'],['historico','📚 Historico'],['gerenciar','⚙️ Gerenciar']];
   var r='<div class="tabs np">';
-  ts.forEach(function(t){r+='<button class="tab'+(S.tab===t[0]?' on':'')+'" onclick="switchTab(''+t[0]+'')">'+t[1]+'</button>';});
+  ts.forEach(function(t){r+='<button class="tab'+(S.tab===t[0]?' on':'')+'" onclick=\"switchTab(''+t[0]+'')">'+t[1]+'</button>';});
   return r+'</div>';
 }
 function renderEntrada(){
