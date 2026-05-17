@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Controle de Qualidade de Matérias-Primas Formula Animal</title>
+<title>CQ Formula Animal</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,Helvetica,sans-serif;background:#EDF2F7;min-height:100vh}
@@ -224,7 +224,7 @@ function etiqCard(en){
 
 /* ── TAB RENDERS ── */
 function renderHdr(){
-  return '<div class="hdr np"><div><div style="font-size:17px;font-weight:700">🔬 Controle de Qualidade de Matérias-Primas Fórmula Animal</div><div style="font-size:11px;opacity:.65;margin-top:2px">'+fdb().length+' substancias · '+S.entries.length+' entradas</div></div>'+
+  return '<div class="hdr np"><div><div style="font-size:17px;font-weight:700">🔬 CQ Formula Animal</div><div style="font-size:11px;opacity:.65;margin-top:2px">'+fdb().length+' substancias · '+S.entries.length+' entradas</div></div>'+
          '<button class="btn np" data-action="newEntry" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff">+ Nova entrada</button></div>';}
 
 function renderTabs(){
@@ -304,13 +304,66 @@ function renderEtiqueta(){
   if(etiqList.length>0){r+='<button class="btn bp" data-action="print">🖨️ Imprimir '+etiqList.length+'</button>';}
   r+='</div>'+selHtml;
   r+='<div style="margin-bottom:8px"><input id="etiqq" placeholder="Buscar laudo por produto ou RE... ('+S.entries.length+' entradas)" value="'+e(S.etiqQ)+'"></div>';
-  r+='<div style="max-height:280px;overflow-y:auto;border:1px solid #E2E8F0;border-radius:8px">'+listHtml+'</div></div>'+preview;
+  r+='<div id="etiq-list" style="max-height:280px;overflow-y:auto;border:1px solid #E2E8F0;border-radius:8px">'+renderEtiqList()+'</div></div>'+preview;
   return r;}
 
+
+function renderHistList(){
+  var q=S.histQ.toLowerCase();
+  var fil=q?S.entries.filter(function(en){return (en.substancia||'').toLowerCase().indexOf(q)>=0||(en.re||'').indexOf(q)>=0||(en.fornecedor||'').toLowerCase().indexOf(q)>=0;}):S.entries;
+  var r='';
+  if(S.entries.length===0){return '<div style="text-align:center;padding:60px;color:#A0AEC0;border:2px dashed #E2E8F0;border-radius:12px"><div style="font-size:40px;margin-bottom:10px">📋</div><div>Nenhuma entrada. Importe o historico_cq.json em Gerenciar.</div></div>';}
+  fil.forEach(function(en){
+    r+='<div class="hi" data-action="loadE" data-eid="'+en.id+'">';
+    r+='<div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13px;color:#1A3A5C">RE '+e(en.re)+'/'+e(en.ano)+' — '+e(en.substancia)+'</div>';
+    r+='<div style="font-size:11px;color:#718096;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+e(en.fornecedor||'')+' · Val. <b style="color:#9B2C2C">'+(fmt(en.validade)||'--')+'</b> · <span style="color:'+rc(en.resultado)+';font-weight:600">'+ri(en.resultado)+' '+rl(en.resultado)+'</span></div></div>';
+    r+='<div class="hb"><button class="btn bg bsm" data-action="vLaudo" data-eid="'+en.id+'">Laudo</button>';
+    r+='<button class="btn bg bsm" data-action="vEtiq" data-eid="'+en.id+'">Etiqueta</button>';
+    r+='<button class="btn bd bsm" data-action="delE" data-eid="'+en.id+'">✕</button></div></div>';
+  });
+  return r;
+}
+
+function renderEtiqList(){
+  var q=S.etiqQ.toLowerCase();
+  var filtE=q?S.entries.filter(function(en){return (en.substancia||'').toLowerCase().indexOf(q)>=0||(en.re||'').indexOf(q)>=0;}):S.entries;
+  var r='';
+  filtE.forEach(function(en){
+    var s=!!S.esel[en.id];
+    r+='<div class="esr'+(s?' on':'')+' etog-btn" data-eid="'+en.id+'">';
+    r+='<div style="display:flex;align-items:center;gap:10px"><div class="cb'+(s?' on':'')+'">'+(s?'✓':'')+'</div>';
+    r+='<div><span style="font-weight:700;font-size:12px;color:#1A3A5C">RE '+e(en.re)+'/'+e(en.ano)+'</span> <span style="font-size:12px;color:#4A5568">'+e(en.substancia)+'</span></div></div>';
+    r+='<span style="font-size:11px;color:#718096">'+e(fmt(en.validade)||'--')+'</span></div>';
+  });
+  return r;
+}
+
+function renderSubList(){
+  var db=fdb(),q=S.subQ.toLowerCase();
+  var fil=q?db.filter(function(s){return s.n.toLowerCase().indexOf(q)>=0;}):db;
+  var r='';
+  fil.slice(0,150).forEach(function(s){
+    var isU=String(s.c).indexOf('U')===0,hasTests=!!(s.org||s.sol||s.fus||s.ph);
+    var hasOverride=!isU&&!!S.overrides[s.c];
+    r+='<div style="padding:8px 14px;border-bottom:1px solid #EEF2F7;display:flex;justify-content:space-between;align-items:center">';
+    r+='<div><span style="font-weight:600;font-size:13px">'+e(s.n)+'</span>';
+    if(hasTests){r+='<span style="margin-left:6px;font-size:10px;background:#F0FFF4;color:#276749;padding:1px 6px;border-radius:10px">dados testes</span>';}
+    if(hasOverride){r+='<span style="margin-left:4px;font-size:10px;background:#FFF8E1;color:#744210;padding:1px 6px;border-radius:10px">editada</span>';}
+    if(isU){r+='<span style="margin-left:4px;font-size:10px;background:#EBF4FB;color:#1A3A5C;padding:1px 6px;border-radius:10px">personalizada</span>';}
+    r+='<div style="font-size:11px;color:#718096;margin-top:2px">'+(s.d?'DCB: '+e(s.d)+' · ':'')+( s.s?'CAS: '+e(s.s):'')+'</div></div>';
+    r+='<div style="display:flex;gap:4px"><button class="btn bg bsm editSub-btn" data-sc="'+e(s.c)+'">✏️ Editar</button>';
+    r+='<button class="btn bg bsm fichaBtn" data-sc="'+e(s.c)+'">📄 Ficha</button>';
+    if(isU){r+='<button class="btn bd bsm remSub-btn" data-sc="'+e(s.c)+'">✕</button>';}
+    r+='</div></div>';
+  });
+  if(fil.length>150){r+='<div style="padding:10px;text-align:center;color:#718096;font-size:12px">Mostrando 150 de '+fil.length+'. Refine a busca.</div>';}
+  return r;
+}
 function renderHistorico(){
   var q=S.histQ.toLowerCase();
   var fil=q?S.entries.filter(function(en){return (en.substancia||'').toLowerCase().indexOf(q)>=0||(en.re||'').indexOf(q)>=0||(en.fornecedor||'').toLowerCase().indexOf(q)>=0;}):S.entries;
   var r='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div style="font-weight:700;font-size:14px;color:#1A3A5C">'+S.entries.length+' entrada'+(S.entries.length!==1?'s':'')+'</div><input id="hq" style="width:280px" placeholder="Buscar produto, RE, fornecedor..." value="'+e(S.histQ)+'"></div>';
+  r+='<div id="hist-list">';
   if(S.entries.length===0){r+='<div style="text-align:center;padding:60px;color:#A0AEC0;border:2px dashed #E2E8F0;border-radius:12px"><div style="font-size:40px;margin-bottom:10px">📋</div><div>Nenhuma entrada. Importe o historico_cq.json em Gerenciar.</div></div>';}
   fil.forEach(function(en){
     r+='<div class="hi" data-action="loadE" data-eid="'+en.id+'">';
@@ -320,6 +373,7 @@ function renderHistorico(){
     r+='<button class="btn bg bsm" data-action="vEtiq" data-eid="'+en.id+'">Etiqueta</button>';
     r+='<button class="btn bd bsm" data-action="delE" data-eid="'+en.id+'">✕</button></div></div>';
   });
+  r+='</div>';
   return r;}
 
 function renderGerenciar(){
@@ -354,7 +408,7 @@ function renderGerenciar(){
     r+='<div class="fld" style="margin-bottom:10px"><label class="lbl">Referencias</label><input id="ns-ref" value="'+e(ns.ref)+'"></div>';
     r+='<button class="btn bp" data-action="addSub">+ Adicionar Substancia</button></div>';
     r+='<div style="margin-bottom:8px"><input id="sq" placeholder="Buscar nas '+db.length+' substancias..." value="'+e(S.subQ)+'"></div>';
-    r+='<div style="max-height:380px;overflow-y:auto;border:1px solid #E2E8F0;border-radius:8px">';
+    r+='<div id="sub-list" style="max-height:380px;overflow-y:auto;border:1px solid #E2E8F0;border-radius:8px">';
     fil.slice(0,150).forEach(function(s){
       var isU=String(s.c).indexOf('U')===0;
       var hasTests=!!(s.org||s.sol||s.fus||s.ph);
@@ -412,22 +466,20 @@ function renderTab(){
 function paint(){
   document.getElementById('root').innerHTML='<div class="app">'+renderHdr()+renderTabs()+'<div class="card body" id="tb">'+renderTab()+'</div><div class="ft np">CQ Formula Animal · Dados salvos localmente</div></div>'+renderFichaModal()+renderAIModal();
   bindAll();}
-function repaint(){document.getElementById('tb').innerHTML=renderTab();var root=document.getElementById('root');var existing=root.querySelectorAll('.modal-overlay');existing.forEach(function(m){m.remove();});var fichaHtml=renderFichaModal();var aiHtml=renderAIModal();if(fichaHtml){var d=document.createElement('div');d.className='modal-overlay';d.innerHTML=fichaHtml;root.appendChild(d);}if(aiHtml){var d2=document.createElement('div');d2.className='modal-overlay';d2.innerHTML=aiHtml;root.appendChild(d2);}bindAll();}
+function repaint(){var _af=document.activeElement,_fid=_af?_af.id:null,_fsel=_af&&_af.selectionStart!==undefined?_af.selectionStart:null,_fval=_af?_af.value:null;document.getElementById('tb').innerHTML=renderTab();var root=document.getElementById('root');var existing=root.querySelectorAll('.modal-overlay');existing.forEach(function(m){m.remove();});var fichaHtml=renderFichaModal();var aiHtml=renderAIModal();if(fichaHtml){var d=document.createElement('div');d.className='modal-overlay';d.innerHTML=fichaHtml;root.appendChild(d);}if(aiHtml){var d2=document.createElement('div');d2.className='modal-overlay';d2.innerHTML=aiHtml;root.appendChild(d2);}if(_fid){var _rfe=document.getElementById(_fid);if(_rfe&&_fval!==null&&_rfe.value===_fval){_rfe.focus();if(_fsel!==null&&_rfe.setSelectionRange){try{_rfe.setSelectionRange(_fsel,_fsel);}catch(x){}}}}bindAll();}
 
 function bindAll(){
   var inp=document.getElementById('ss'),drop=document.getElementById('sd');
   if(inp&&drop){inp.oninput=function(){S.form.substancia=this.value;doSearch(this.value);};inp.onfocus=function(){doSearch(this.value);};}
-  var hq=document.getElementById('hq');if(hq){hq.oninput=function(){S.histQ=this.value;repaint();};}
-  var sq=document.getElementById('sq');if(sq){sq.oninput=function(){S.subQ=this.value;repaint();};}
-  var etiqq=document.getElementById('etiqq');if(etiqq){etiqq.oninput=function(){S.etiqQ=this.value;repaint();};}
+  var hq=document.getElementById('hq');if(hq){hq.oninput=function(){S.histQ=this.value;var c=document.getElementById('hist-list');if(c){c.innerHTML=renderHistList();}else{repaint();}};}
+  var sq=document.getElementById('sq');if(sq){sq.oninput=function(){S.subQ=this.value;var c=document.getElementById('sub-list');if(c){c.innerHTML=renderSubList();}else{repaint();}};}
+  var etiqq=document.getElementById('etiqq');if(etiqq){etiqq.oninput=function(){S.etiqQ=this.value;var c=document.getElementById('etiq-list');if(c){c.innerHTML=renderEtiqList();}else{repaint();}};}
   /* ns fields */
   var nsMap={n:'ns-n',d:'ns-d',s:'ns-s',dci:'ns-dci',sin:'ns-sin',fm:'ns-fm',pm:'ns-pm',fte:'ns-fte',ftc:'ns-ftc',tp:'ns-tp',dn:'ns-dn',ph:'ns-ph',org:'ns-org',sol:'ns-sol',fus:'ns-fus',a:'ns-a',ref:'ns-ref'};
   Object.keys(nsMap).forEach(function(k){var el=document.getElementById(nsMap[k]);if(el){el.oninput=function(){S.newSub[k]=this.value;};}});
   document.querySelectorAll('.eq-sel').forEach(function(sel){sel.onchange=function(){setEQ(this.dataset.eid,+this.value);};});
   document.querySelectorAll('.etog-btn').forEach(function(btn){btn.onclick=function(ev){ev.stopPropagation();togE(this.dataset.eid);};});
   document.querySelectorAll('.remSub-btn').forEach(function(btn){btn.onclick=function(){remSub(this.dataset.sc);};});
-  document.querySelectorAll('.editSub-btn').forEach(function(btn){btn.onclick=function(){startEditSub(this.dataset.sc);};});
-  document.querySelectorAll('.fichaBtn').forEach(function(btn){btn.onclick=function(){S.fichaCode=this.dataset.sc;repaint();};});
   var aif=document.getElementById('ai-file');if(aif){aif.onchange=function(){callAI(this);this.value='';};}
   document.querySelectorAll('.esf').forEach(function(el){el.oninput=function(){if(S.editSub)S.editSub[this.dataset.ek]=this.value;};});
   var ie=document.getElementById('imp-e');if(ie){ie.onchange=function(ev){impE(ev);};}
@@ -466,6 +518,41 @@ function bindAll(){
     el.oninput=function(){S.form[this.dataset.f]=this.type==='checkbox'?this.checked:this.value;};
     el.onchange=function(){S.form[this.dataset.f]=this.type==='checkbox'?this.checked:this.value;};
   });
+  /* delegated clicks on dynamic list containers */
+  ['hist-list','etiq-list'].forEach(function(cid){
+    var cont=document.getElementById(cid);
+    if(!cont)return;
+    cont.onclick=function(ev){
+      var t=ev.target;
+      while(t&&t!==cont){
+        if(t.dataset&&t.dataset.action){
+          var a=t.dataset.action,eid=t.dataset.eid;
+          if(a==='loadE'){loadE(eid);return;}
+          if(a==='vLaudo'){vLaudo(eid);return;}
+          if(a==='vEtiq'){vEtiq(eid);return;}
+          if(a==='delE'){delE(eid);return;}
+        }
+        if(t.classList&&t.classList.contains('etog-btn')){togE(t.dataset.eid);return;}
+        if(t.classList&&t.classList.contains('editSub-btn')){startEditSub(t.dataset.sc);return;}
+        if(t.classList&&t.classList.contains('fichaBtn')){S.fichaCode=t.dataset.sc;repaint();return;}
+        if(t.classList&&t.classList.contains('remSub-btn')){remSub(t.dataset.sc);return;}
+        t=t.parentElement;
+      }
+    };
+  });
+  var subList=document.getElementById('sub-list');
+  if(subList){
+    subList.onclick=function(ev){
+      var t=ev.target;
+      while(t&&t!==subList){
+        if(t.classList&&t.classList.contains('editSub-btn')){ev.stopPropagation();startEditSub(t.dataset.sc);return;}
+        if(t.classList&&t.classList.contains('fichaBtn')){ev.stopPropagation();S.fichaCode=t.dataset.sc;repaint();return;}
+        if(t.classList&&t.classList.contains('remSub-btn')){remSub(t.dataset.sc);return;}
+        if(t.dataset&&t.dataset.action==='loadE'){loadE(t.dataset.eid);return;}
+        t=t.parentElement;
+      }
+    };
+  }
   /* close search on outside click */
   document.onclick=function(ev){
     var drop=document.getElementById('sd');
@@ -561,7 +648,7 @@ function expE(){var b=new Blob([JSON.stringify(S.entries,null,2)],{type:'applica
 
 
 function startEditSub(c){
-  var s=S.udb.filter(function(x){return x.c===c;})[0];
+  var s=fdb().filter(function(x){return x.c===c;})[0];
   if(!s)return;
   S.editSub=Object.assign({},s);
   repaint();
