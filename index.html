@@ -382,7 +382,10 @@ function renderGerenciar(){
   var r='<div style="display:flex;gap:6px;margin-bottom:16px"><button class="btn '+(S.gerTab==='sub'?'bp':'bg')+'" data-action="gerTab" data-val="sub">📦 Substancias</button><button class="btn '+(S.gerTab==='imp'?'bp':'bg')+'" data-action="gerTab" data-val="imp">📥 Importar/Exportar</button></div>';
   if(S.msg){r+='<div class="ok">'+e(S.msg)+'</div>';}
   if(S.gerTab==='sub'){
-    r+='<div class="sec s1" style="margin-bottom:16px"><div class="stl" style="color:#1A3A5C">Adicionar / Importar Substancia</div>';
+    r+='<div class="sec s1" style="margin-bottom:16px">';
+    r+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">';
+    r+='<div class="stl" style="color:#1A3A5C;margin:0">Adicionar / Importar Substancia</div>';
+    r+='<button class="btn bg bsm" data-action="openSubAINew" style="font-size:11px">🤖 Preencher com IA</button></div>';
     r+='<div style="background:#F0FFF4;border:1px solid #68D391;border-radius:6px;padding:8px 12px;margin-bottom:12px;font-size:12px;color:#276749">';
     r+='💡 Para adicionar as 1505 especificacoes completas (com dados de testes): baixe e importe o arquivo <b>substancias_completo.json</b> na aba Importar/Exportar.</div>';
     r+='<div class="g3" style="margin-bottom:8px">';
@@ -430,6 +433,7 @@ function renderGerenciar(){
       r+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">';
       r+='<div class="stl" style="color:#276749;margin:0">✏️ Editando: '+e(es.n)+'</div>';
       if(!esIsU&&S.overrides[es.c]){r+='<button class="btn bd bsm" data-action="resetSub" data-sc="'+e(es.c)+'">↺ Restaurar original</button>';}
+      r+='<button class="btn bg bsm" data-action="openSubAIEdit" style="font-size:11px">🤖 Preencher com IA</button>';
       r+='</div>';
       r+='<div class="g3" style="margin-bottom:8px">';
       var eFields=[['Nome','n'],['DCB','d'],['CAS','s'],['DCI','dci'],['Sinonimo','sin'],['Formula Molecular','fm'],['Peso Molecular','pm'],['Ft. Equivalencia','fte'],['Ft. Correcao','ftc'],['Teor/Potencia','tp'],['Densidade','dn'],['pH','ph']];
@@ -466,7 +470,7 @@ function renderTab(){
 function paint(){
   document.getElementById('root').innerHTML='<div class="app">'+renderHdr()+renderTabs()+'<div class="card body" id="tb">'+renderTab()+'</div><div class="ft np">CQ Formula Animal · Dados salvos localmente</div></div>'+renderFichaModal()+renderAIModal();
   bindAll();}
-function repaint(){var _af=document.activeElement,_fid=_af?_af.id:null,_fsel=_af&&_af.selectionStart!==undefined?_af.selectionStart:null,_fval=_af?_af.value:null;document.getElementById('tb').innerHTML=renderTab();var root=document.getElementById('root');var existing=root.querySelectorAll('.modal-overlay');existing.forEach(function(m){m.remove();});var fichaHtml=renderFichaModal();var aiHtml=renderAIModal();if(fichaHtml){var d=document.createElement('div');d.className='modal-overlay';d.innerHTML=fichaHtml;root.appendChild(d);}if(aiHtml){var d2=document.createElement('div');d2.className='modal-overlay';d2.innerHTML=aiHtml;root.appendChild(d2);}if(_fid){var _rfe=document.getElementById(_fid);if(_rfe&&_fval!==null&&_rfe.value===_fval){_rfe.focus();if(_fsel!==null&&_rfe.setSelectionRange){try{_rfe.setSelectionRange(_fsel,_fsel);}catch(x){}}}}bindAll();}
+function repaint(){var _af=document.activeElement,_fid=_af?_af.id:null,_fsel=_af&&_af.selectionStart!==undefined?_af.selectionStart:null,_fval=_af?_af.value:null;document.getElementById('tb').innerHTML=renderTab();var root=document.getElementById('root');var existing=root.querySelectorAll('.modal-overlay');existing.forEach(function(m){m.remove();});var fichaHtml=renderFichaModal();var aiHtml=renderAIModal();var subAiHtml=renderSubAIModal();if(fichaHtml){var d=document.createElement('div');d.className='modal-overlay';d.innerHTML=fichaHtml;root.appendChild(d);}if(aiHtml){var d2=document.createElement('div');d2.className='modal-overlay';d2.innerHTML=aiHtml;root.appendChild(d2);}if(subAiHtml){var d3=document.createElement('div');d3.className='modal-overlay';d3.innerHTML=subAiHtml;root.appendChild(d3);}if(_fid){var _rfe=document.getElementById(_fid);if(_rfe&&_fval!==null&&_rfe.value===_fval){_rfe.focus();if(_fsel!==null&&_rfe.setSelectionRange){try{_rfe.setSelectionRange(_fsel,_fsel);}catch(x){}}}}bindAll();}
 
 function bindAll(){
   var inp=document.getElementById('ss'),drop=document.getElementById('sd');
@@ -481,6 +485,9 @@ function bindAll(){
   document.querySelectorAll('.etog-btn').forEach(function(btn){btn.onclick=function(ev){ev.stopPropagation();togE(this.dataset.eid);};});
   document.querySelectorAll('.remSub-btn').forEach(function(btn){btn.onclick=function(){remSub(this.dataset.sc);};});
   var aif=document.getElementById('ai-file');if(aif){aif.onchange=function(){callAI(this);this.value='';};}
+  var saif=document.getElementById('sub-ai-file');if(saif){saif.onchange=function(){runSubAIFromFile(this,S.subAITarget==='edit'?S.editSub:S.newSub);};}
+  var satxt=document.getElementById('sub-ai-text');if(satxt){satxt.oninput=function(){S.subAIText=this.value;};}
+  var sacas=document.getElementById('sub-ai-cas');if(sacas){sacas.oninput=function(){S.subAICAS=this.value;};}
   document.querySelectorAll('.esf').forEach(function(el){el.oninput=function(){if(S.editSub)S.editSub[this.dataset.ek]=this.value;};});
   var ie=document.getElementById('imp-e');if(ie){ie.onchange=function(ev){impE(ev);};}
   var idd=document.getElementById('imp-d');if(idd){idd.onchange=function(ev){impD(ev);};}
@@ -499,6 +506,13 @@ function bindAll(){
       else if(a==='addSub'){addSub();}
       else if(a==='saveEditSub'){saveEditSub();}
       else if(a==='cancelEdit'){cancelEdit();}
+      else if(a==='openSubAINew'){S.subAIModal=true;S.subAITarget='new';S.subAIMode='';repaint();}
+      else if(a==='openSubAIEdit'){S.subAIModal=true;S.subAITarget='edit';S.subAIMode='';repaint();}
+      else if(a==='closeSubAI'){S.subAIModal=false;S.subAIMode='';repaint();}
+      else if(a==='setSubAIMode'){S.subAIMode=v;repaint();}
+      else if(a==='pickSubAIFile'){document.getElementById('sub-ai-file').click();}
+      else if(a==='runSubAIText'){var t=document.getElementById('sub-ai-text');if(t){S.subAIText=t.value;runSubAIFromText(t.value,S.subAITarget==='edit'?S.editSub:S.newSub);}}
+      else if(a==='runSubAICAS'){var cas=document.getElementById('sub-ai-cas');if(cas){S.subAICAS=cas.value;runSubAIFromCAS(cas.value,S.subAITarget==='edit'?S.editSub:S.newSub);}}
       else if(a==='resetSub'){var c=this.dataset.sc;delete S.overrides[c];sls('cq_overrides',S.overrides);S.editSub=null;S.msg='Substancia restaurada ao original.';repaint();setTimeout(function(){S.msg='';},3000);}
       else if(a==='openAI'){S.aiModal=true;repaint();}
       else if(a==='closeAI'){S.aiModal=false;repaint();}
@@ -794,6 +808,108 @@ function callAI(fileInput){
     });
   };
   reader.readAsDataURL(file);
+}
+
+function renderSubAIModal(){
+  if(!S.subAIModal)return '';
+  var r='<div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px">';
+  r+='<div style="background:#fff;border-radius:12px;padding:20px;max-width:540px;width:100%;max-height:90vh;overflow-y:auto">';
+  r+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">';
+  r+='<div style="font-weight:700;font-size:15px;color:#1A3A5C">🤖 Preencher Referências com IA</div>';
+  r+='<button data-action="closeSubAI" style="background:none;border:none;font-size:22px;cursor:pointer;color:#718096">✕</button></div>';
+  if(!S.apiKey){
+    r+='<div style="background:#FFF5F5;border:1px solid #FEB2B2;border-radius:6px;padding:10px 12px;margin-bottom:12px;font-size:13px;color:#9B2C2C">';
+    r+='Configure sua chave de API na aba Nova Entrada → botão 🤖 Analisar laudo com IA.</div>';
+    r+='<button class="btn bp" data-action="closeSubAI" style="width:100%">Fechar</button>';
+  } else {
+    r+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">';
+    var modes=[['photo','📷 Foto ou PDF do laudo'],['text','📝 Colar texto / pesquisa'],['cas','🔬 Buscar pelo numero CAS']];
+    modes.forEach(function(m){
+      var on=S.subAIMode===m[0];
+      r+='<button class="btn '+(on?'bp':'bg')+'" data-action="setSubAIMode" data-val="'+m[0]+'" style="text-align:left;font-size:12px">'+m[1]+'</button>';
+    });
+    r+='</div>';
+    if(!S.subAIMode){
+      r+='<div style="text-align:center;padding:20px;color:#A0AEC0;font-size:13px">Selecione como deseja fornecer as informacoes da substancia.</div>';
+    } else if(S.subAIMode==='photo'){
+      if(!S.subAILoading){
+        r+='<div style="font-size:13px;color:#4A5568;margin-bottom:10px">Envie uma foto do laudo do fornecedor, ficha tecnica, bula ou qualquer documento com dados da substancia. A IA vai extrair e preencher os campos de referencia automaticamente.</div>';
+        r+='<input type="file" id="sub-ai-file" accept="image/*,.pdf" style="display:none">';
+        r+='<button class="btn bp" data-action="pickSubAIFile" style="width:100%">📂 Selecionar foto ou PDF</button>';
+      } else {
+        r+='<div style="text-align:center;padding:24px;color:#4A5568"><div style="font-size:28px;margin-bottom:10px">⏳</div><div style="font-weight:600">Analisando documento...</div><div style="font-size:11px;color:#A0AEC0;margin-top:4px">Extraindo dados tecnicos da substancia</div></div>';
+      }
+    } else if(S.subAIMode==='text'){
+      if(!S.subAILoading){
+        r+='<div style="font-size:13px;color:#4A5568;margin-bottom:8px">Cole qualquer texto: monografia de farmacopeia, descricao do fornecedor, resultado de pesquisa, bula, especificacao tecnica. A IA vai estruturar e preencher os campos.</div>';
+        r+='<div class="fld"><label class="lbl">Texto com dados da substancia</label>';
+        r+='<textarea id="sub-ai-text" style="min-height:120px;font-size:12px" placeholder="Cole aqui o texto com as informacoes da substancia...">'+e(S.subAIText||'')+'</textarea></div>';
+        r+='<button class="btn bp" data-action="runSubAIText" style="width:100%">🤖 Analisar texto</button>';
+      } else {
+        r+='<div style="text-align:center;padding:24px;color:#4A5568"><div style="font-size:28px;margin-bottom:10px">⏳</div><div style="font-weight:600">Analisando texto...</div></div>';
+      }
+    } else if(S.subAIMode==='cas'){
+      if(!S.subAILoading){
+        r+='<div style="font-size:13px;color:#4A5568;margin-bottom:8px">Informe o numero CAS da substancia. A IA vai buscar e preencher os dados tecnicos conhecidos.</div>';
+        r+='<div class="fld"><label class="lbl">Numero CAS</label><input id="sub-ai-cas" value="'+e(S.subAICAS||'')+'" placeholder="Ex: 51-21-8"></div>';
+        r+='<button class="btn bp" data-action="runSubAICAS" style="width:100%">🔍 Buscar dados pelo CAS</button>';
+      } else {
+        r+='<div style="text-align:center;padding:24px;color:#4A5568"><div style="font-size:28px;margin-bottom:10px">⏳</div><div style="font-weight:600">Buscando dados...</div></div>';
+      }
+    }
+  }
+  r+='</div></div>';return r;
+}
+
+function callSubAI(contentArr, targetObj){
+  var prompt='Analise este conteudo e extraia dados tecnicos de materia-prima farmaceutica. Retorne APENAS um JSON valido (sem markdown) com os campos que encontrar (deixe vazio se nao encontrar): n (nome), d (DCB), s (CAS), dci, sin (sinonimo), fm (formula molecular), pm (peso molecular), fte (fator equivalencia), ftc (fator correcao), tp (teor/potencia, ex: 98,0% a 102,0%), org (caracteristicas organolepticas), sol (solubilidade), fus (ponto de fusao), dn (densidade), ph, a (armazenamento/embalagem), ref (referencias bibliograficas).';
+  var messages=[{role:'user',content:contentArr.concat([{type:'text',text:prompt}])}];
+  S.subAILoading=true;repaint();
+  fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':S.apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1200,messages:messages})
+  }).then(function(r){return r.json();}).then(function(data){
+    S.subAILoading=false;
+    try{
+      var text=data.content[0].text;
+      var clean=text.replace(/```json[\s\S]*?```/g,function(m){return m.replace(/```json\n?/,'').replace(/\n?```/,'');}).replace(/```/g,'').trim();
+      var parsed=JSON.parse(clean);
+      Object.keys(parsed).forEach(function(k){if(parsed[k]&&parsed[k]!==''&&parsed[k]!=='n/d'){targetObj[k]=String(parsed[k]).trim();}});
+      S.subAIModal=false;S.subAIMode='';S.subAIText='';S.subAICAS='';
+      S.msg='✅ Campos preenchidos pela IA! Revise antes de salvar.';
+      repaint();setTimeout(function(){S.msg='';},5000);
+    }catch(err){
+      S.subAILoading=false;repaint();
+      alert('Erro ao processar resposta da IA: '+err.message);
+    }
+  }).catch(function(err){
+    S.subAILoading=false;repaint();
+    alert('Erro na API: '+err.message);
+  });
+}
+
+function runSubAIFromFile(fileInput, targetObj){
+  var file=fileInput.files[0];if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    var b64=ev.target.result.split(',')[1];
+    var isPDF=file.type==='application/pdf';
+    var block=isPDF?{type:'document',source:{type:'base64',media_type:'application/pdf',data:b64}}:{type:'image',source:{type:'base64',media_type:file.type||'image/jpeg',data:b64}};
+    callSubAI([block],targetObj);
+  };
+  reader.readAsDataURL(file);
+  fileInput.value='';
+}
+
+function runSubAIFromText(text, targetObj){
+  if(!text.trim()){alert('Cole algum texto primeiro.');return;}
+  callSubAI([{type:'text',text:text}],targetObj);
+}
+
+function runSubAIFromCAS(cas, targetObj){
+  if(!cas.trim()){alert('Informe o numero CAS.');return;}
+  callSubAI([{type:'text',text:'Substancia com numero CAS: '+cas+'. Forneca os dados tecnicos desta substancia.'}],targetObj);
 }
 try{paint();}catch(err){document.getElementById('root').innerHTML='<div class="err">Erro: '+err.message+'\n\n'+err.stack+'</div>';}
 
