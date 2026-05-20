@@ -121,11 +121,24 @@ function blank(){return {re:'',ano:new Date().getFullYear().toString().slice(-2)
   teor_ref:'',teor_fab:'',resultado:'A',analisado:'',obs:'',
   port344:false,termossens:false,fotossens:false,higro:false,hormonio:false,citostatico:false,antibiotico:false};}
 
-var S={tab:'entrada',form:blank(),entries:gls('cq_entries')||[],udb:gls('cq_userdb')||[],
-       overrides:gls('cq_overrides')||{},
-       current:null,esel:{},histQ:'',subQ:'',etiqQ:'',gerTab:'sub',msg:'',editSub:null,fichaCode:null,apiKey:gls('cq_apikey')||'',aiLoading:false,aiModal:false,
-       newSub:{n:'',d:'',s:'',dci:'',sin:'',fm:'',pm:'',fte:'',ftc:'',tp:'',
-               org:'',sol:'',fus:'',dn:'',ph:'',a:'',ref:''}};
+var S={
+  tab:'entrada', form:blank(),
+  entries:gls('cq_entries')||[],
+  udb:gls('cq_userdb')||[],
+  overrides:gls('cq_overrides')||{},
+  current:null, esel:{}, histQ:'', subQ:'', etiqQ:'',
+  gerTab:'sub', msg:'',
+  editSub:null, fichaCode:null,
+  apiKey:gls('cq_apikey')||'',
+  aiLoading:false, aiModal:false,
+  subAIModal:false, subAIMode:'', subAILoading:false,
+  subAIText:'', subAICAS:'', subAITarget:'new',
+  driveToken:gls('cq_drive_token')||'',
+  driveFolderName:gls('cq_drive_folder')||'CQ Farmacia Backup',
+  backupLog:gls('cq_backup_log')||[],
+  newSub:{n:'',d:'',s:'',dci:'',sin:'',fm:'',pm:'',fte:'',ftc:'',tp:'',
+          org:'',sol:'',fus:'',dn:'',ph:'',a:'',ref:''}
+};
 
 /* ── FIELD BUILDERS ── */
 function mkInp(fld,type){var v=S.form[fld];if(v==null)v='';return '<input type="'+(type||'text')+'" data-f="'+fld+'" value="'+e(v)+'">';}
@@ -376,11 +389,76 @@ function renderHistorico(){
   r+='</div>';
   return r;}
 
+
+function renderBackupTab(){
+  var r='';
+  /* ── BIG BACKUP BUTTON ── */
+  r+='<div style="background:linear-gradient(135deg,#1A3A5C,#2B6CB0);border-radius:14px;padding:28px 24px;text-align:center;margin-bottom:16px;cursor:pointer" data-action="doFullBackup">';
+  r+='<div style="font-size:48px;margin-bottom:10px">💾</div>';
+  r+='<div style="font-size:20px;font-weight:700;color:#fff;margin-bottom:6px">Fazer Backup Agora</div>';
+  r+='<div style="font-size:13px;color:rgba(255,255,255,.8);margin-bottom:16px">Baixa 2 arquivos com data e hora: histórico de laudos + banco de substâncias</div>';
+  r+='<div style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:10px 16px;display:inline-block">';
+  r+='<span style="color:#fff;font-size:14px;font-weight:600">▼ Clique para baixar backup completo</span></div></div>';
+
+  /* ── INFO ── */
+  r+='<div style="background:#EBF4FB;border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:#2C5282">';
+  r+='<div style="font-weight:700;margin-bottom:6px">📋 O que é salvo no backup:</div>';
+  r+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">';
+  r+='<div>📊 <b>historico_laudos</b><br><span style="font-size:11px;color:#4A5568">Todos os '+((S.entries||[]).length)+' laudos registrados</span></div>';
+  r+='<div>📦 <b>substancias</b><br><span style="font-size:11px;color:#4A5568">'+((fdb()||[]).length)+' substâncias do banco</span></div>';
+  r+='</div></div>';
+
+  /* ── BACKUP INDIVIDUAL ── */
+  r+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">';
+  r+='<button class="btn bg" data-action="expE" style="padding:12px;font-size:13px">📊 Só os Laudos<br><span style="font-size:10px;font-weight:400;color:#718096">(historico)</span></button>';
+  r+='<button class="btn bg" data-action="expDB" style="padding:12px;font-size:13px">📦 Só as Substâncias<br><span style="font-size:10px;font-weight:400;color:#718096">(banco)</span></button>';
+  r+='</div>';
+
+  /* ── DRIVE CONFIG ── */
+  r+='<div style="border:1px solid #E2E8F0;border-radius:10px;overflow:hidden;margin-bottom:16px">';
+  r+='<div style="background:#F7FAFC;padding:10px 14px;border-bottom:1px solid #E2E8F0;display:flex;justify-content:space-between;align-items:center">';
+  r+='<div style="font-weight:700;font-size:13px;color:#2D3748">☁️ Backup automático na nuvem</div>';
+  r+='<span style="font-size:11px;color:'+( S.driveToken?'#276749':'#E53E3E')+'">'+( S.driveToken?'● Conectado':'○ Não conectado')+'</span></div>';
+  r+='<div style="padding:12px 14px">';
+  if(!S.driveToken){
+    r+='<div style="font-size:12px;color:#4A5568;margin-bottom:10px">Conecte o Google Drive para enviar o backup diretamente para uma pasta na nuvem, sem precisar salvar manualmente.</div>';
+    r+='<button class="btn bp" data-action="connectDrive" style="width:100%;margin-bottom:6px"><img src="https://www.google.com/favicon.ico" style="width:14px;height:14px;vertical-align:-2px;margin-right:6px"> Conectar Google Drive</button>';
+    r+='<div style="font-size:10px;color:#A0AEC0;text-align:center">O sistema só terá permissão para criar arquivos na pasta configurada. Nenhum outro dado é acessado.</div>';
+  } else {
+    r+='<div class="fld"><label class="lbl">Nome da pasta no Drive</label><input id="drive-folder" value="'+e(S.driveFolderName)+'" placeholder="CQ Farmacia Backup"></div>';
+    r+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">';
+    r+='<button class="btn bp" data-action="backupToDrive">☁️ Backup → Drive</button>';
+    r+='<button class="btn bd bsm" data-action="disconnectDrive">Desconectar Drive</button></div>';
+    r+='<div style="font-size:10px;color:#A0AEC0;margin-top:6px">Os arquivos serão salvos em: Drive → '+e(S.driveFolderName)+'/</div>';
+  }
+  r+='</div></div>';
+
+  /* ── BACKUP LOG ── */
+  if((S.backupLog||[]).length>0){
+    r+='<div style="border:1px solid #E2E8F0;border-radius:8px;overflow:hidden">';
+    r+='<div style="background:#F7FAFC;padding:8px 14px;border-bottom:1px solid #E2E8F0;font-weight:700;font-size:12px;color:#4A5568">📅 Histórico de backups recentes</div>';
+    (S.backupLog||[]).slice(0,8).forEach(function(log){
+      r+='<div style="padding:8px 14px;border-bottom:1px solid #EEF2F7;font-size:11px">';
+      r+='<div style="color:#4A5568;font-weight:600">'+e(log.dt)+'</div>';
+      r+='<div style="color:#718096">'+(log.drive?'☁️ Drive: ':'')+((log.files||[]).join(' · '))+'</div></div>';
+    });
+    r+='</div>';
+  } else {
+    r+='<div style="text-align:center;padding:20px;color:#A0AEC0;border:1px dashed #E2E8F0;border-radius:8px;font-size:13px">Nenhum backup realizado ainda.<br>Clique no botão acima para começar.</div>';
+  }
+  return r;
+}
 function renderGerenciar(){
   var ns=S.newSub,db=fdb(),q=S.subQ.toLowerCase();
   var fil=q?db.filter(function(s){return s.n.toLowerCase().indexOf(q)>=0;}):db;
-  var r='<div style="display:flex;gap:6px;margin-bottom:16px"><button class="btn '+(S.gerTab==='sub'?'bp':'bg')+'" data-action="gerTab" data-val="sub">📦 Substancias</button><button class="btn '+(S.gerTab==='imp'?'bp':'bg')+'" data-action="gerTab" data-val="imp">📥 Importar/Exportar</button></div>';
+  var r='<div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap">';
+  r+='<button class="btn '+(S.gerTab==='sub'?'bp':'bg')+'" data-action="gerTab" data-val="sub">📦 Substancias</button>';
+  r+='<button class="btn '+(S.gerTab==='imp'?'bp':'bg')+'" data-action="gerTab" data-val="imp">📥 Importar/Exportar</button>';
+  r+='<button class="btn" data-action="gerTab" data-val="bak" style="background:'+(S.gerTab==='bak'?'#276749':'#F0FFF4')+';border:2px solid #276749;color:'+(S.gerTab==='bak'?'#fff':'#276749')+';font-weight:700">💾 Backup</button>';
+  r+='</div>';
   if(S.msg){r+='<div class="ok">'+e(S.msg)+'</div>';}
+  if(S.msg){r+='<div class="ok">'+e(S.msg)+'</div>';}
+  if(S.gerTab==='bak'){r+=renderBackupTab();return r;}
   if(S.gerTab==='sub'){
     r+='<div class="sec s1" style="margin-bottom:16px">';
     r+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">';
@@ -514,6 +592,10 @@ function bindAll(){
       else if(a==='runSubAIText'){var t=document.getElementById('sub-ai-text');if(t){S.subAIText=t.value;runSubAIFromText(t.value,S.subAITarget==='edit'?S.editSub:S.newSub);}}
       else if(a==='runSubAICAS'){var cas=document.getElementById('sub-ai-cas');if(cas){S.subAICAS=cas.value;runSubAIFromCAS(cas.value,S.subAITarget==='edit'?S.editSub:S.newSub);}}
       else if(a==='resetSub'){var c=this.dataset.sc;delete S.overrides[c];sls('cq_overrides',S.overrides);S.editSub=null;S.msg='Substancia restaurada ao original.';repaint();setTimeout(function(){S.msg='';},3000);}
+      else if(a==='doFullBackup'){doFullBackup();}
+      else if(a==='connectDrive'){connectDrive();}
+      else if(a==='disconnectDrive'){disconnectDrive();}
+      else if(a==='backupToDrive'){backupToDrive();}
       else if(a==='openAI'){S.aiModal=true;repaint();}
       else if(a==='closeAI'){S.aiModal=false;repaint();}
       else if(a==='pickAIFile'){document.getElementById('ai-file').click();}
@@ -657,8 +739,8 @@ function addSub(){
 function remSub(c){if(!confirm('Remover?'))return;S.udb=S.udb.filter(function(s){return s.c!==c;});sls('cq_userdb',S.udb);repaint();}
 function impE(ev){var f=ev.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(ev2){try{var data=JSON.parse(ev2.target.result);if(!Array.isArray(data))throw new Error('not array');var ex=new Set(S.entries.map(function(x){return x.id;}));var add=data.filter(function(x){return!ex.has(x.id);});S.entries=add.concat(S.entries);sls('cq_entries',S.entries);S.msg=add.length+' entradas importadas!';repaint();setTimeout(function(){S.msg='';},4000);}catch(err){alert('Arquivo invalido: '+err.message);}};r.readAsText(f);ev.target.value='';}
 function impD(ev){var f=ev.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(ev2){try{var data=JSON.parse(ev2.target.result);if(!Array.isArray(data))throw new Error('not array');var ec=new Set(DB.map(function(s){return s.c;}));var newO=data.filter(function(s){return s.n&&!ec.has(s.c);}).map(function(s){return Object.assign({},s,{c:'U'+s.c});});S.udb=S.udb.concat(newO);sls('cq_userdb',S.udb);S.msg=newO.length+' substancias importadas!';repaint();setTimeout(function(){S.msg='';},4000);}catch(err){alert('Arquivo invalido: '+err.message);}};r.readAsText(f);ev.target.value='';}
-function expDB(){var b=new Blob([JSON.stringify(DB.concat(S.udb),null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='substancias_cq.json';a.click();}
-function expE(){var b=new Blob([JSON.stringify(S.entries,null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='historico_cq.json';a.click();}
+function expDB(){backupJSON(DB.concat(S.udb),'substancias_cq.json');}
+function expE(){backupJSON(S.entries,'historico_cq.json');}
 
 
 function startEditSub(c){
@@ -911,7 +993,119 @@ function runSubAIFromCAS(cas, targetObj){
   if(!cas.trim()){alert('Informe o numero CAS.');return;}
   callSubAI([{type:'text',text:'Substancia com numero CAS: '+cas+'. Forneca os dados tecnicos desta substancia.'}],targetObj);
 }
-try{paint();}catch(err){document.getElementById('root').innerHTML='<div class="err">Erro: '+err.message+'\n\n'+err.stack+'</div>';}
+
+function dateStamp(){
+  var d=new Date();
+  var pad=function(n){return String(n).padStart(2,'0');};
+  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'_'+pad(d.getHours())+'-'+pad(d.getMinutes());
+}
+function backupJSON(data,filename){
+  var stamp=dateStamp();
+  var b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(b);
+  a.download=stamp+'_'+filename;a.click();
+  return stamp+'_'+filename;
+}
+function logBackup(files){
+  var entry={dt:new Date().toLocaleString('pt-BR'),files:files};
+  if(!S.backupLog)S.backupLog=[];
+  S.backupLog=[entry].concat(S.backupLog.slice(0,29));
+  sls('cq_backup_log',S.backupLog);
+}
+function doFullBackup(){
+  var h=backupJSON(S.entries,'historico_cq.json');
+  var s=backupJSON(DB.concat(S.udb),'substancias_cq.json');
+  logBackup([h,s]);
+  S.msg='✅ Backup completo! 2 arquivos baixados com data e hora.';repaint();
+  setTimeout(function(){S.msg='';},4000);
+}
+
+function connectDrive(){
+  var clientId='';
+  /* Check if user has set a client ID */
+  var cid=gls('cq_drive_clientid');
+  if(!cid){
+    cid=prompt('Para conectar o Google Drive, informe o Client ID do Google Cloud\n\n(Veja o guia em: console.cloud.google.com → Credenciais → OAuth 2.0)\n\nSe ainda não tem, deixe em branco e use o backup manual por enquanto:');
+    if(!cid){
+      alert('Para usar o backup automático no Google Drive:\n\n1. Acesse console.cloud.google.com\n2. Crie um projeto\n3. Ative a API do Google Drive\n4. Crie uma credencial OAuth 2.0 do tipo "Aplicativo da Web"\n5. Adicione o endereço do seu site Vercel como "Origem autorizada"\n6. Copie o Client ID e cole aqui\n\nEnquanto isso, use o backup manual — os arquivos baixam com data e hora automaticamente.');
+      return;
+    }
+    sls('cq_drive_clientid',cid);
+  }
+  var redirectUri=window.location.origin+window.location.pathname;
+  var scope='https://www.googleapis.com/auth/drive.file';
+  var url='https://accounts.google.com/o/oauth2/v2/auth?client_id='+encodeURIComponent(cid)+'&redirect_uri='+encodeURIComponent(redirectUri)+'&response_type=token&scope='+encodeURIComponent(scope);
+  /* Save current state */
+  sls('cq_before_oauth',JSON.stringify({tab:S.tab,gerTab:'bak'}));
+  window.location.href=url;
+}
+function checkOAuthReturn(){
+  var hash=window.location.hash;
+  if(hash&&hash.indexOf('access_token')>=0){
+    var params={};
+    hash.substring(1).split('&').forEach(function(p){var kv=p.split('=');params[kv[0]]=decodeURIComponent(kv[1]||'');});
+    if(params.access_token){
+      S.driveToken=params.access_token;
+      sls('cq_drive_token',params.access_token);
+      /* Restore state */
+      var prev=gls('cq_before_oauth');
+      if(prev){try{var st=JSON.parse(prev);S.tab=st.tab||'gerenciar';S.gerTab=st.gerTab||'bak';}catch(x){}}
+      history.replaceState(null,'',window.location.pathname);
+      S.msg='✅ Google Drive conectado com sucesso!';
+    }
+  }
+}
+function disconnectDrive(){
+  S.driveToken='';sls('cq_drive_token','');sls('cq_drive_clientid','');repaint();
+}
+function getDriveFolder(token,folderName,cb){
+  /* Search for existing folder */
+  fetch("https://www.googleapis.com/drive/v3/files?q=name%3D'"+encodeURIComponent(folderName)+"'+and+mimeType%3D'application%2Fvnd.google-apps.folder'+and+trashed%3Dfalse",{
+    headers:{Authorization:'Bearer '+token}
+  }).then(function(r){return r.json();}).then(function(data){
+    if(data.files&&data.files.length>0){cb(null,data.files[0].id);}
+    else{
+      /* Create folder */
+      fetch('https://www.googleapis.com/drive/v3/files',{
+        method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},
+        body:JSON.stringify({name:folderName,mimeType:'application/vnd.google-apps.folder'})
+      }).then(function(r){return r.json();}).then(function(f){cb(null,f.id);}).catch(cb);
+    }
+  }).catch(cb);
+}
+function uploadToDrive(token,folderId,filename,content,cb){
+  var boundary='----CQBoundary'+Date.now();
+  var meta=JSON.stringify({name:filename,parents:[folderId]});
+  var body='--'+boundary+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n'+meta+'\r\n--'+boundary+'\r\nContent-Type: application/json\r\n\r\n'+content+'\r\n--'+boundary+'--';
+  fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{
+    method:'POST',
+    headers:{Authorization:'Bearer '+token,'Content-Type':'multipart/related; boundary='+boundary},
+    body:body
+  }).then(function(r){return r.json();}).then(function(f){cb(null,f);}).catch(cb);
+}
+function backupToDrive(){
+  if(!S.driveToken){alert('Conecte o Google Drive primeiro.');return;}
+  var folder=document.getElementById('drive-folder');
+  if(folder)S.driveFolderName=folder.value||'CQ Farmacia Backup';
+  sls('cq_drive_folder',S.driveFolderName);
+  var stamp=dateStamp();
+  var histFile=stamp+'_historico_cq.json';
+  var subFile=stamp+'_substancias_cq.json';
+  S.msg='⏳ Enviando para o Drive...';repaint();
+  getDriveFolder(S.driveToken,S.driveFolderName,function(err,folderId){
+    if(err){S.driveToken='';sls('cq_drive_token','');S.msg='❌ Sessão expirada. Reconecte o Drive.';repaint();setTimeout(function(){S.msg='';},4000);return;}
+    uploadToDrive(S.driveToken,folderId,histFile,JSON.stringify(S.entries,null,2),function(err2){
+      if(err2){S.msg='❌ Erro ao enviar histórico: '+err2.message;repaint();return;}
+      uploadToDrive(S.driveToken,folderId,subFile,JSON.stringify(DB.concat(S.udb),null,2),function(err3){
+        if(err3){S.msg='❌ Erro ao enviar substâncias: '+err3.message;repaint();return;}
+        logBackup([histFile,subFile]);S.backupLog[0].drive=true;sls('cq_backup_log',S.backupLog);
+        S.msg='✅ Backup salvo no Google Drive! Pasta: '+S.driveFolderName;
+        repaint();setTimeout(function(){S.msg='';},5000);
+      });
+    });
+  });
+}
+try{checkOAuthReturn();paint();}catch(err){document.getElementById('root').innerHTML='<div class="err">Erro: '+err.message+'\n\n'+err.stack+'</div>';}
 
 </script>
 </body>
