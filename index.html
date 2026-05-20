@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>CQ Formula Animal</title>
+<title>Controle de Qualidade para Farmácias de Manipulação</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,Helvetica,sans-serif;background:#EDF2F7;min-height:100vh}
@@ -237,7 +237,7 @@ function etiqCard(en){
 
 /* ── TAB RENDERS ── */
 function renderHdr(){
-  return '<div class="hdr np"><div><div style="font-size:17px;font-weight:700">🔬 CQ Formula Animal</div><div style="font-size:11px;opacity:.65;margin-top:2px">'+fdb().length+' substancias · '+S.entries.length+' entradas</div></div>'+
+  return '<div class="hdr np"><div><div style="font-size:17px;font-weight:700">🔬 Controle de Qualidade para Farmácias de Manipulação</div><div style="font-size:11px;opacity:.65;margin-top:2px">'+fdb().length+' substancias · '+S.entries.length+' entradas</div></div>'+
          '<button class="btn np" data-action="newEntry" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff">+ Nova entrada</button></div>';}
 
 function renderTabs(){
@@ -546,7 +546,7 @@ function renderTab(){
 
 /* ── PAINT ── */
 function paint(){
-  document.getElementById('root').innerHTML='<div class="app">'+renderHdr()+renderTabs()+'<div class="card body" id="tb">'+renderTab()+'</div><div class="ft np">CQ Formula Animal · Dados salvos localmente</div></div>'+renderFichaModal()+renderAIModal();
+  document.getElementById('root').innerHTML='<div class="app">'+renderHdr()+renderTabs()+'<div class="card body" id="tb">'+renderTab()+'</div><div class="ft np">Copyright (c) 2026 Paulo Edson Fernandes · Dados salvos localmente</div></div>'+renderFichaModal()+renderAIModal();
   bindAll();}
 function repaint(){var _af=document.activeElement,_fid=_af?_af.id:null,_fsel=_af&&_af.selectionStart!==undefined?_af.selectionStart:null,_fval=_af?_af.value:null;document.getElementById('tb').innerHTML=renderTab();var root=document.getElementById('root');var existing=root.querySelectorAll('.modal-overlay');existing.forEach(function(m){m.remove();});var fichaHtml=renderFichaModal();var aiHtml=renderAIModal();var subAiHtml=renderSubAIModal();if(fichaHtml){var d=document.createElement('div');d.className='modal-overlay';d.innerHTML=fichaHtml;root.appendChild(d);}if(aiHtml){var d2=document.createElement('div');d2.className='modal-overlay';d2.innerHTML=aiHtml;root.appendChild(d2);}if(subAiHtml){var d3=document.createElement('div');d3.className='modal-overlay';d3.innerHTML=subAiHtml;root.appendChild(d3);}if(_fid){var _rfe=document.getElementById(_fid);if(_rfe&&_fval!==null&&_rfe.value===_fval){_rfe.focus();if(_fsel!==null&&_rfe.setSelectionRange){try{_rfe.setSelectionRange(_fsel,_fsel);}catch(x){}}}}bindAll();}
 
