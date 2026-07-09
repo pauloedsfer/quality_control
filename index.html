@@ -111,13 +111,32 @@ textarea{resize:vertical;min-height:56px}
 .lr{border-radius:var(--radius-md);padding:12px 18px;text-align:center;margin-bottom:10px}
 .lf{display:flex;justify-content:space-between;font-size:9px;color:#A0AEC0;padding-top:4px}
 /* ── ETIQUETAS ── */
-.ec{border:2.5px solid var(--blue-dark);border-radius:var(--radius-md);padding:8px 10px;background:#fff;font-size:10px;box-shadow:var(--shadow-xs)}
-.eh{color:#fff;text-align:center;font-weight:700;font-size:12px;padding:4px 0;border-radius:6px;margin-bottom:6px;letter-spacing:1.5px}
-.en{font-weight:700;font-size:12px;text-align:center;border-bottom:1.5px solid #E2E8F0;padding-bottom:5px;margin-bottom:6px;line-height:1.3;text-transform:uppercase;letter-spacing:.5px;color:#1A3A5C}
-.et{width:100%;border-collapse:collapse;font-size:10px}.et td{padding:2px 0;vertical-align:top}
-.el{color:#718096;width:28%}.ev{font-weight:600}
-.ea{border-top:1.5px solid #E2E8F0;padding-top:5px;margin-top:5px;font-size:9px}
-.etg{border-top:1px solid #E2E8F0;padding-top:4px;margin-top:4px;display:flex;flex-wrap:wrap;gap:2px 8px;font-size:9px}
+/* ── ETIQUETA ── */
+.ec{background:#fff;font-size:10px;border:2px solid #000;page-break-inside:avoid;break-inside:avoid;width:100%}
+.ec-nome{background:#000;color:#fff;font-weight:900;font-size:13.5px;text-align:center;padding:5px 6px;line-height:1.25;letter-spacing:.3px;text-transform:uppercase;word-break:break-word}
+.ec-nome.quarentena{background:#fff;color:#000;border-bottom:2px solid #000;font-size:12px}
+.ec-nome.reprovado{background:#fff;color:#000;border-bottom:2px solid #000;font-size:12px;text-decoration:line-through}
+.ec-status{display:flex;align-items:center;justify-content:center;gap:6px;padding:4px 6px;border-bottom:1.5px solid #000;font-weight:800;font-size:11px;letter-spacing:.8px;background:#f8f8f8}
+.ec-status.quarentena{background:repeating-linear-gradient(45deg,#fff,#fff 4px,#e0e0e0 4px,#e0e0e0 8px)}
+.ec-status.reprovado{background:repeating-linear-gradient(45deg,#fff,#fff 4px,#ddd 4px,#ddd 8px)}
+.ec-validade-bloco{display:flex;border-bottom:1.5px solid #000}
+.ec-val-item{flex:1;padding:4px 6px;text-align:center}
+.ec-val-item+.ec-val-item{border-left:1px solid #000}
+.ec-val-lbl{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#555;display:block;margin-bottom:1px}
+.ec-val-dado{font-size:13px;font-weight:900;letter-spacing:.3px;display:block}
+.ec-val-dado.grande{font-size:15px}
+.ec-val-dado.fator-alerta{font-size:14px;font-weight:900;border:1.5px solid #000;padding:0 4px;display:inline-block}
+.ec-dados{border-bottom:1px solid #ddd}
+.ec-linha{display:flex;border-bottom:1px solid #eee}
+.ec-linha:last-child{border-bottom:none}
+.ec-campo{flex:1;padding:3px 6px;font-size:10px}
+.ec-campo+.ec-campo{border-left:1px solid #eee}
+.ec-campo .cl{font-size:8px;font-weight:700;text-transform:uppercase;color:#777;display:block;margin-bottom:1px;letter-spacing:.3px}
+.ec-campo .cv{font-weight:700;color:#000;font-size:10.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ec-arm{padding:3px 6px;font-size:8.5px;color:#333;border-bottom:1px solid #ddd;line-height:1.4}
+.ec-arm span{font-weight:700;font-size:8px;text-transform:uppercase;color:#555;margin-right:4px}
+.ec-tags{padding:3px 6px 3px;display:flex;flex-wrap:wrap;gap:2px 6px}
+.ec-tag{font-size:8px;font-weight:700;padding:1px 4px;border:1px solid #000;border-radius:2px;text-transform:uppercase;letter-spacing:.3px}
 /* ── HISTORICO ── */
 .hi{border:1.5px solid #E2E8F0;border-radius:var(--radius-md);padding:12px 16px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;background:#fff;transition:var(--transition);box-shadow:var(--shadow-xs)}
 .hi:hover{background:var(--blue-xlight);border-color:#C3D9F0;box-shadow:var(--shadow-sm);transform:translateX(2px)}
@@ -148,7 +167,9 @@ textarea{resize:vertical;min-height:56px}
   .lb{padding:7px 12px!important}
   .lk{padding:7px!important}
   .lt td{padding:2px 6px!important;font-size:9px!important}
-  .epg{display:grid!important;grid-template-columns:1fr 1fr!important;gap:4mm!important}
+  .epg{display:grid!important;grid-template-columns:1fr 1fr!important;gap:3mm!important}
+  .ec{box-shadow:none!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .ec-status.quarentena,.ec-nome.quarentena,.ec-status.reprovado{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .hi,.tb,.sec{box-shadow:none!important;transform:none!important}
 }
 </style>
@@ -529,25 +550,73 @@ function laudoHtml(en){
 /* ════════════════════════════════ ETIQUETA CARD ════════════════════════════════ */
 function etiqCard(en){
   var RE=e(en.re)+'/'+e(en.ano);
-  var TAGS=[['port344','Port.344'],['termossens','Termoss.'],['fotossens','Fotoss.'],['higro','Higro.'],['hormonio','Horm.'],['citostatico','Cito.'],['antibiotico','Antib.']];
-  var fok=en.fator&&en.fator!='1'&&en.fator!='';
-  var r='<div class="ec" style="border-color:'+(en.resultado==='Q'?'#D69E2E':'#1A3A5C')+'">';
-  r+='<div class="eh" style="background:'+rc(en.resultado)+'">'+ri(en.resultado)+'  '+rl(en.resultado)+'</div>';
-  r+='<div class="en">'+e((en.substancia||'').toUpperCase())+'</div>';
-  r+='<table class="et"><tbody>';
-  r+='<tr><td class="el">DT.Fabr.:</td><td class="ev">'+fmt(en.fabricacao)+'</td><td class="el" style="width:12%">RE</td><td style="font-weight:700;color:#1A3A5C">'+RE+'</td></tr>';
-  r+='<tr><td class="el">DT.Valid.:</td><td colspan="3" style="font-weight:700;font-size:12px;color:#9B2C2C;white-space:nowrap">'+(fmt(en.validade)||'--')+'</td></tr>';
-  r+='<tr><td class="el">DCB:</td><td colspan="3" class="ev">'+(e(en.dcb)||'n/d')+'</td></tr>';
-  if(fok){r+='<tr><td class="el">F.Corr.:</td><td colspan="3" style="font-weight:700;font-size:13px;color:#9B2C2C">'+e(en.fator)+'</td></tr>';}
-  else{r+='<tr><td class="el">F.Corr.:</td><td class="ev">'+(e(en.fator)||'--')+'</td><td class="el">Orig.:</td><td class="ev">'+(e(en.origem)||'--')+'</td></tr>';}
-  r+='<tr><td class="el">Fornec.:</td><td colspan="2" class="ev">'+e(en.fornecedor)+'</td><td></td></tr>';
-  r+='<tr><td class="el">Lote:</td><td colspan="3" class="ev">'+e(en.lote)+'</td></tr>';
-  r+='<tr><td class="el">Qtde.:</td><td class="ev">'+e(en.qtde)+'</td><td class="el">Teor:</td><td class="ev">'+e(en.teor_fab||en.teor_pot||en.teor_ref||'--')+'</td></tr>';
-  r+='<tr><td class="el">CAS:</td><td colspan="3" style="font-weight:600;font-size:9px">'+(e(en.cas)||'--')+'</td></tr>';
-  r+='</tbody></table>';
-  if(en.armazenamento){var arm=(en.armazenamento||'').substring(0,90);r+='<div class="ea"><div style="font-size:9px;font-weight:700;color:#4A5568;text-transform:uppercase;margin-bottom:2px">Armazenamento</div><div style="font-size:9px;color:#2D3748;line-height:1.4">'+e(arm)+((en.armazenamento||'').length>90?'...':'')+'</div></div>';}
-  r+='<div class="etg">';TAGS.forEach(function(t){r+='<span style="color:'+(en[t[0]]?'#1A3A5C':'#CBD5E0')+';font-weight:'+(en[t[0]]?700:400)+'">'+(en[t[0]]?'☑':'☐')+' '+t[1]+'</span>';});
-  r+='</div></div>';return r;}
+  var res=en.resultado||'A';
+  var isQ=res==='Q', isR=res==='R', isA=res==='A';
+  var fatorDiff=en.fator&&en.fator!='1'&&en.fator!='';
+
+  /* Status label and symbol */
+  var statusTxt=isA?'✓  APROVADO':isQ?'⚠  QUARENTENA':'✗  REPROVADO';
+  var statusCls=isA?'':isQ?' quarentena':' reprovado';
+
+  /* Build classified tags */
+  var TAGS=[['port344','PORT.344'],['termossens','TERMOSS.'],['fotossens','FOTOSS.'],
+            ['higro','HIGRO.'],['hormonio','HORM.'],['citostatico','CITO.'],['antibiotico','ANTIB.']];
+  var activeTags=TAGS.filter(function(t){return en[t[0]];});
+
+  var r='<div class="ec">';
+
+  /* Zona 1 — Nome do princípio ativo */
+  r+='<div class="ec-nome'+statusCls+'">'+e((en.substancia||'').toUpperCase())+'</div>';
+
+  /* Zona 2 — Status badge */
+  r+='<div class="ec-status'+statusCls+'">'+statusTxt+'</div>';
+
+  /* Zona 3 — Validade + Fator de Correção */
+  r+='<div class="ec-validade-bloco">';
+  r+='<div class="ec-val-item">';
+  r+='<span class="ec-val-lbl">Validade</span>';
+  r+='<span class="ec-val-dado grande">'+(fmt(en.validade)||'--')+'</span>';
+  r+='</div>';
+  if(fatorDiff){
+    r+='<div class="ec-val-item">';
+    r+='<span class="ec-val-lbl">⚠ Fator de Correção</span>';
+    r+='<span class="ec-val-dado fator-alerta">'+e(en.fator)+'</span>';
+    r+='</div>';
+  } else {
+    r+='<div class="ec-val-item">';
+    r+='<span class="ec-val-lbl">Fabricação</span>';
+    r+='<span class="ec-val-dado">'+(fmt(en.fabricacao)||'--')+'</span>';
+    r+='</div>';
+  }
+  r+='</div>';
+
+  /* Zona 4 — Dados essenciais em 2 colunas */
+  r+='<div class="ec-dados">';
+  r+='<div class="ec-linha">';
+  r+='<div class="ec-campo"><span class="cl">R.E.</span><span class="cv">'+RE+'</span></div>';
+  r+='<div class="ec-campo"><span class="cl">Análise (Frac.)</span><span class="cv">'+(fmt(en.fracionamento)||'--')+'</span></div>';
+  r+='</div>';
+  r+='<div class="ec-linha">';
+  r+='<div class="ec-campo"><span class="cl">Fornecedor</span><span class="cv" style="font-size:9.5px">'+e(en.fornecedor||'--')+'</span></div>';
+  r+='<div class="ec-campo"><span class="cl">Lote</span><span class="cv">'+e(en.lote||'--')+'</span></div>';
+  r+='</div>';
+  r+='</div>';
+
+  /* Zona 5 — Armazenamento */
+  if(en.armazenamento){
+    var arm=(en.armazenamento||'').substring(0,80);
+    r+='<div class="ec-arm"><span>Arm.:</span>'+e(arm)+((en.armazenamento||'').length>80?'...':'')+'</div>';
+  }
+
+  /* Zona 6 — Classificações */
+  if(activeTags.length>0){
+    r+='<div class="ec-tags">';
+    activeTags.forEach(function(t){r+='<span class="ec-tag">'+t[1]+'</span>';});
+    r+='</div>';
+  }
+
+  r+='</div>';return r;}
+
 
 /* ════════════════════════════════ FICHA TÉCNICA ════════════════════════════════ */
 function renderFicha(code){
@@ -635,7 +704,7 @@ function renderEtiqueta(){
   }
 
   var q=S.etiqQ.toLowerCase();
-  var _etiq=S.etiqEntries.slice().sort(function(a,b){return (parseInt(b.re,10)||0)-(parseInt(a.re,10)||0);});
+  var _etiq=S.etiqEntries.slice().sort(function(a,b){var fa=a.fracionamento||'';var fb=b.fracionamento||'';if(fb>fa)return 1;if(fb<fa)return -1;return (parseInt(b.re,10)||0)-(parseInt(a.re,10)||0);});
   var filtE=q?_etiq.filter(function(en){return (en.substancia||'').toLowerCase().indexOf(q)>=0||(en.re||'').indexOf(q)>=0;}):_etiq;
   var listHtml='';
   filtE.forEach(function(en){
@@ -660,7 +729,7 @@ function renderHistorico(){
   r+=yearTabs(S.histYear,'histYear');
   if(S._loadingHist){return r+'<div style="text-align:center;padding:40px;color:#718096"><div style="font-size:32px;margin-bottom:10px">⏳</div><div>Carregando entradas de 20'+S.histYear+'...</div></div>';}
   var q=S.histQ.toLowerCase();
-  var _hist=S.histEntries.slice().sort(function(a,b){return (parseInt(b.re,10)||0)-(parseInt(a.re,10)||0);});
+  var _hist=S.histEntries.slice().sort(function(a,b){var fa=a.fracionamento||'';var fb=b.fracionamento||'';if(fb>fa)return 1;if(fb<fa)return -1;return (parseInt(b.re,10)||0)-(parseInt(a.re,10)||0);});
   var fil=q?_hist.filter(function(en){return (en.substancia||'').toLowerCase().indexOf(q)>=0||(en.re||'').indexOf(q)>=0||(en.fornecedor||'').toLowerCase().indexOf(q)>=0;}):_hist;
   r+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div style="font-size:13px;color:#718096">'+fil.length+' entrada'+(fil.length!==1?'s':'')+' em 20'+S.histYear+'</div><input id="hq" style="width:260px" placeholder="Buscar produto, RE, fornecedor..." value="'+e(S.histQ)+'"></div>';
   if(S.histEntries.length===0){r+='<div style="text-align:center;padding:60px;color:#A0AEC0;border:2px dashed #E2E8F0;border-radius:12px"><div style="font-size:40px;margin-bottom:10px">📋</div><div>Nenhuma entrada em 20'+S.histYear+'.<br>Importe dados em ⚙️ Gerenciar.</div></div>';return r;}
