@@ -116,7 +116,8 @@ textarea{resize:vertical;min-height:56px}
 .ec-nome{background:#000;color:#fff;font-weight:900;font-size:13.5px;text-align:center;padding:5px 6px;line-height:1.25;letter-spacing:.3px;text-transform:uppercase;word-break:break-word}
 .ec-nome.quarentena{background:#fff;color:#000;border-bottom:2px solid #000;font-size:12px}
 .ec-nome.reprovado{background:#fff;color:#000;border-bottom:2px solid #000;font-size:12px;text-decoration:line-through}
-.ec-status{display:flex;align-items:center;justify-content:center;gap:6px;padding:4px 6px;border-bottom:1.5px solid #000;font-weight:800;font-size:11px;letter-spacing:.8px;background:#f8f8f8}
+.ec-status{display:flex;align-items:center;justify-content:space-between;padding:4px 8px;border-bottom:1.5px solid #000;font-weight:800;font-size:11px;letter-spacing:.8px;background:#f8f8f8}
+.ec-qtdf{font-weight:900;font-size:11px;letter-spacing:.5px;border-left:1px solid #bbb;padding-left:8px;color:#000}
 .ec-status.quarentena{background:repeating-linear-gradient(45deg,#fff,#fff 4px,#e0e0e0 4px,#e0e0e0 8px)}
 .ec-status.reprovado{background:repeating-linear-gradient(45deg,#fff,#fff 4px,#ddd 4px,#ddd 8px)}
 .ec-validade-bloco{display:flex;border-bottom:1.5px solid #000}
@@ -372,7 +373,7 @@ var S={
   driveToken:'', driveFolderName:'CQ Farmacia Backup',
   backupLog:[],
   newSub:{n:'',d:'',s:'',dci:'',sin:'',fm:'',pm:'',fte:'',ftc:'',tp:'',org:'',sol:'',fus:'',dn:'',ph:'',a:'',ref:''},
-  _loading:true, _loadingHist:false, _loadingEtiq:false,
+  _loading:true, _loadingHist:false, _loadingEtiq:false, eselQF:{},
   _importing:false, _importProgress:'',
 };
 
@@ -548,64 +549,65 @@ function laudoHtml(en){
   r+='</div><div class="lf"><span>COPIA CONTROLADA</span><span>Data: '+(fmt(en.fracionamento)||TODAY)+'</span><span>Revisao n 01</span></div></div></div>';return r;}
 
 /* ════════════════════════════════ ETIQUETA CARD ════════════════════════════════ */
-function etiqCard(en){
+function etiqCard(en,qf){
   var RE=e(en.re)+'/'+e(en.ano);
   var res=en.resultado||'A';
   var isQ=res==='Q', isR=res==='R', isA=res==='A';
   var fatorDiff=en.fator&&en.fator!='1'&&en.fator!='';
-
-  /* Status label and symbol */
   var statusTxt=isA?'✓  APROVADO':isQ?'⚠  QUARENTENA':'✗  REPROVADO';
   var statusCls=isA?'':isQ?' quarentena':' reprovado';
-
-  /* Build classified tags */
   var TAGS=[['port344','PORT.344'],['termossens','TERMOSS.'],['fotossens','FOTOSS.'],
             ['higro','HIGRO.'],['hormonio','HORM.'],['citostatico','CITO.'],['antibiotico','ANTIB.']];
   var activeTags=TAGS.filter(function(t){return en[t[0]];});
-
   var r='<div class="ec">';
 
-  /* Zona 1 — Nome do princípio ativo */
+  /* Zona 1 — Nome */
   r+='<div class="ec-nome'+statusCls+'">'+e((en.substancia||'').toUpperCase())+'</div>';
 
-  /* Zona 2 — Status badge */
-  r+='<div class="ec-status'+statusCls+'">'+statusTxt+'</div>';
+  /* Zona 2 — Status + Quantidade fracionada na mesma linha */
+  r+='<div class="ec-status'+statusCls+'">';
+  r+='<span>'+statusTxt+'</span>';
+  if(qf){r+='<span class="ec-qtdf">'+e(qf)+'</span>';}
+  r+='</div>';
 
-  /* Zona 3 — Validade + Fator de Correção */
+  /* Zona 3 — Fabricação (esq) | Validade (dir) */
   r+='<div class="ec-validade-bloco">';
+  /* Fabricação — esquerda */
+  r+='<div class="ec-val-item">';
+  r+='<span class="ec-val-lbl">Fabricação</span>';
+  r+='<span class="ec-val-dado">'+(fmt(en.fabricacao)||'--')+'</span>';
+  r+='</div>';
+  /* Validade — direita (sempre em destaque) */
   r+='<div class="ec-val-item">';
   r+='<span class="ec-val-lbl">Validade</span>';
   r+='<span class="ec-val-dado grande">'+(fmt(en.validade)||'--')+'</span>';
   r+='</div>';
-  if(fatorDiff){
-    r+='<div class="ec-val-item">';
-    r+='<span class="ec-val-lbl">⚠ Fator de Correção</span>';
-    r+='<span class="ec-val-dado fator-alerta">'+e(en.fator)+'</span>';
-    r+='</div>';
-  } else {
-    r+='<div class="ec-val-item">';
-    r+='<span class="ec-val-lbl">Fabricação</span>';
-    r+='<span class="ec-val-dado">'+(fmt(en.fabricacao)||'--')+'</span>';
-    r+='</div>';
-  }
   r+='</div>';
 
-  /* Zona 4 — Dados essenciais em 2 colunas */
+  /* Fator de correção — linha extra só quando ≠ 1 */
+  if(fatorDiff){
+    r+='<div style="border-bottom:1px solid #000;padding:3px 6px;display:flex;align-items:center;gap:8px">';
+    r+='<span style="font-size:8px;font-weight:700;text-transform:uppercase;color:#555">⚠ Fator de Correção</span>';
+    r+='<span class="ec-val-dado fator-alerta">'+e(en.fator)+'</span>';
+    r+='</div>';
+  }
+
+  /* Zona 4 — RE | Análise / Fornecedor | Lote */
   r+='<div class="ec-dados">';
   r+='<div class="ec-linha">';
   r+='<div class="ec-campo"><span class="cl">R.E.</span><span class="cv">'+RE+'</span></div>';
-  r+='<div class="ec-campo"><span class="cl">Análise (Frac.)</span><span class="cv">'+(fmt(en.fracionamento)||'--')+'</span></div>';
+  r+='<div class="ec-campo"><span class="cl">Data de Análise</span><span class="cv">'+(fmt(en.fracionamento)||'--')+'</span></div>';
   r+='</div>';
   r+='<div class="ec-linha">';
-  r+='<div class="ec-campo"><span class="cl">Fornecedor</span><span class="cv" style="font-size:9.5px">'+e(en.fornecedor||'--')+'</span></div>';
+  r+='<div class="ec-campo"><span class="cl">Fornecedor</span><span class="cv" style="font-size:9px">'+e(en.fornecedor||'--')+'</span></div>';
   r+='<div class="ec-campo"><span class="cl">Lote</span><span class="cv">'+e(en.lote||'--')+'</span></div>';
   r+='</div>';
   r+='</div>';
 
   /* Zona 5 — Armazenamento */
   if(en.armazenamento){
-    var arm=(en.armazenamento||'').substring(0,80);
-    r+='<div class="ec-arm"><span>Arm.:</span>'+e(arm)+((en.armazenamento||'').length>80?'...':'')+'</div>';
+    var arm=(en.armazenamento||'').substring(0,90);
+    r+='<div class="ec-arm"><span>Arm.:</span>'+e(arm)+((en.armazenamento||'').length>90?'...':'')+'</div>';
   }
 
   /* Zona 6 — Classificações */
@@ -698,7 +700,7 @@ function renderEtiqueta(){
     selHtml='<div style="background:#EBF4FB;border-radius:8px;padding:10px 12px;margin-bottom:12px"><div style="font-size:11px;font-weight:700;color:#1A3A5C;margin-bottom:8px">SELECIONADOS:</div><div style="display:flex;flex-wrap:wrap;gap:8px">';
     selE.forEach(function(en){
       var qOpts='';for(var n=1;n<=8;n++)qOpts+='<option value="'+n+'"'+(S.esel[en.id]===n?' selected':'')+'>'+n+'</option>';
-      selHtml+='<div style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #BEE3F8;border-radius:6px;padding:4px 10px"><span style="font-weight:700;font-size:12px;color:#1A3A5C">'+e(en.re)+'/'+e(en.ano)+'</span><span style="font-size:11px;color:#718096;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+e(en.substancia)+'</span><span> x </span><select class="eq-sel" data-eid="'+en.id+'" style="width:50px;padding:2px 4px;font-size:12px">'+qOpts+'</select><button class="etog-btn" data-eid="'+en.id+'" style="background:none;border:none;color:#E53E3E;font-weight:700;font-size:14px;cursor:pointer;padding:0 2px">x</button></div>';
+      selHtml+='<div style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #BEE3F8;border-radius:6px;padding:4px 10px"><span style="font-weight:700;font-size:12px;color:#1A3A5C">'+e(en.re)+'/'+e(en.ano)+'</span><span style="font-size:11px;color:#718096;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+e(en.substancia)+'</span><span> x </span><select class="eq-sel" data-eid="'+en.id+'" style="width:50px;padding:2px 4px;font-size:12px">'+qOpts+'</select><input class="eqf-inp" data-eid="'+en.id+'" value="'+e(S.eselQF[en.id]||en.qtde||'')+'" placeholder="Qtde" style="width:80px;padding:2px 5px;font-size:12px;border:1px solid #BEE3F8;border-radius:4px" title="Quantidade fracionada"><button class="etog-btn" data-eid="'+en.id+'" style="background:none;border:none;color:#E53E3E;font-weight:700;font-size:14px;cursor:pointer;padding:0 2px">x</button></div>';
     });
     selHtml+='</div></div>';
   }
@@ -713,7 +715,7 @@ function renderEtiqueta(){
   });
 
   var preview=etiqList.length>0
-    ?'<div><div class="np" style="font-weight:700;font-size:13px;color:#4A5568;margin-bottom:10px">Previa ('+etiqList.length+' etiqueta'+(etiqList.length>1?'s':'')+'):</div><div class="epg" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+etiqList.map(function(en){return etiqCard(en);}).join('')+'</div></div>'
+    ?'<div><div class="np" style="font-weight:700;font-size:13px;color:#4A5568;margin-bottom:10px">Previa ('+etiqList.length+' etiqueta'+(etiqList.length>1?'s':'')+'):</div><div class="epg" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+etiqList.map(function(en){return etiqCard(en,S.eselQF[en.id]||'');}).join('')+'</div></div>'
     :'<div class="np" style="text-align:center;padding:40px;color:#A0AEC0;border:2px dashed #E2E8F0;border-radius:12px"><div style="font-size:40px;margin-bottom:10px">🏷️</div><div style="font-size:14px">Selecione laudos para imprimir etiquetas.</div></div>';
 
   var r='<div class="card np" style="margin-bottom:16px;padding:16px">';
@@ -921,6 +923,7 @@ function bindAll(){
   var dfld=document.getElementById('drive-folder');if(dfld){dfld.oninput=function(){S.driveFolderName=this.value;};}
   document.querySelectorAll('.eq-sel').forEach(function(sel){sel.onchange=function(){setEQ(this.dataset.eid,+this.value);};});
   document.querySelectorAll('.etog-btn').forEach(function(btn){btn.onclick=function(ev){ev.stopPropagation();togE(this.dataset.eid);};});
+  document.querySelectorAll('.eqf-inp').forEach(function(inp){inp.oninput=function(){S.eselQF[this.dataset.eid]=this.value;};inp.onclick=function(ev){ev.stopPropagation();};});
   document.querySelectorAll('.remSub-btn').forEach(function(btn){btn.onclick=function(){remSub(this.dataset.sc);};});
   document.querySelectorAll('.editSub-btn').forEach(function(btn){btn.onclick=function(){startEditSub(this.dataset.sc);};});
   document.querySelectorAll('.fichaBtn').forEach(function(btn){btn.onclick=function(){S.fichaCode=this.dataset.sc;repaint();};});
@@ -1026,7 +1029,7 @@ function delE(id){
 function togE(id){
   var numC=Object.keys(S.esel).filter(function(k){return S.esel[k];}).length;
   var total=Object.keys(S.esel).reduce(function(a,k){return a+(S.esel[k]||0);},0);
-  if(S.esel[id]){var ns=Object.assign({},S.esel);delete ns[id];S.esel=ns;}
+  if(S.esel[id]){var ns=Object.assign({},S.esel);delete ns[id];S.esel=ns;var nq=Object.assign({},S.eselQF);delete nq[id];S.eselQF=nq;}
   else{if(numC>=8){alert('Max 8 laudos diferentes.');return;}if(total>=8){alert('Max 8 etiquetas.');return;}S.esel[id]=1;}
   repaint();}
 
