@@ -157,25 +157,33 @@ textarea{resize:vertical;min-height:56px}
 .err{background:var(--red-light);color:var(--red-dark);padding:16px;border-radius:var(--radius-md);font-family:monospace;font-size:12px;margin:20px;white-space:pre-wrap;border:1px solid #FEB2B2}
 
 /* ── FICHA TECNICA ── */
-.fw{max-width:700px;margin:0 auto;background:#fff;border:1.5px solid #C3D9F0;border-radius:var(--radius-lg);overflow:hidden;font-size:11px;box-shadow:var(--shadow-sm)}
-.fh{background:linear-gradient(135deg,#1A3A5C 0%,#2056A0 60%,#2B6CB0 100%);color:#fff;padding:12px 20px;display:flex;justify-content:space-between;align-items:center}
-.fh-t{font-size:13px;font-weight:700;letter-spacing:.5px}
-.fh-s{font-size:10px;opacity:.75;margin-top:2px}
-.fb{padding:14px 18px}
-.f-nome{background:linear-gradient(135deg,#EBF4FB,#F0F7FF);border:1px solid #D4E8F8;border-radius:var(--radius-md);padding:12px 14px;margin-bottom:12px}
-.f-nome-t{font-size:17px;font-weight:700;color:var(--blue-dark);margin-bottom:8px;line-height:1.25}
-.f-ids{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px 12px;font-size:10px}
-.f-ids div{line-height:1.5}
-.f-ids b{color:#718096;font-weight:700;text-transform:uppercase;font-size:9px;letter-spacing:.3px}
-.f-sec{font-weight:700;font-size:10px;color:var(--blue-dark);border-bottom:2px solid var(--blue-mid);padding-bottom:5px;margin:14px 0 8px;text-transform:uppercase;letter-spacing:.8px}
-.f-tbl{width:100%;border-collapse:collapse;margin-bottom:12px}
-.f-tbl td{padding:5px 10px;font-size:10px;border-bottom:1px solid #EEF2F7;vertical-align:top;line-height:1.5}
-.f-tbl .f-th{background:#FAFBFC;font-weight:700;color:#4A5568;width:26%;border-right:1px solid #EEF2F7;text-transform:uppercase;font-size:9px;letter-spacing:.3px}
-.f-arm{background:linear-gradient(135deg,#EBF4FB,#F0F7FF);border:1px solid #D4E8F8;border-radius:var(--radius-sm);padding:9px 12px;margin-bottom:10px;font-size:10px;line-height:1.5}
-.f-arm-t{font-size:9px;font-weight:700;color:var(--blue-dark);text-transform:uppercase;margin-bottom:4px;letter-spacing:.5px}
-.f-ref{border-top:1px solid #EEF2F7;padding-top:8px;font-size:9px;color:#718096;line-height:1.5;margin-bottom:8px}
+.fw{max-width:700px;margin:0 auto;background:#fff;border:1.5px solid #C3D9F0;border-radius:var(--radius-lg);overflow:hidden;font-size:12.5px;box-shadow:var(--shadow-sm)}
+.fh{background:linear-gradient(135deg,#1A3A5C 0%,#2056A0 60%,#2B6CB0 100%);color:#fff;padding:14px 22px;display:flex;justify-content:space-between;align-items:center}
+.fh-t{font-size:15px;font-weight:700;letter-spacing:.5px}
+.fh-s{font-size:11px;opacity:.75;margin-top:3px}
+.fb{padding:16px 20px}
+.f-nome{background:linear-gradient(135deg,#EBF4FB,#F0F7FF);border:1px solid #D4E8F8;border-radius:var(--radius-md);padding:14px 16px;margin-bottom:14px}
+.f-nome-t{font-size:20px;font-weight:700;color:var(--blue-dark);margin-bottom:10px;line-height:1.25}
+.f-ids{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px 14px;font-size:12px}
+.f-ids div{line-height:1.55}
+.f-ids b{color:#718096;font-weight:700;text-transform:uppercase;font-size:10px;letter-spacing:.3px}
+.f-sec{font-weight:700;font-size:12px;color:var(--blue-dark);border-bottom:2px solid var(--blue-mid);padding-bottom:6px;margin:16px 0 10px;text-transform:uppercase;letter-spacing:.8px}
+.f-tbl{width:100%;border-collapse:collapse;margin-bottom:14px}
+.f-tbl td{padding:7px 12px;font-size:12px;border-bottom:1px solid #EEF2F7;vertical-align:top;line-height:1.55}
+.f-tbl .f-th{background:#FAFBFC;font-weight:700;color:#4A5568;width:26%;border-right:1px solid #EEF2F7;text-transform:uppercase;font-size:11px;letter-spacing:.3px}
+.f-arm{background:linear-gradient(135deg,#EBF4FB,#F0F7FF);border:1px solid #D4E8F8;border-radius:var(--radius-sm);padding:11px 14px;margin-bottom:12px;font-size:12px;line-height:1.55}
+.f-arm-t{font-size:11px;font-weight:700;color:var(--blue-dark);text-transform:uppercase;margin-bottom:5px;letter-spacing:.5px}
+.f-ref{border-top:1px solid #EEF2F7;padding-top:10px;font-size:11px;color:#718096;line-height:1.55;margin-bottom:10px}
 .f-ref b{color:#4A5568}
-.f-foot{display:flex;justify-content:space-between;font-size:9px;color:#A0AEC0;border-top:1px solid #EEF2F7;padding-top:8px}
+.f-foot{display:flex;justify-content:space-between;font-size:10.5px;color:#A0AEC0;border-top:1px solid #EEF2F7;padding-top:10px}
+/* ── CABECALHO DA FARMACIA (laudos e fichas) ── */
+.ph-hdr{border-bottom:2px solid var(--blue-dark);padding:10px 20px 12px;background:#fff}
+.ph-hdr-flex{display:flex;align-items:center;gap:14px}
+.ph-logo{max-height:56px;max-width:130px;object-fit:contain;flex-shrink:0}
+.ph-info{flex:1;line-height:1.45}
+.ph-nome{font-size:15px;font-weight:700;color:var(--blue-dark);letter-spacing:.2px}
+.ph-linha{font-size:10.5px;color:#4A5568;margin-top:2px}
+.ph-rt{font-size:10.5px;color:#2D3748;margin-top:3px;font-weight:600}
 /* Modal overlays */
 .mv{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,30,50,.6);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(2px)}
 .mv-box{background:#fff;border-radius:var(--radius-lg);max-width:760px;width:100%;max-height:95vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
@@ -200,7 +208,11 @@ textarea{resize:vertical;min-height:56px}
   body.printing-modal .app{display:none!important}
 
   /* ── FICHA TECNICA ── */
-  .fw{max-width:100%!important;border:none!important;border-radius:0!important;box-shadow:none!important;font-size:10.5px!important;page-break-inside:auto}
+  .fw{max-width:100%!important;border:none!important;border-radius:0!important;box-shadow:none!important;font-size:11.5px!important;page-break-inside:auto}
+  .ph-hdr{page-break-inside:avoid;page-break-after:avoid;padding:6px 14px 8px!important}
+  .ph-logo{max-height:48px!important}
+  .ph-nome{font-size:14px!important}
+  .ph-linha,.ph-rt{font-size:10px!important}
   .fh{padding:10px 14px!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;background:#1A3A5C!important}
   .fb{padding:10px 14px!important}
   .f-nome{-webkit-print-color-adjust:exact;print-color-adjust:exact;background:#EBF4FB!important;padding:10px 12px!important;page-break-inside:avoid}
@@ -428,6 +440,7 @@ var S={
   subAIText:'', subAICAS:'', subAITarget:'new',
   driveToken:'', driveFolderName:'CQ Farmacia Backup',
   backupLog:[],
+  farm:{nome:'',cnpj:'',end:'',cidade:'',fone:'',rt:'',crf:'',logo:''},
   newSub:{n:'',d:'',s:'',dci:'',sin:'',fm:'',pm:'',fte:'',ftc:'',tp:'',org:'',sol:'',fus:'',dn:'',ph:'',a:'',ref:''},
   _loading:true, _loadingHist:false, _loadingEtiq:false, eselQF:{},
   _importing:false, _importProgress:'',
@@ -487,13 +500,14 @@ function migrateLegacy(oldEntries,yr){
 }
 
 function loadState(yr){
-  var pending=5;
+  var pending=6;
   function done(){if(--pending===0)afterConfig();}
   IDB.cfg('apiKey',function(v){S.apiKey=v||'';done();});
   IDB.cfg('driveToken',function(v){S.driveToken=v||'';done();});
   IDB.cfg('driveFolderName',function(v){S.driveFolderName=v||'CQ Farmacia Backup';done();});
   IDB.cfg('backupLog',function(v){S.backupLog=v||[];done();});
   IDB.cfg('overrides',function(v){S.overrides=v||{};done();});
+  IDB.cfg('farm',function(v){if(v)S.farm=Object.assign(S.farm,v);done();});
   function afterConfig(){
     IDB.getUserDB(function(udb){
       S.udb=udb||[];
@@ -580,7 +594,7 @@ function laudoHtml(en){
   function row2(a,b,c,d){return '<tr><td class="th">'+a+'</td><td>'+e(b)+'</td><td class="th">'+c+'</td><td>'+e(d)+'</td></tr>';}
   var tests=[['Caract. Organolépticas',en.organoleptica_ref,en.organoleptica_result,en.organoleptica_conf],['Solubilidade',en.solubilidade_ref,en.solubilidade_result,en.solubilidade_conf],['Ponto de Fusao',en.fusao_ref,en.fusao_result,en.fusao_conf],['Densidade',en.densidade_ref||en.densidade,en.densidade_result,en.densidade_conf],['pH',en.ph_ref,en.ph_result,en.ph_conf]];
   var tRows='';tests.forEach(function(t){tRows+='<tr><td class="th">'+t[0]+'</td><td>'+e(t[1])+'</td><td>'+e(t[2])+'</td><td style="text-align:center;font-weight:700;color:'+cc(t[3])+'">'+cl(t[3])+'</td></tr>';});
-  var r='<div class="lw"><div class="lh"><div><div style="font-size:13px;font-weight:700;letter-spacing:.5px">LAUDO DE ANALISE DE MATERIA-PRIMA</div><div style="font-size:10px;opacity:.7;margin-top:2px">LABORATORIO DE CONTROLE DE QUALIDADE</div></div><div style="text-align:right"><div style="font-size:9px;opacity:.7">Codigo</div><div style="font-size:20px;font-weight:700">'+RE+'</div></div></div>';
+  var r='<div class="lw">'+farmHeader()+'<div class="lh"><div><div style="font-size:13px;font-weight:700;letter-spacing:.5px">LAUDO DE ANALISE DE MATERIA-PRIMA</div><div style="font-size:10px;opacity:.7;margin-top:2px">LABORATORIO DE CONTROLE DE QUALIDADE</div></div><div style="text-align:right"><div style="font-size:9px;opacity:.7">Codigo</div><div style="font-size:20px;font-weight:700">'+RE+'</div></div></div>';
   r+='<div class="lb"><div class="lk"><div><div class="kl">Produto</div><div class="kv" style="color:#1A3A5C">'+e(en.substancia)+'</div></div><div><div class="kl">Data de Validade</div><div class="kv" style="color:#9B2C2C">'+(fmt(en.validade)||'--')+'</div></div><div><div class="kl">Fabricacao</div><div class="kv" style="font-size:11px">'+(fmt(en.fabricacao)||'--')+'</div></div><div><div class="kl">Fracionamento</div><div class="kv" style="font-size:11px">'+(fmt(en.fracionamento)||'--')+'</div></div></div>';
   r+='<div class="sh">Detalhes da Compra</div><table class="lt"><tbody>';
   r+=row2('Fornecedor',en.fornecedor,'Nota Fiscal',en.nf);
@@ -677,12 +691,36 @@ function etiqCard(en,qf){
 
 
 /* ════════════════════════════════ FICHA TÉCNICA ════════════════════════════════ */
+
+function farmHeader(){
+  var f=S.farm||{};
+  if(!f.nome&&!f.rt&&!f.logo)return '';
+  var r='<div class="ph-hdr"><div class="ph-hdr-flex">';
+  if(f.logo){r+='<img src="'+f.logo+'" class="ph-logo" alt="">';}
+  r+='<div class="ph-info">';
+  if(f.nome){r+='<div class="ph-nome">'+e(f.nome)+'</div>';}
+  var l1=[];
+  if(f.end)l1.push(f.end);
+  if(f.cidade)l1.push(f.cidade);
+  if(l1.length){r+='<div class="ph-linha">'+e(l1.join(' — '))+'</div>';}
+  var l2=[];
+  if(f.cnpj)l2.push('CNPJ: '+f.cnpj);
+  if(f.fone)l2.push('Tel: '+f.fone);
+  if(l2.length){r+='<div class="ph-linha">'+e(l2.join('  ·  '))+'</div>';}
+  var l3=[];
+  if(f.rt)l3.push('RT: '+f.rt);
+  if(f.crf)l3.push(f.crf);
+  if(l3.length){r+='<div class="ph-rt">'+e(l3.join('  —  '))+'</div>';}
+  r+='</div></div></div>';
+  return r;}
+
 function renderFicha(code){
   var db=fdb();var s=db.filter(function(x){return x.c===code;})[0];
   if(!s)return '<div style="padding:30px;color:#999">Substancia nao encontrada.</div>';
   var today=new Date().toLocaleDateString('pt-BR');
 
   var r='<div class="fw">';
+  r+=farmHeader();
   /* Cabecalho */
   r+='<div class="fh"><div>';
   r+='<div class="fh-t">FICHA TECNICA DE MATERIA-PRIMA</div>';
@@ -894,6 +932,92 @@ function renderBackupTab(){
   return r;}
 
 /* ════════════════════════════════ GERENCIAR ════════════════════════════════ */
+
+
+function saveFarm(){
+  var g=function(id){var el=document.getElementById(id);return el?el.value.trim():'';};
+  S.farm=Object.assign({},S.farm,{
+    nome:g('fm-nome'),cnpj:g('fm-cnpj'),end:g('fm-end'),
+    cidade:g('fm-cidade'),fone:g('fm-fone'),rt:g('fm-rt'),crf:g('fm-crf')
+  });
+  IDB.setCfg('farm',S.farm,function(){
+    S.msg='Cabecalho salvo! Aparecera nos laudos e fichas.';repaint();
+    setTimeout(function(){S.msg='';},3500);
+  });}
+
+function handleLogo(fileInput){
+  var file=fileInput.files[0];if(!file)return;
+  if(file.size>3*1024*1024){alert('Imagem muito grande. Use uma imagem menor que 3MB.');return;}
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    var img=new Image();
+    img.onload=function(){
+      /* Resize to max 260x110 keeping aspect */
+      var maxW=260,maxH=110;
+      var w=img.width,h=img.height;
+      var scale=Math.min(maxW/w,maxH/h,1);
+      var cw=Math.round(w*scale),ch=Math.round(h*scale);
+      var cv=document.createElement('canvas');cv.width=cw;cv.height=ch;
+      var ctx=cv.getContext('2d');
+      ctx.fillStyle='#fff';ctx.fillRect(0,0,cw,ch);
+      ctx.drawImage(img,0,0,cw,ch);
+      var dataUrl=cv.toDataURL('image/png');
+      S.farm.logo=dataUrl;
+      IDB.setCfg('farm',S.farm,function(){
+        S.msg='Logotipo salvo!';repaint();setTimeout(function(){S.msg='';},3000);
+      });
+    };
+    img.onerror=function(){alert('Nao foi possivel ler a imagem.');};
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(file);
+  fileInput.value='';}
+
+function removeLogo(){
+  if(!confirm('Remover o logotipo?'))return;
+  S.farm.logo='';
+  IDB.setCfg('farm',S.farm,function(){repaint();});}
+
+function renderCfgTab(){
+  var f=S.farm||{};
+  var r='<div class="sec s1" style="margin-bottom:16px">';
+  r+='<div class="stl" style="color:#1A3A5C">Dados da Farmacia</div>';
+  r+='<p style="font-size:13px;color:#4A5568;margin-bottom:14px">Estes dados aparecem no topo dos <b>laudos de analise</b> e das <b>fichas tecnicas</b> impressos.</p>';
+  r+='<div class="fld"><label class="lbl">Nome / Razao Social</label><input id="fm-nome" value="'+e(f.nome||'')+'" placeholder="Ex: Formula Animal Farmacia de Manipulacao"></div>';
+  r+='<div class="g2">';
+  r+='<div class="fld"><label class="lbl">CNPJ</label><input id="fm-cnpj" value="'+e(f.cnpj||'')+'" placeholder="00.000.000/0001-00"></div>';
+  r+='<div class="fld"><label class="lbl">Telefone</label><input id="fm-fone" value="'+e(f.fone||'')+'" placeholder="(62) 0000-0000"></div>';
+  r+='</div>';
+  r+='<div class="fld"><label class="lbl">Endereco</label><input id="fm-end" value="'+e(f.end||'')+'" placeholder="Rua Exemplo, 123 - Centro"></div>';
+  r+='<div class="fld"><label class="lbl">Cidade / UF</label><input id="fm-cidade" value="'+e(f.cidade||'')+'" placeholder="Anapolis - GO"></div>';
+  r+='<div class="g2">';
+  r+='<div class="fld"><label class="lbl">Responsavel Tecnico</label><input id="fm-rt" value="'+e(f.rt||'')+'" placeholder="Nome do farmaceutico RT"></div>';
+  r+='<div class="fld"><label class="lbl">Registro no Conselho</label><input id="fm-crf" value="'+e(f.crf||'')+'" placeholder="CRF-GO 0000"></div>';
+  r+='</div>';
+  /* Logo */
+  r+='<div class="fld"><label class="lbl">Logotipo (opcional)</label>';
+  if(f.logo){
+    r+='<div style="display:flex;align-items:center;gap:12px;background:#fff;border:1px solid #C3D9F0;border-radius:8px;padding:10px">';
+    r+='<img src="'+f.logo+'" style="max-height:56px;max-width:130px;object-fit:contain">';
+    r+='<button class="btn bd bsm" data-action="removeLogo">Remover logotipo</button></div>';
+  } else {
+    r+='<input type="file" id="fm-logo-file" accept="image/*" style="display:none">';
+    r+='<button class="btn bg" data-action="pickLogo" style="width:100%">Selecionar imagem do logotipo</button>';
+    r+='<div style="font-size:10px;color:#A0AEC0;margin-top:4px">PNG ou JPG. A imagem e reduzida automaticamente e salva no navegador.</div>';
+  }
+  r+='</div>';
+  r+='<button class="btn bp" data-action="saveFarm" style="width:100%;padding:12px;margin-top:6px">Salvar Cabecalho</button>';
+  r+='</div>';
+  /* Preview */
+  r+='<div style="font-weight:700;font-size:12px;color:#4A5568;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">Previa do cabecalho</div>';
+  var hdr=farmHeader();
+  if(hdr){
+    r+='<div style="border:1px solid #E2E8F0;border-radius:10px;overflow:hidden;background:#fff">'+hdr+'</div>';
+  } else {
+    r+='<div style="text-align:center;padding:30px;color:#A0AEC0;border:2px dashed #E2E8F0;border-radius:10px;font-size:13px">Preencha os dados acima e salve para ver a previa.</div>';
+  }
+  return r;}
+
 function renderGerenciar(){
   var ns=S.newSub,db=fdb(),q=S.subQ.toLowerCase();
   var fil=q?db.filter(function(s){return s.n.toLowerCase().indexOf(q)>=0;}):db;
@@ -901,9 +1025,11 @@ function renderGerenciar(){
   var r='<div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap">';
   r+='<button class="btn '+(S.gerTab==='sub'?'bp':'bg')+'" data-action="gerTab" data-val="sub">📦 Substancias</button>';
   r+='<button class="btn '+(S.gerTab==='imp'?'bp':'bg')+'" data-action="gerTab" data-val="imp">📥 Importar/Exportar</button>';
+  r+='<button class="btn '+(S.gerTab==='cfg'?'bp':'bg')+'" data-action="gerTab" data-val="cfg">🏥 Cabecalho</button>';
   r+='<button class="btn" data-action="gerTab" data-val="bak" style="background:'+(S.gerTab==='bak'?'#276749':'#F0FFF4')+';border:2px solid #276749;color:'+(S.gerTab==='bak'?'#fff':'#276749')+';font-weight:700">💾 Backup</button></div>';
   if(S.msg){r+='<div class="ok">'+e(S.msg)+'</div>';}
   if(S.gerTab==='bak'){r+=renderBackupTab();return r;}
+  if(S.gerTab==='cfg'){r+=renderCfgTab();return r;}
   if(S.gerTab==='sub'){
     r+='<div class="sec s1" style="margin-bottom:16px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div class="stl" style="color:#1A3A5C;margin:0">Adicionar / Importar Substancia</div><button class="btn bg bsm" data-action="openSubAINew" style="font-size:11px">🤖 Preencher com IA</button></div>';
     r+='<div style="background:#F0FFF4;border:1px solid #68D391;border-radius:6px;padding:8px 12px;margin-bottom:12px;font-size:12px;color:#276749">💡 Para adicionar as especificacoes completas importe <b>substancias_completo.json</b> abaixo.</div>';
@@ -1028,6 +1154,7 @@ function bindAll(){
   document.querySelectorAll('.esf').forEach(function(el){el.oninput=function(){if(S.editSub)S.editSub[this.dataset.ek]=this.value;};});
   var ie=document.getElementById('imp-e');if(ie){ie.onchange=function(ev){impE(ev);};}
   var idd=document.getElementById('imp-d');if(idd){idd.onchange=function(ev){impD(ev);};}
+  var lgf=document.getElementById('fm-logo-file');if(lgf){lgf.onchange=function(){handleLogo(this);};}
   var aif=document.getElementById('ai-file');if(aif){aif.onchange=function(){callAI(this);this.value='';};};
   var saif=document.getElementById('sub-ai-file');if(saif){saif.onchange=function(){runSubAIFromFile(this,S.subAITarget==='edit'?S.editSub:S.newSub);};};
   var satxt=document.getElementById('sub-ai-text');if(satxt){satxt.oninput=function(){S.subAIText=this.value;};};
@@ -1046,6 +1173,9 @@ function bindAll(){
       else if(a==='delE'){ev.stopPropagation();delE(eid);}
       else if(a==='gerTab'){S.gerTab=v;repaint();}
       else if(a==='addSub'){addSub();}
+      else if(a==='saveFarm'){saveFarm();}
+      else if(a==='pickLogo'){document.getElementById('fm-logo-file').click();}
+      else if(a==='removeLogo'){removeLogo();}
       else if(a==='saveEditSub'){saveEditSub();}
       else if(a==='cancelEdit'){cancelEdit();}
       else if(a==='resetSub'){var c=this.dataset.sc;delete S.overrides[c];IDB.setCfg('overrides',S.overrides,null);S.editSub=null;S.msg='Substancia restaurada.';repaint();setTimeout(function(){S.msg='';},3000);}
