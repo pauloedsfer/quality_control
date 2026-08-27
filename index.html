@@ -155,22 +155,78 @@ textarea{resize:vertical;min-height:56px}
 /* ── MISC ── */
 .ft{text-align:center;font-size:11px;color:#A0AEC0;margin-top:16px;letter-spacing:.2px}
 .err{background:var(--red-light);color:var(--red-dark);padding:16px;border-radius:var(--radius-md);font-family:monospace;font-size:12px;margin:20px;white-space:pre-wrap;border:1px solid #FEB2B2}
+
+/* ── FICHA TECNICA ── */
+.fw{max-width:700px;margin:0 auto;background:#fff;border:1.5px solid #C3D9F0;border-radius:var(--radius-lg);overflow:hidden;font-size:11px;box-shadow:var(--shadow-sm)}
+.fh{background:linear-gradient(135deg,#1A3A5C 0%,#2056A0 60%,#2B6CB0 100%);color:#fff;padding:12px 20px;display:flex;justify-content:space-between;align-items:center}
+.fh-t{font-size:13px;font-weight:700;letter-spacing:.5px}
+.fh-s{font-size:10px;opacity:.75;margin-top:2px}
+.fb{padding:14px 18px}
+.f-nome{background:linear-gradient(135deg,#EBF4FB,#F0F7FF);border:1px solid #D4E8F8;border-radius:var(--radius-md);padding:12px 14px;margin-bottom:12px}
+.f-nome-t{font-size:17px;font-weight:700;color:var(--blue-dark);margin-bottom:8px;line-height:1.25}
+.f-ids{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px 12px;font-size:10px}
+.f-ids div{line-height:1.5}
+.f-ids b{color:#718096;font-weight:700;text-transform:uppercase;font-size:9px;letter-spacing:.3px}
+.f-sec{font-weight:700;font-size:10px;color:var(--blue-dark);border-bottom:2px solid var(--blue-mid);padding-bottom:5px;margin:14px 0 8px;text-transform:uppercase;letter-spacing:.8px}
+.f-tbl{width:100%;border-collapse:collapse;margin-bottom:12px}
+.f-tbl td{padding:5px 10px;font-size:10px;border-bottom:1px solid #EEF2F7;vertical-align:top;line-height:1.5}
+.f-tbl .f-th{background:#FAFBFC;font-weight:700;color:#4A5568;width:26%;border-right:1px solid #EEF2F7;text-transform:uppercase;font-size:9px;letter-spacing:.3px}
+.f-arm{background:linear-gradient(135deg,#EBF4FB,#F0F7FF);border:1px solid #D4E8F8;border-radius:var(--radius-sm);padding:9px 12px;margin-bottom:10px;font-size:10px;line-height:1.5}
+.f-arm-t{font-size:9px;font-weight:700;color:var(--blue-dark);text-transform:uppercase;margin-bottom:4px;letter-spacing:.5px}
+.f-ref{border-top:1px solid #EEF2F7;padding-top:8px;font-size:9px;color:#718096;line-height:1.5;margin-bottom:8px}
+.f-ref b{color:#4A5568}
+.f-foot{display:flex;justify-content:space-between;font-size:9px;color:#A0AEC0;border-top:1px solid #EEF2F7;padding-top:8px}
+/* Modal overlays */
+.mv{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,30,50,.6);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(2px)}
+.mv-box{background:#fff;border-radius:var(--radius-lg);max-width:760px;width:100%;max-height:95vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
+.mv-bar{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-bottom:1px solid #E2E8F0;background:#FAFCFF;position:sticky;top:0;z-index:2}
+
 @media print{
-  @page{size:A4 portrait;margin:8mm}
+  @page{size:A4 portrait;margin:10mm}
   .np{display:none!important}
-  body{background:#fff}
-  .hdr,.tabs{display:none!important}
-  .app{padding:0;max-width:100%}
-  .card{box-shadow:none;border-radius:0;border:none}
-  .body{padding:4px}
-  .lw{max-width:100%!important;font-size:9.5px!important;box-shadow:none}
-  .lh{padding:7px 12px!important}
+  body{background:#fff!important}
+  .hdr,.tabs,.ft{display:none!important}
+  .app{padding:0!important;max-width:100%!important}
+  .card{box-shadow:none!important;border-radius:0!important;border:none!important}
+  .body{padding:0!important}
+
+  /* ── MODAL: remove overlay, show only content ── */
+  .mv{position:static!important;background:none!important;padding:0!important;display:block!important;backdrop-filter:none!important}
+  .mv-box{max-width:100%!important;width:100%!important;max-height:none!important;overflow:visible!important;box-shadow:none!important;border-radius:0!important}
+  .mv-bar{display:none!important}
+  .modal-overlay{position:static!important}
+
+  /* ── When a modal is open, hide everything else ── */
+  body.printing-modal .app{display:none!important}
+
+  /* ── FICHA TECNICA ── */
+  .fw{max-width:100%!important;border:none!important;border-radius:0!important;box-shadow:none!important;font-size:10.5px!important;page-break-inside:auto}
+  .fh{padding:10px 14px!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;background:#1A3A5C!important}
+  .fb{padding:10px 14px!important}
+  .f-nome{-webkit-print-color-adjust:exact;print-color-adjust:exact;background:#EBF4FB!important;padding:10px 12px!important;page-break-inside:avoid}
+  .f-nome-t{font-size:16px!important}
+  .f-sec{margin:10px 0 6px!important;page-break-after:avoid}
+  .f-tbl{page-break-inside:auto}
+  .f-tbl tr{page-break-inside:avoid;page-break-after:auto}
+  .f-tbl td{padding:4px 8px!important;font-size:10px!important}
+  .f-arm{-webkit-print-color-adjust:exact;print-color-adjust:exact;background:#EBF4FB!important;page-break-inside:avoid}
+  .f-ref{page-break-inside:avoid}
+  .f-foot{page-break-inside:avoid}
+
+  /* ── LAUDO ── */
+  .lw{max-width:100%!important;font-size:9.5px!important;box-shadow:none!important;border:none!important}
+  .lh{padding:7px 12px!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .lb{padding:7px 12px!important}
-  .lk{padding:7px!important}
+  .lk{padding:7px!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .lt td{padding:2px 6px!important;font-size:9px!important}
+  .lt tr{page-break-inside:avoid}
+
+  /* ── ETIQUETAS ── */
   .epg{display:grid!important;grid-template-columns:1fr 1fr!important;gap:3mm!important}
-  .ec{box-shadow:none!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .ec-status.quarentena,.ec-nome.quarentena,.ec-status.reprovado{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .ec{box-shadow:none!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;page-break-inside:avoid}
+  .ec-nome{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .ec-status{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+
   .hi,.tb,.sec{box-shadow:none!important;transform:none!important}
 }
 </style>
@@ -625,23 +681,65 @@ function renderFicha(code){
   var db=fdb();var s=db.filter(function(x){return x.c===code;})[0];
   if(!s)return '<div style="padding:30px;color:#999">Substancia nao encontrada.</div>';
   var today=new Date().toLocaleDateString('pt-BR');
-  var r='<div style="max-width:700px;margin:0 auto;background:#fff;border:1px solid #CBD5E0;border-radius:8px;overflow:hidden;font-size:11px">';
-  r+='<div style="background:#1A3A5C;color:#fff;padding:10px 18px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:13px;font-weight:700">FICHA TECNICA DE MATERIA-PRIMA</div><div style="font-size:10px;opacity:.7;margin-top:2px">LABORATORIO DE CONTROLE DE QUALIDADE</div></div><div style="text-align:right"><div style="font-size:9px;opacity:.7">Codigo</div><div style="font-size:16px;font-weight:700">'+e(s.c)+'</div></div></div>';
-  r+='<div style="padding:12px 16px"><div style="background:#EBF4FB;border-radius:6px;padding:10px 12px;margin-bottom:10px"><div style="font-size:16px;font-weight:700;color:#1A3A5C;margin-bottom:6px">'+e(s.n)+'</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;font-size:10px">';
-  if(s.d){r+='<div><span style="color:#718096;font-weight:700">DCB: </span>'+e(s.d)+'</div>';}
-  if(s.s){r+='<div><span style="color:#718096;font-weight:700">CAS: </span>'+e(s.s)+'</div>';}
-  if(s.dci){r+='<div><span style="color:#718096;font-weight:700">DCI: </span>'+e(s.dci)+'</div>';}
-  if(s.fm){r+='<div><span style="color:#718096;font-weight:700">Formula: </span>'+e(s.fm)+'</div>';}
-  if(s.pm){r+='<div><span style="color:#718096;font-weight:700">Peso Mol.: </span>'+e(s.pm)+'</div>';}
-  if(s.fte){r+='<div><span style="color:#718096;font-weight:700">Ft. Equiv.: </span>'+e(s.fte)+'</div>';}
-  if(s.ftc){r+='<div><span style="color:#718096;font-weight:700">Ft. Corr.: </span>'+e(s.ftc)+'</div>';}
+
+  var r='<div class="fw">';
+  /* Cabecalho */
+  r+='<div class="fh"><div>';
+  r+='<div class="fh-t">FICHA TECNICA DE MATERIA-PRIMA</div>';
+  r+='<div class="fh-s">LABORATORIO DE CONTROLE DE QUALIDADE</div></div>';
+  r+='<div style="text-align:right"><div style="font-size:9px;opacity:.75">Codigo</div>';
+  r+='<div style="font-size:17px;font-weight:700">'+e(s.c)+'</div></div></div>';
+
+  r+='<div class="fb">';
+  /* Bloco de identificacao */
+  r+='<div class="f-nome"><div class="f-nome-t">'+e(s.n)+'</div><div class="f-ids">';
+  if(s.d){r+='<div><b>DCB</b><br>'+e(s.d)+'</div>';}
+  if(s.s){r+='<div><b>CAS</b><br>'+e(s.s)+'</div>';}
+  if(s.dci){r+='<div><b>DCI</b><br>'+e(s.dci)+'</div>';}
+  if(s.fm){r+='<div><b>Formula Molecular</b><br>'+e(s.fm)+'</div>';}
+  if(s.pm){r+='<div><b>Peso Molecular</b><br>'+e(s.pm)+'</div>';}
+  if(s.fte){r+='<div><b>Ft. Equivalencia</b><br>'+e(s.fte)+'</div>';}
+  if(s.ftc){r+='<div><b>Ft. Correcao</b><br>'+e(s.ftc)+'</div>';}
+  if(s.sin){r+='<div style="grid-column:span 3"><b>Sinonimo</b><br>'+e(s.sin)+'</div>';}
   r+='</div></div>';
-  function spec(label,val){if(!val)return'';return'<tr><td style="padding:3px 8px;background:#FAFAFA;font-weight:600;color:#4A5568;width:30%;font-size:10px;border-bottom:1px solid #EEF2F7">'+label+'</td><td style="padding:3px 8px;font-size:10px;border-bottom:1px solid #EEF2F7">'+e(val)+'</td></tr>';}
-  r+='<div class="sh">Especificacoes Tecnicas</div><table style="width:100%;border-collapse:collapse;margin-bottom:10px"><tbody>';
-  r+=spec('Teor / Potencia',s.tp);r+=spec('Caract. Organolepticas',s.org);r+=spec('Solubilidade',s.sol);r+=spec('Ponto de Fusao',s.fus);r+=spec('Densidade',s.dn);r+=spec('pH',s.ph);r+='</tbody></table>';
-  if(s.a){r+='<div class="la"><div style="font-size:9px;font-weight:700;color:#1A3A5C;text-transform:uppercase;margin-bottom:3px">Armazenamento</div>'+e(s.a)+'</div>';}
-  if(s.ref){r+='<div style="border-top:1px solid #EEF2F7;padding-top:6px;font-size:9px;color:#718096"><b>Referencias:</b> '+e(s.ref)+'</div>';}
-  r+='<div style="display:flex;justify-content:space-between;margin-top:8px;font-size:9px;color:#A0AEC0"><span>DOCUMENTO INTERNO</span><span>Emitido em: '+today+'</span></div></div></div>';return r;}
+
+  /* Especificacoes tecnicas */
+  function row(label,val){
+    if(!val)return '';
+    return '<tr><td class="f-th">'+label+'</td><td>'+e(val)+'</td></tr>';
+  }
+  var specRows='';
+  specRows+=row('Teor / Potencia',s.tp);
+  specRows+=row('Caract. Organolepticas',s.org);
+  specRows+=row('Solubilidade',s.sol);
+  specRows+=row('Ponto de Fusao',s.fus);
+  specRows+=row('Densidade',s.dn);
+  specRows+=row('pH',s.ph);
+
+  if(specRows){
+    r+='<div class="f-sec">Especificacoes Tecnicas</div>';
+    r+='<table class="f-tbl"><tbody>'+specRows+'</tbody></table>';
+  } else {
+    r+='<div class="f-sec">Especificacoes Tecnicas</div>';
+    r+='<div style="padding:12px;text-align:center;color:#A0AEC0;font-size:11px;border:1px dashed #E2E8F0;border-radius:6px;margin-bottom:12px">Nenhuma especificacao tecnica cadastrada para esta substancia.</div>';
+  }
+
+  /* Armazenamento */
+  if(s.a){
+    r+='<div class="f-arm"><div class="f-arm-t">Embalagem / Armazenamento</div>'+e(s.a)+'</div>';
+  }
+
+  /* Referencias */
+  if(s.ref){
+    r+='<div class="f-ref"><b>Referencias:</b> '+e(s.ref)+'</div>';
+  }
+
+  /* Rodape */
+  r+='<div class="f-foot"><span>DOCUMENTO INTERNO — CONTROLE DE QUALIDADE</span>';
+  r+='<span>Emitido em: '+today+'</span></div>';
+  r+='</div></div>';
+  return r;}
+
 
 /* ════════════════════════════════ RENDER FUNCTIONS ════════════════════════════════ */
 function backupBadge(){
@@ -700,7 +798,7 @@ function renderEtiqueta(){
     selHtml='<div style="background:#EBF4FB;border-radius:8px;padding:10px 12px;margin-bottom:12px"><div style="font-size:11px;font-weight:700;color:#1A3A5C;margin-bottom:8px">SELECIONADOS:</div><div style="display:flex;flex-wrap:wrap;gap:8px">';
     selE.forEach(function(en){
       var qOpts='';for(var n=1;n<=8;n++)qOpts+='<option value="'+n+'"'+(S.esel[en.id]===n?' selected':'')+'>'+n+'</option>';
-      selHtml+='<div style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #BEE3F8;border-radius:6px;padding:4px 10px"><span style="font-weight:700;font-size:12px;color:#1A3A5C">'+e(en.re)+'/'+e(en.ano)+'</span><span style="font-size:11px;color:#718096;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+e(en.substancia)+'</span><span> x </span><select class="eq-sel" data-eid="'+en.id+'" style="width:50px;padding:2px 4px;font-size:12px">'+qOpts+'</select><input class="eqf-inp" data-eid="'+en.id+'" value="'+e(S.eselQF[en.id]||en.qtde||'')+'" placeholder="Qtde" style="width:80px;padding:2px 5px;font-size:12px;border:1px solid #BEE3F8;border-radius:4px" title="Quantidade fracionada"><button class="etog-btn" data-eid="'+en.id+'" style="background:none;border:none;color:#E53E3E;font-weight:700;font-size:14px;cursor:pointer;padding:0 2px">x</button></div>';
+      selHtml+='<div style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #BEE3F8;border-radius:6px;padding:4px 10px"><span style="font-weight:700;font-size:12px;color:#1A3A5C">'+e(en.re)+'/'+e(en.ano)+'</span><span style="font-size:11px;color:#718096;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+e(en.substancia)+'</span><span> x </span><select class="eq-sel" data-eid="'+en.id+'" style="width:50px;padding:2px 4px;font-size:12px">'+qOpts+'</select><input class="eqf-inp" id="eqf-'+en.id+'" data-eid="'+en.id+'" value="'+e(S.eselQF[en.id]||en.qtde||'')+'" placeholder="Qtde ex: 50g" style="width:90px;padding:2px 5px;font-size:12px;border:1px solid #BEE3F8;border-radius:4px" title="Quantidade fracionada que aparecera na etiqueta"><button class="etog-btn" data-eid="'+en.id+'" style="background:none;border:none;color:#E53E3E;font-weight:700;font-size:14px;cursor:pointer;padding:0 2px">x</button></div>';
     });
     selHtml+='</div></div>';
   }
@@ -923,7 +1021,7 @@ function bindAll(){
   var dfld=document.getElementById('drive-folder');if(dfld){dfld.oninput=function(){S.driveFolderName=this.value;};}
   document.querySelectorAll('.eq-sel').forEach(function(sel){sel.onchange=function(){setEQ(this.dataset.eid,+this.value);};});
   document.querySelectorAll('.etog-btn').forEach(function(btn){btn.onclick=function(ev){ev.stopPropagation();togE(this.dataset.eid);};});
-  document.querySelectorAll('.eqf-inp').forEach(function(inp){inp.oninput=function(){S.eselQF[this.dataset.eid]=this.value;};inp.onclick=function(ev){ev.stopPropagation();};});
+  document.querySelectorAll('.eqf-inp').forEach(function(inp){inp.oninput=function(){S.eselQF[this.dataset.eid]=this.value;repaint();};inp.onclick=function(ev){ev.stopPropagation();};});
   document.querySelectorAll('.remSub-btn').forEach(function(btn){btn.onclick=function(){remSub(this.dataset.sc);};});
   document.querySelectorAll('.editSub-btn').forEach(function(btn){btn.onclick=function(){startEditSub(this.dataset.sc);};});
   document.querySelectorAll('.fichaBtn').forEach(function(btn){btn.onclick=function(){S.fichaCode=this.dataset.sc;repaint();};});
@@ -971,7 +1069,7 @@ function bindAll(){
       else if(a==='disconnectDrive'){disconnectDrive();}
       else if(a==='backupToDrive'){backupToDrive();}
       else if(a==='closeFicha'){S.fichaCode=null;repaint();}
-      else if(a==='printFicha'){window.print();}
+      else if(a==='printFicha'){document.body.classList.add('printing-modal');window.print();setTimeout(function(){document.body.classList.remove('printing-modal');},500);}
       else if(a==='pickImpE'){document.getElementById('imp-e').click();}
       else if(a==='pickImpD'){document.getElementById('imp-d').click();}
       else if(a==='expDB'){IDB.cfg('overrides',function(ov){var full=DB.concat(S.udb).map(function(s){return ov&&ov[s.c]?Object.assign({},s,ov[s.c]):s;});backupJSON(full,dateStamp()+'_substancias_cq.json');});}
@@ -1122,8 +1220,7 @@ function impD(ev){
 /* ════════════════════════════════ AI FUNCTIONS ════════════════════════════════ */
 function renderAIModal(){
   if(!S.aiModal)return '';
-  var r='<div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px">';
-  r+='<div style="background:#fff;border-radius:12px;padding:20px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto">';
+  var r='<div class="mv np"><div class="mv-box" style="max-width:500px;padding:20px">';
   r+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div style="font-weight:700;font-size:15px;color:#1A3A5C">🤖 Analisar Laudo com IA</div><button data-action="closeAI" style="background:none;border:none;font-size:22px;cursor:pointer;color:#718096">✕</button></div>';
   if(!S.apiKey){
     r+='<div style="background:#FFF5F5;border:1px solid #FEB2B2;border-radius:6px;padding:10px 12px;margin-bottom:12px;font-size:13px;color:#9B2C2C">Cole sua chave de API do Claude (console.anthropic.com) para usar esta funcionalidade.</div>';
@@ -1140,8 +1237,7 @@ function renderAIModal(){
 
 function renderSubAIModal(){
   if(!S.subAIModal)return '';
-  var r='<div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px">';
-  r+='<div style="background:#fff;border-radius:12px;padding:20px;max-width:540px;width:100%;max-height:90vh;overflow-y:auto">';
+  var r='<div class="mv np"><div class="mv-box" style="max-width:540px;padding:20px">';
   r+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div style="font-weight:700;font-size:15px;color:#1A3A5C">🤖 Preencher Referencias com IA</div><button data-action="closeSubAI" style="background:none;border:none;font-size:22px;cursor:pointer;color:#718096">✕</button></div>';
   if(!S.apiKey){
     r+='<div style="background:#FFF5F5;border:1px solid #FEB2B2;border-radius:6px;padding:10px 12px;margin-bottom:12px;font-size:13px;color:#9B2C2C">Configure sua chave de API em Nova Entrada → 🤖 Analisar laudo com IA.</div>';
@@ -1166,11 +1262,16 @@ function renderSubAIModal(){
 
 function renderFichaModal(){
   if(!S.fichaCode)return '';
-  var r='<div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px">';
-  r+='<div style="background:#fff;border-radius:12px;max-width:740px;width:100%;max-height:95vh;overflow-y:auto">';
-  r+='<div class="np" style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid #E2E8F0">';
-  r+='<span style="font-weight:700;color:#1A3A5C">Ficha Tecnica</span><div style="display:flex;gap:8px"><button class="btn bp bsm" data-action="printFicha">🖨️ Imprimir</button><button data-action="closeFicha" style="background:none;border:none;font-size:20px;cursor:pointer;color:#718096">✕</button></div></div>';
-  r+=renderFicha(S.fichaCode);r+='</div></div>';return r;}
+  var r='<div class="mv"><div class="mv-box">';
+  r+='<div class="mv-bar np">';
+  r+='<span style="font-weight:700;color:#1A3A5C;font-size:14px">Ficha Tecnica</span>';
+  r+='<div style="display:flex;gap:8px">';
+  r+='<button class="btn bp bsm" data-action="printFicha">Imprimir</button>';
+  r+='<button class="btn bg bsm" data-action="closeFicha">Fechar</button>';
+  r+='</div></div>';
+  r+=renderFicha(S.fichaCode);
+  r+='</div></div>';return r;}
+
 
 function callAI(fileInput){
   var file=fileInput.files[0];if(!file)return;
